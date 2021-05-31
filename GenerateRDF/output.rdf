@@ -1,0 +1,343 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <person rdf:about="p0">
+    <name xml:lang="ru">п0</name>
+    <age>23</age>
+  </person>
+  <person rdf:about="p1">
+    <name xml:lang="ru">п1</name>
+    <age>23</age>
+  </person>
+  <person rdf:about="p2">
+    <name xml:lang="ru">п2</name>
+    <age>23</age>
+  </person>
+  <person rdf:about="p3">
+    <name xml:lang="ru">п3</name>
+    <age>23</age>
+  </person>
+  <person rdf:about="p4">
+    <name xml:lang="ru">п4</name>
+    <age>23</age>
+  </person>
+  <person rdf:about="p5">
+    <name xml:lang="ru">п5</name>
+    <age>23</age>
+  </person>
+  <person rdf:about="p6">
+    <name xml:lang="ru">п6</name>
+    <age>23</age>
+  </person>
+  <person rdf:about="p7">
+    <name xml:lang="ru">п7</name>
+    <age>23</age>
+  </person>
+  <person rdf:about="p8">
+    <name xml:lang="ru">п8</name>
+    <age>23</age>
+  </person>
+  <person rdf:about="p9">
+    <name xml:lang="ru">п9</name>
+    <age>23</age>
+  </person>
+  <photo rdf:about="f0">
+    <name>dsp0</name>
+  </photo>
+  <photo rdf:about="f1">
+    <name>dsp1</name>
+  </photo>
+  <photo rdf:about="f2">
+    <name>dsp2</name>
+  </photo>
+  <photo rdf:about="f3">
+    <name>dsp3</name>
+  </photo>
+  <photo rdf:about="f4">
+    <name>dsp4</name>
+  </photo>
+  <photo rdf:about="f5">
+    <name>dsp5</name>
+  </photo>
+  <photo rdf:about="f6">
+    <name>dsp6</name>
+  </photo>
+  <photo rdf:about="f7">
+    <name>dsp7</name>
+  </photo>
+  <photo rdf:about="f8">
+    <name>dsp8</name>
+  </photo>
+  <photo rdf:about="f9">
+    <name>dsp9</name>
+  </photo>
+  <photo rdf:about="f10">
+    <name>dsp10</name>
+  </photo>
+  <photo rdf:about="f11">
+    <name>dsp11</name>
+  </photo>
+  <photo rdf:about="f12">
+    <name>dsp12</name>
+  </photo>
+  <photo rdf:about="f13">
+    <name>dsp13</name>
+  </photo>
+  <photo rdf:about="f14">
+    <name>dsp14</name>
+  </photo>
+  <photo rdf:about="f15">
+    <name>dsp15</name>
+  </photo>
+  <photo rdf:about="f16">
+    <name>dsp16</name>
+  </photo>
+  <photo rdf:about="f17">
+    <name>dsp17</name>
+  </photo>
+  <photo rdf:about="f18">
+    <name>dsp18</name>
+  </photo>
+  <photo rdf:about="f19">
+    <name>dsp19</name>
+  </photo>
+  <reflection rdf:about="r0">
+    <reflected rdf:resource="p0" />
+    <indoc rdf:resource="f16" />
+  </reflection>
+  <reflection rdf:about="r1">
+    <reflected rdf:resource="p6" />
+    <indoc rdf:resource="f18" />
+  </reflection>
+  <reflection rdf:about="r2">
+    <reflected rdf:resource="p5" />
+    <indoc rdf:resource="f17" />
+  </reflection>
+  <reflection rdf:about="r3">
+    <reflected rdf:resource="p7" />
+    <indoc rdf:resource="f2" />
+  </reflection>
+  <reflection rdf:about="r4">
+    <reflected rdf:resource="p0" />
+    <indoc rdf:resource="f3" />
+  </reflection>
+  <reflection rdf:about="r5">
+    <reflected rdf:resource="p7" />
+    <indoc rdf:resource="f12" />
+  </reflection>
+  <reflection rdf:about="r6">
+    <reflected rdf:resource="p7" />
+    <indoc rdf:resource="f8" />
+  </reflection>
+  <reflection rdf:about="r7">
+    <reflected rdf:resource="p6" />
+    <indoc rdf:resource="f18" />
+  </reflection>
+  <reflection rdf:about="r8">
+    <reflected rdf:resource="p5" />
+    <indoc rdf:resource="f8" />
+  </reflection>
+  <reflection rdf:about="r9">
+    <reflected rdf:resource="p2" />
+    <indoc rdf:resource="f16" />
+  </reflection>
+  <reflection rdf:about="r10">
+    <reflected rdf:resource="p5" />
+    <indoc rdf:resource="f10" />
+  </reflection>
+  <reflection rdf:about="r11">
+    <reflected rdf:resource="p5" />
+    <indoc rdf:resource="f6" />
+  </reflection>
+  <reflection rdf:about="r12">
+    <reflected rdf:resource="p6" />
+    <indoc rdf:resource="f14" />
+  </reflection>
+  <reflection rdf:about="r13">
+    <reflected rdf:resource="p0" />
+    <indoc rdf:resource="f13" />
+  </reflection>
+  <reflection rdf:about="r14">
+    <reflected rdf:resource="p4" />
+    <indoc rdf:resource="f8" />
+  </reflection>
+  <reflection rdf:about="r15">
+    <reflected rdf:resource="p0" />
+    <indoc rdf:resource="f10" />
+  </reflection>
+  <reflection rdf:about="r16">
+    <reflected rdf:resource="p3" />
+    <indoc rdf:resource="f11" />
+  </reflection>
+  <reflection rdf:about="r17">
+    <reflected rdf:resource="p9" />
+    <indoc rdf:resource="f2" />
+  </reflection>
+  <reflection rdf:about="r18">
+    <reflected rdf:resource="p6" />
+    <indoc rdf:resource="f1" />
+  </reflection>
+  <reflection rdf:about="r19">
+    <reflected rdf:resource="p2" />
+    <indoc rdf:resource="f6" />
+  </reflection>
+  <reflection rdf:about="r20">
+    <reflected rdf:resource="p2" />
+    <indoc rdf:resource="f12" />
+  </reflection>
+  <reflection rdf:about="r21">
+    <reflected rdf:resource="p1" />
+    <indoc rdf:resource="f14" />
+  </reflection>
+  <reflection rdf:about="r22">
+    <reflected rdf:resource="p9" />
+    <indoc rdf:resource="f18" />
+  </reflection>
+  <reflection rdf:about="r23">
+    <reflected rdf:resource="p3" />
+    <indoc rdf:resource="f19" />
+  </reflection>
+  <reflection rdf:about="r24">
+    <reflected rdf:resource="p2" />
+    <indoc rdf:resource="f10" />
+  </reflection>
+  <reflection rdf:about="r25">
+    <reflected rdf:resource="p5" />
+    <indoc rdf:resource="f0" />
+  </reflection>
+  <reflection rdf:about="r26">
+    <reflected rdf:resource="p9" />
+    <indoc rdf:resource="f12" />
+  </reflection>
+  <reflection rdf:about="r27">
+    <reflected rdf:resource="p8" />
+    <indoc rdf:resource="f11" />
+  </reflection>
+  <reflection rdf:about="r28">
+    <reflected rdf:resource="p2" />
+    <indoc rdf:resource="f7" />
+  </reflection>
+  <reflection rdf:about="r29">
+    <reflected rdf:resource="p2" />
+    <indoc rdf:resource="f15" />
+  </reflection>
+  <reflection rdf:about="r30">
+    <reflected rdf:resource="p8" />
+    <indoc rdf:resource="f0" />
+  </reflection>
+  <reflection rdf:about="r31">
+    <reflected rdf:resource="p6" />
+    <indoc rdf:resource="f12" />
+  </reflection>
+  <reflection rdf:about="r32">
+    <reflected rdf:resource="p0" />
+    <indoc rdf:resource="f5" />
+  </reflection>
+  <reflection rdf:about="r33">
+    <reflected rdf:resource="p2" />
+    <indoc rdf:resource="f3" />
+  </reflection>
+  <reflection rdf:about="r34">
+    <reflected rdf:resource="p4" />
+    <indoc rdf:resource="f10" />
+  </reflection>
+  <reflection rdf:about="r35">
+    <reflected rdf:resource="p2" />
+    <indoc rdf:resource="f8" />
+  </reflection>
+  <reflection rdf:about="r36">
+    <reflected rdf:resource="p1" />
+    <indoc rdf:resource="f18" />
+  </reflection>
+  <reflection rdf:about="r37">
+    <reflected rdf:resource="p5" />
+    <indoc rdf:resource="f18" />
+  </reflection>
+  <reflection rdf:about="r38">
+    <reflected rdf:resource="p3" />
+    <indoc rdf:resource="f17" />
+  </reflection>
+  <reflection rdf:about="r39">
+    <reflected rdf:resource="p3" />
+    <indoc rdf:resource="f13" />
+  </reflection>
+  <reflection rdf:about="r40">
+    <reflected rdf:resource="p3" />
+    <indoc rdf:resource="f1" />
+  </reflection>
+  <reflection rdf:about="r41">
+    <reflected rdf:resource="p4" />
+    <indoc rdf:resource="f18" />
+  </reflection>
+  <reflection rdf:about="r42">
+    <reflected rdf:resource="p8" />
+    <indoc rdf:resource="f1" />
+  </reflection>
+  <reflection rdf:about="r43">
+    <reflected rdf:resource="p5" />
+    <indoc rdf:resource="f14" />
+  </reflection>
+  <reflection rdf:about="r44">
+    <reflected rdf:resource="p6" />
+    <indoc rdf:resource="f8" />
+  </reflection>
+  <reflection rdf:about="r45">
+    <reflected rdf:resource="p8" />
+    <indoc rdf:resource="f5" />
+  </reflection>
+  <reflection rdf:about="r46">
+    <reflected rdf:resource="p7" />
+    <indoc rdf:resource="f9" />
+  </reflection>
+  <reflection rdf:about="r47">
+    <reflected rdf:resource="p4" />
+    <indoc rdf:resource="f5" />
+  </reflection>
+  <reflection rdf:about="r48">
+    <reflected rdf:resource="p9" />
+    <indoc rdf:resource="f11" />
+  </reflection>
+  <reflection rdf:about="r49">
+    <reflected rdf:resource="p6" />
+    <indoc rdf:resource="f13" />
+  </reflection>
+  <reflection rdf:about="r50">
+    <reflected rdf:resource="p6" />
+    <indoc rdf:resource="f3" />
+  </reflection>
+  <reflection rdf:about="r51">
+    <reflected rdf:resource="p5" />
+    <indoc rdf:resource="f14" />
+  </reflection>
+  <reflection rdf:about="r52">
+    <reflected rdf:resource="p2" />
+    <indoc rdf:resource="f2" />
+  </reflection>
+  <reflection rdf:about="r53">
+    <reflected rdf:resource="p8" />
+    <indoc rdf:resource="f0" />
+  </reflection>
+  <reflection rdf:about="r54">
+    <reflected rdf:resource="p0" />
+    <indoc rdf:resource="f18" />
+  </reflection>
+  <reflection rdf:about="r55">
+    <reflected rdf:resource="p1" />
+    <indoc rdf:resource="f7" />
+  </reflection>
+  <reflection rdf:about="r56">
+    <reflected rdf:resource="p9" />
+    <indoc rdf:resource="f12" />
+  </reflection>
+  <reflection rdf:about="r57">
+    <reflected rdf:resource="p3" />
+    <indoc rdf:resource="f15" />
+  </reflection>
+  <reflection rdf:about="r58">
+    <reflected rdf:resource="p5" />
+    <indoc rdf:resource="f13" />
+  </reflection>
+  <reflection rdf:about="r59">
+    <reflected rdf:resource="p7" />
+    <indoc rdf:resource="f0" />
+  </reflection>
+</rdf:RDF>
