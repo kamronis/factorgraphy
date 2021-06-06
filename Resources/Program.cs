@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DoingFactography
+namespace Resources
 {
     class Program
     {

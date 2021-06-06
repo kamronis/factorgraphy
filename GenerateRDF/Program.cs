@@ -21,7 +21,7 @@ namespace GenerateRDF
 </rdf:RDF>
 ");
             Random rnd = new Random();
-            int npersons = 10;
+            int npersons = 100;
             int np = npersons;
             int nf = npersons * 2;
             int nr = npersons * 6;
@@ -42,6 +42,24 @@ namespace GenerateRDF
 
             // Проверяю что получилось
             dataset.Save("../../../output.rdf");
+
+            // Поиск по образцу
+            Func<XElement, string, IEnumerable<XElement>> Search = (ds, sample) => ds.Elements()
+                .Where(r => r.Elements("name").Any(f => f.Value.StartsWith(sample)));
+
+            // Испытаем
+            foreach (XElement r in Search(dataset, "и7"))
+            {
+                Console.WriteLine(r.ToString());
+            }
+            Console.WriteLine();
+
+            // Выборка записи по идентификатору
+            Func<XElement, string, XElement> GetById = (ds, id) => ds.Elements().FirstOrDefault(r => r.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value == id);
+
+            // Испытаем
+            XElement rec = GetById(dataset, "p" + (npersons / 3 * 2));
+            Console.WriteLine(rec.ToString());
         }
     }
 }
