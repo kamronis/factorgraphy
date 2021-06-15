@@ -12,6 +12,6 @@ namespace RDFEngine
         public void Load(IEnumerable<XElement> records);
         public void Build();
         public IEnumerable<XElement> Search(string searchstring);
-        public XElement GetRecord(string id, bool addinverse);
+        public XElement GetRecordBasic(string id, bool addinverse, string unused_direct_prop);
     }
 }

@@ -1,0 +1,17 @@
+﻿@using System.Xml.Linq
+@model XElement
+
+@{ 
+    if (Model == null) return;
+}
+<div><b>Персона</b></div>
+
+<div>
+    <table>
+        @foreach (var field in Model.Elements("field"))
+        {
+            <tr><td>@field.Attribute("prop").Value</td><td><b>@field.Value</b></td></tr>
+        }
+    </table>
+</div>
+

@@ -73,7 +73,7 @@ namespace RDFEngine
         }
 
         // Сначала сделаем преобразователь записи в промежуточное представление
-        private XElement ConvertToIntermediate(XElement rec)
+        private XElement ConvertToIntermediate(XElement rec, string unused_direct_prop)
         {
             return new XElement("record",
                 new XAttribute("id", rec.Attribute(rdfabout).Value),
@@ -85,6 +85,7 @@ namespace RDFEngine
                         XAttribute resource = el.Attribute(rdfresource);
                         if (resource != null)
                         {
+                            if (prop == unused_direct_prop) return null;
                             return new XElement("direct", new XAttribute("prop", prop),
                                 new XElement("record", new XAttribute("id", resource.Value)));
                         }
@@ -97,25 +98,38 @@ namespace RDFEngine
                         }
                     }));
         }
+
+        // Поиск айтемов по образцу имени (сравнение в нижнем регистре начала значения поля name
         public IEnumerable<XElement> Search(string sample)
         {
             sample = sample.ToLower(); // Сравнивать будем в нижнем регистре
             var query = rdf.Elements()
                 .Where(r => r.Elements("name").Any(f => f.Value.StartsWith(sample)))
                 // преобразуем в промежуточное представление
-                .Select(r => new XElement("record", 
-                    new XAttribute("id", r.Attribute(rdfabout).Value),
-                    new XAttribute("type", r.Name.Namespace + r.Name.LocalName),
-                    null));
+                .Select(r => ConvertToIntermediate(r, null));
             return query;
         }
-        
 
-        public XElement GetRecord(string id, bool addinverse)
+        // Получение записи по ее идентификатору. Если нет, то null. По признаку addinverse добавляюся обратные ссылки 
+        public XElement GetRecordBasic(string id, bool addinverse, string unused_direct_prop)
         {
-            throw new NotImplementedException();
+            // Находим запись
+            XElement rec = id == null || !recordsById.ContainsKey(id) ? null : recordsById[id];
+            if (rec == null) return null;
+            XElement result = ConvertToIntermediate(rec, unused_direct_prop);
+            // Добавим обратные
+            if (addinverse && subelementsByResource.ContainsKey(id))
+            {
+                result.Add(subelementsByResource[id]
+                    .Select(sub =>
+                    {
+                        string prop = sub.Name.NamespaceName + sub.Name.LocalName;
+                        XElement parent = sub.Parent;
+                        return new XElement("inverse", new XAttribute("prop", prop), 
+                            new XElement("record", new XAttribute("id", parent.Attribute(rdfabout).Value)));
+                    }));
+            }
+            return result;
         }
-
-
     }
 }
