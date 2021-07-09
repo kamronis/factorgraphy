@@ -11,7 +11,12 @@ namespace RDFEngine
         public void Clear();
         public void Load(IEnumerable<XElement> records);
         public void Build();
-        public IEnumerable<XElement> Search(string searchstring);
-        public XElement GetRecordBasic(string id, bool addinverse, string unused_direct_prop);
+        public IEnumerable<RRecord> RSearch(string searchstring);
+        public RRecord GetRRecord(string id);
+
+        // Константы для удобства
+        public static XName rdfabout = XName.Get("about", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+        public static XName rdfresource = XName.Get("resource", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+
     }
 }

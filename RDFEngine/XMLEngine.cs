@@ -12,9 +12,6 @@ namespace RDFEngine
         // Основным объектом будет XML-представление RDF-данных
         private XElement rdf;
 
-        // Константы для удобства
-        static XName rdfabout = XName.Get("about", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-        static XName rdfresource = XName.Get("resource", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 
         // Констрируется пустая база данных
         public XMLEngine()
@@ -52,10 +49,10 @@ namespace RDFEngine
             // Сканирую записи и "разбрасываю" ссылки по словарям
             foreach (XElement rec in rdf.Elements())
             {
-                recordsById.Add(rec.Attribute(rdfabout).Value, rec);
+                recordsById.Add(rec.Attribute(IEngine.rdfabout).Value, rec);
                 foreach (XElement sub in rec.Elements())
                 {
-                    string resource = sub.Attribute(rdfresource)?.Value;
+                    string resource = sub.Attribute(IEngine.rdfresource)?.Value;
                     if (resource == null) continue;
                     if (subelements.ContainsKey(resource))
                     {
@@ -76,13 +73,13 @@ namespace RDFEngine
         private XElement ConvertToIntermediate(XElement rec, string unused_direct_prop)
         {
             return new XElement("record",
-                new XAttribute("id", rec.Attribute(rdfabout).Value),
+                new XAttribute("id", rec.Attribute(IEngine.rdfabout).Value),
                 new XAttribute("type", rec.Name.NamespaceName + rec.Name.LocalName),
                 rec.Elements()
                     .Select(el =>
                     {
                         string prop = el.Name.NamespaceName + el.Name.LocalName;
-                        XAttribute resource = el.Attribute(rdfresource);
+                        XAttribute resource = el.Attribute(IEngine.rdfresource);
                         if (resource != null)
                         {
                             if (prop == unused_direct_prop) return null;
@@ -126,10 +123,20 @@ namespace RDFEngine
                         string prop = sub.Name.NamespaceName + sub.Name.LocalName;
                         XElement parent = sub.Parent;
                         return new XElement("inverse", new XAttribute("prop", prop), 
-                            new XElement("record", new XAttribute("id", parent.Attribute(rdfabout).Value)));
+                            new XElement("record", new XAttribute("id", parent.Attribute(IEngine.rdfabout).Value)));
                     }));
             }
             return result;
+        }
+
+        public IEnumerable<RRecord> RSearch(string searchstring)
+        {
+            throw new NotImplementedException();
+        }
+
+        public RRecord GetRRecord(string id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
