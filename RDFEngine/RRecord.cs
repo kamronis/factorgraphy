@@ -11,6 +11,16 @@ namespace RDFEngine
         public string Id { get; set; }
         public string Tp { get; set; }
         public RProperty[] Props { get; set; }
+        public override string ToString()
+        {
+            var query = Props.Select(p =>
+            {
+                string prop = p.Prop;
+                if (p is RField) return "f^{<" + prop + ">, \"" + ((RField)p).Value + "\"}";
+                else             return "l^{<" + prop + ">, <" + ((RLink)p).Resource + ">}";
+            }).Aggregate((a, s) => a + ", " + s);
+            return "{ <" + Id + ">, <" + Tp + ">, " +         query                + "}";
+        }
     }
     public abstract class RProperty
     {
@@ -23,6 +33,5 @@ namespace RDFEngine
     public class RLink : RProperty
     {
         public string Resource { get; set; }
-        //public RRecord Target { get; set; }
     }
 }

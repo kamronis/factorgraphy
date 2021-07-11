@@ -22,7 +22,7 @@ namespace RDFEngine
                 {
                     string prop = el.Name.NamespaceName + el.Name.LocalName;
                     XAttribute resource = el.Attribute(IEngine.rdfresource);
-                    if (records == null)
+                    if (resource == null)
                     {  // Поле   TODO: надо учесть языковый спецификатор, а может, и тип
                         return new RField() { Prop = prop, Value = el.Value };
                     }
@@ -61,8 +61,7 @@ namespace RDFEngine
                 .Select(pair => pair.Value)
                 .Where(rr => 
                 {
-                    rr.Props.FirstOrDefault(p => p is RField && ((RField)p).Prop == "http://fogid.net/o/name"
-                    return true;
+                    return rr.Props.Any(p => p is RField && ((RField)p).Prop == "name" && ((RField)p).Value.ToLower().StartsWith(searchstring)); 
                 });
         }
     }

@@ -14,13 +14,13 @@ namespace TesterConsole
 
             int npersons = 100;
 
-            // Создадим движок
-            RDFEngine.XMLEngine engine = new XMLEngine();
+            // Создадим XML движок
+            RDFEngine.IEngine engine = new REngine(); //  new XMLEngine();
             engine.Load(PhototekaGenerator.Generate(npersons));
             engine.Build();
 
             // Попробуем поиск
-            foreach (var rec in engine.Search("и9"))
+            foreach (var rec in engine.RSearch("и9"))
             {
                 Console.WriteLine(rec.ToString());
             }
@@ -28,7 +28,7 @@ namespace TesterConsole
 
             // Попробуем выборку
             int key = npersons * 2 / 3;
-            var record = engine.GetRecordBasic("p" + key, false, null);
+            var record = engine.GetRRecord("r" + key);
             Console.WriteLine(record.ToString());
             Console.WriteLine("====");
 
@@ -48,7 +48,7 @@ namespace TesterConsole
             for (int i=0; i<nprobes; i++)
             {
                 key = rnd.Next(npersons);
-                var r = engine.GetRecordBasic("p" + key, false, null);
+                var r = engine.GetRRecord("p" + key);
             }
             sw.Stop();
             Console.WriteLine($"duration of {nprobes} probes for {npersons} persons: {sw.ElapsedMilliseconds} ms.");
@@ -61,7 +61,7 @@ namespace TesterConsole
             for (int i = 0; i < nprobes; i++)
             {
                 key = rnd.Next(npersons);
-                var recs = engine.Search("и" + key);
+                var recs = engine.RSearch("и" + key);
                 n += recs.Count();
                 //foreach (var r in recs)
                 //{
