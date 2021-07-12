@@ -18,36 +18,14 @@ namespace FactographyView.Controllers
         {
             _logger = logger;
         }
-
         public IActionResult Index(string id)
         {
-            if (id == null) return View("Stend");
-            XElement model = Infobase.engine.GetRecordBasic(id, true, null);
-            XElement model2 = new XElement("record", new XAttribute(model.Attribute("id")), new XAttribute(model.Attribute("type")),
-                model.Elements("field").Select(f => new XElement(f)),
-                model.Elements("inverse").Select(i =>
-                {
-                    string prop = i.Attribute("prop").Value;
-                    string idd = i.Element("record").Attribute("id").Value;
-                    XElement mod = Infobase.engine.GetRecordBasic(idd, false, prop);
-                    return new XElement("inverse", new XAttribute("prop", prop), mod);
-                }),
-                null);
-            return View("Index", model2);
+            return View("Index", id);
         }
+
         public IActionResult Person(string id)
         {
-            XElement model = Infobase.engine.GetRecordBasic(id, true, null);
-            XElement model2 = new XElement("record", new XAttribute(model.Attribute("id")), new XAttribute(model.Attribute("type")),
-                model.Elements("field").Select(f => new XElement(f)),
-                model.Elements("inverse").Select(i =>
-                {
-                string prop = i.Attribute("prop").Value;
-                string idd = i.Element("record").Attribute("id").Value;
-                XElement mod = Infobase.engine.GetRecordBasic(id, false, prop);
-                return new XElement("inverse", new XAttribute("prop", prop), mod);
-                }), 
-                null);
+            var model = Infobase.engine.GetRRecord(id);
             return View("Person", model);
         }
 

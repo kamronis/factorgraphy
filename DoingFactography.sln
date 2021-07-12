@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDFEngine", "RDFEngine\RDFE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TesterConsole", "TesterConsole\TesterConsole.csproj", "{0D57F738-F92D-49E8-B8D4-A4193742DBBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FactographyView", "FactographyView\FactographyView.csproj", "{8A030740-F622-4998-A48E-ABE5F74A8407}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FactographyView", "FactographyView\FactographyView.csproj", "{8A030740-F622-4998-A48E-ABE5F74A8407}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

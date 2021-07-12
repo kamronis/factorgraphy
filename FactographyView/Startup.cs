@@ -46,7 +46,7 @@ namespace FactographyView
 
             app.UseAuthorization();
 
-            Infobase.engine = new RDFEngine.XMLEngine();
+            Infobase.engine = new RDFEngine.REngine();
             Infobase.engine.Load(RDFEngine.PhototekaGenerator.Generate(100));
             Infobase.engine.Build();
 

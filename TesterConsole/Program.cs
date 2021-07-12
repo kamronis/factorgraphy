@@ -63,17 +63,10 @@ namespace TesterConsole
                 key = rnd.Next(npersons);
                 var recs = engine.RSearch("и" + key);
                 n += recs.Count();
-                //foreach (var r in recs)
-                //{
-                //    Console.WriteLine(r.ToString());
-                //}
-                //Console.WriteLine();
             }
             sw.Stop();
             Console.WriteLine($"n={n} duration of {nprobes} seaches for {npersons} persons: {sw.ElapsedMilliseconds} ms.");
             Console.WriteLine("====");
-
-
         }
     }
 }

@@ -7,6 +7,6 @@ namespace FactographyView
 {
     public class Infobase
     {
-        public static RDFEngine.XMLEngine engine = null;
+        public static RDFEngine.IEngine engine = null;
     }
 }
