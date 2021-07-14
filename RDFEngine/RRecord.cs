@@ -16,8 +16,10 @@ namespace RDFEngine
             var query = Props.Select(p =>
             {
                 string prop = p.Prop;
-                if (p is RField) return "f^{<" + prop + ">, \"" + ((RField)p).Value + "\"}";
-                else             return "l^{<" + prop + ">, <" + ((RLink)p).Resource + ">}";
+                if (p is RField)      return "f^{<" + prop + ">, \"" + ((RField)p).Value + "\"}";
+                else if (p is RLink) return "l^{<" + prop + ">, <" + ((RLink)p).Resource + ">}";
+                // Добавленный вариант обратной ссылки
+                else return "i^{<" + prop + ">, <" + ((RInverse)p).Source + ">}";
             }).Aggregate((a, s) => a + ", " + s);
             return "{ <" + Id + ">, <" + Tp + ">, " +         query                + "}";
         }
@@ -33,5 +35,11 @@ namespace RDFEngine
     public class RLink : RProperty
     {
         public string Resource { get; set; }
+    }
+
+    // Расширение вводится на странице 11 пособия "Делаем фактографию"
+    public class RInverse : RProperty
+    {
+        public string Source { get; set; }
     }
 }

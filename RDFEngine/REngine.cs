@@ -12,24 +12,47 @@ namespace RDFEngine
         private IDictionary<string, RRecord> rdatabase;
         public void Load(IEnumerable<XElement> records)
         {
-            rdatabase = records.Select(x => new RRecord()
+            // ДОБАВЛЕНИЕ обратных ссылок
+            Dictionary<string, List<RInverse>> inverseDic = new Dictionary<string, List<RInverse>>();
+            Action<string, RInverse> AddInverse = (id, ilink) =>
             {
-                Id = x.Attribute(IEngine.rdfabout).Value,
-                Tp = x.Name.NamespaceName + x.Name.LocalName,
-                Props = x.Elements().Select<XElement, RProperty>(el =>
+                if (!inverseDic.ContainsKey(id)) inverseDic.Add(id, new List<RInverse>());
+                inverseDic[id].Add(ilink);
+            };
+
+            rdatabase = records.Select(x =>
+            {
+                string nodeId = x.Attribute(IEngine.rdfabout).Value;
+                return new RRecord()
                 {
-                    string prop = el.Name.NamespaceName + el.Name.LocalName;
-                    XAttribute resource = el.Attribute(IEngine.rdfresource);
-                    if (resource == null)
-                    {  // Поле   TODO: надо учесть языковый спецификатор, а может, и тип
-                        return new RField() { Prop = prop, Value = el.Value };
-                    }
-                    else
-                    {  // ссылка
-                        return new RLink() { Prop = prop, Resource = resource.Value };
-                    }
-                }).ToArray()
+                    Id = nodeId,
+                    Tp = x.Name.NamespaceName + x.Name.LocalName,
+                    Props = x.Elements().Select<XElement, RProperty>(el =>
+                    {
+                        string prop = el.Name.NamespaceName + el.Name.LocalName;
+                        XAttribute resource = el.Attribute(IEngine.rdfresource);
+                        if (resource == null)
+                        {  // Поле   TODO: надо учесть языковый спецификатор, а может, и тип
+                            return new RField() { Prop = prop, Value = el.Value };
+                        }
+                        else
+                        {  // ссылка
+                            // Создадим RInverse и добавим в inverseDic 
+                            AddInverse(resource.Value, new RInverse() { Prop = prop, Source = nodeId }); // ДОБАВЛЕНИЕ
+                            return new RLink() { Prop = prop, Resource = resource.Value };
+                        }
+                    }).ToArray()
+                };
             }).ToDictionary(rr => rr.Id);
+
+            // ДОБАВЛЕНИЕ Вставим наработанные обратные ссылки
+            foreach (var pair in inverseDic)
+            {
+                string id = pair.Key;
+                var list = pair.Value;
+                var node = rdatabase[id];
+                node.Props = node.Props.Concat(list).ToArray();
+            }
         }
 
         public void Build()
