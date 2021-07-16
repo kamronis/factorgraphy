@@ -49,6 +49,7 @@ namespace FactographyView
             Infobase.engine = new RDFEngine.REngine();
             Infobase.engine.Load(RDFEngine.PhototekaGenerator.Generate(100));
             Infobase.engine.Build();
+            Infobase.LoadOntology("../RDFEngine/SimpleOntology.owl");
 
             app.UseEndpoints(endpoints =>
             {

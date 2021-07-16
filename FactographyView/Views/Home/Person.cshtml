@@ -5,31 +5,31 @@
     if (Model == null) return;
 }
 <h2>Персона</h2>
-
+<div>@Model.Tp</div>
 <div>
     <table>
         @foreach (var property in Model.Props)
         {
-            string priznak = "";
-            string value = "";
             if (property is RField)
             {
                 RField f = (RField)property;
-                value = f.Value;
+                string value = f.Value;
+                <tr><td>@property.Prop</td><td><b>@value</b></td></tr>
             }
             else if (property is RLink)
             {
                 RLink l = (RLink)property;
-                value = l.Resource;
+                string resource = l.Resource;
+                <tr><td>@property.Prop</td><td><a href='/Home/Person/@(resource)'>прямая ссылка</a></td></tr>
             }
             else if (property is RInverse)
             {
-                priznak = "inv";
                 RInverse i = (RInverse)property;
-                value = i.Source;
+                string source = i.Source;
+                <tr><td>@property.Prop</td><td><a href='/Home/Person/@source'>обратная ссылка</a></td></tr>
             }
-            <tr><td>@priznak</td><td>@property.Prop</td><td><b>@value</b></td></tr>
         }
     </table>
+
 </div>
 

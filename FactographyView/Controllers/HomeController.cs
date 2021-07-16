@@ -28,11 +28,13 @@ namespace FactographyView.Controllers
             var model = Infobase.engine.GetRRecord(id);
             return View("Person", model);
         }
-
-        public IActionResult Privacy()
+        public IActionResult Portrait(string id)
         {
-            return View();
+            var model = Infobase.engine.GetRRecord(id);
+            return View("Portrait", model);
         }
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
