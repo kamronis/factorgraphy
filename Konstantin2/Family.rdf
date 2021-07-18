@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+	<person rdf:about="p0">
+		<name xml:lang="ru">Сергей</name>
+		<age>45</age>
+	</person>
+	<person rdf:about="p1">
+		<name xml:lang="ru">Галина</name>
+		<age>44</age>
+	</person>
+	<person rdf:about="p2">
+		<name xml:lang="ru">Людмила</name>
+		<age>57</age>
+	</person>
+	<person rdf:about="p3">
+		<name xml:lang="ru">Бемоль</name>
+		<age>10</age>
+	</person>
+	<person rdf:about="p4">
+		<name xml:lang="ru">Костя</name>
+		<age>21</age>
+	</person>
+	<photo rdf:about="f0">
+		<name>Сергей</name>
+		<url>Sergey.jpg</url>
+	</photo>
+	<photo rdf:about="f1">
+		<name>Сергей</name>
+		<url>Sergey.jpg</url>
+	</photo>
+	<photo rdf:about="f2">
+		<name>Сергей</name>
+		<url>Sergey.jpg</url>
+	</photo>
+	<photo rdf:about="f3">
+		<name>Сергей</name>
+		<url>Sergey.jpg</url>
+	</photo>
+	<photo rdf:about="f4">
+		<name>Сергей</name>
+		<url>Sergey.jpg</url>
+	</photo>
+	<photo rdf:about="f5">
+		<name>Сергей</name>
+		<url>Sergey.jpg</url>
+	</photo>
+	<photo rdf:about="f6">
+		<name>Сергей</name>
+		<url>Sergey.jpg</url>
+	</photo>
+	<reflection rdf:about="r0">
+		<reflected rdf:resource="p0" />
+		<indoc rdf:resource="f0" />
+	</reflection>
+</rdf:RDF>
+	
