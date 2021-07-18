@@ -46,10 +46,11 @@ namespace Konstantin2
             app.UseRouting();
 
             app.UseAuthorization();
-
+        
             Infobase.engine = new RDFEngine.REngine();
-            XElement el = XElement.Load(@"C:\Users\USer\source\repos\NewDoingFactografy\Konstantin2/Family.rdf");
+            XElement el = XElement.Load(@"C:\Home\Konstantin2\Family.rdf");
             Infobase.engine.Load(el.Elements());
+            Infobase.LoadOntology(@"C:\Home\RDFEngine\SimpleOntology.owl");
 
             app.UseEndpoints(endpoints =>
             {

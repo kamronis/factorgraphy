@@ -10,7 +10,7 @@
 @if (Model.Tp == "photo")
 {
     var rurl  = ((RField)Model.Props.Where(a => a.Prop == "url").FirstOrDefault());
-    string url = "~/img/" + rurl.Value;
+    string url = "/img/" + rurl.Value;
         <img src="@url" />
     }
 
@@ -19,18 +19,18 @@
     if (rr is RField)
     {
         string value = ((RField)rr).Value;
-        <div>name @value</div>
+        <div>@rr.Prop @value</div>
     }
 
     else if (rr is RLink)
     {
         string value = ((RLink)rr).Resource;
-        <div><a href="@value">Reflected</a></div>
+        <div><a href="@value">@rr.Prop</a></div>
     }
     else if (rr is RInverse)
     {
         string value = ((RInverse)rr).Source;
-        <div><a href="@value">Indoc</a></div>
+        <div><a href="@value">@rr.Prop</a></div>
     }
 }
 

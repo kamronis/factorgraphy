@@ -25,32 +25,72 @@
 		<url>Sergey.jpg</url>
 	</photo>
 	<photo rdf:about="f1">
-		<name>Сергей</name>
-		<url>Sergey.jpg</url>
+		<name>Людмила</name>
+		<url>Liudmila.jpg</url>
 	</photo>
 	<photo rdf:about="f2">
-		<name>Сергей</name>
-		<url>Sergey.jpg</url>
+		<name>Галина</name>
+		<url>Galina.jpg</url>
 	</photo>
 	<photo rdf:about="f3">
 		<name>Сергей</name>
-		<url>Sergey.jpg</url>
+		<url>Bemol.jpg</url>
 	</photo>
 	<photo rdf:about="f4">
 		<name>Сергей</name>
-		<url>Sergey.jpg</url>
+		<url>Sergey_Bemol.jpg</url>
 	</photo>
 	<photo rdf:about="f5">
 		<name>Сергей</name>
-		<url>Sergey.jpg</url>
+		<url>Sergey_Galina.jpg</url>
 	</photo>
 	<photo rdf:about="f6">
 		<name>Сергей</name>
-		<url>Sergey.jpg</url>
+		<url>Sergey_Galina_Liudmila.jpg</url>
 	</photo>
 	<reflection rdf:about="r0">
 		<reflected rdf:resource="p0" />
 		<indoc rdf:resource="f0" />
+	</reflection>
+	<reflection rdf:about="r1">
+		<reflected rdf:resource="p0" />
+		<indoc rdf:resource="f4" />
+	</reflection>
+	<reflection rdf:about="r2">
+		<reflected rdf:resource="p0" />
+		<indoc rdf:resource="f5" />
+	</reflection>
+	<reflection rdf:about="r3">
+		<reflected rdf:resource="p0" />
+		<indoc rdf:resource="f6" />
+	</reflection>
+	<reflection rdf:about="r4">
+		<reflected rdf:resource="p3" />
+		<indoc rdf:resource="f4" />
+	</reflection>
+	<reflection rdf:about="r5">
+		<reflected rdf:resource="p3" />
+		<indoc rdf:resource="f3" />
+	</reflection>
+	<reflection rdf:about="r6">
+		<reflected rdf:resource="p1" />
+		<indoc rdf:resource="f2" />
+	</reflection>
+	<reflection rdf:about="r7">
+		<reflected rdf:resource="p1" />
+		<indoc rdf:resource="f5" />
+	</reflection>
+	<reflection rdf:about="r8">
+		<reflected rdf:resource="p1" />
+		<indoc rdf:resource="f6" />
+	</reflection>
+	<reflection rdf:about="r9">
+		<reflected rdf:resource="p2" />
+		<indoc rdf:resource="f1" />
+	</reflection>
+	<reflection rdf:about="r10">
+		<reflected rdf:resource="p2" />
+		<indoc rdf:resource="f6" />
 	</reflection>
 </rdf:RDF>
 	
