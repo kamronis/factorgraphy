@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FactographyView", "Factogra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KonstantinFactografyView", "KonstantinFactografyView\KonstantinFactografyView.csproj", "{CD6224D0-66E3-4773-B54A-D2D316822FE1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Konstantin2", "Konstantin2\Konstantin2.csproj", "{BB7DB2DB-D324-4AF8-A94C-FDAE6B3817BD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{CD6224D0-66E3-4773-B54A-D2D316822FE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD6224D0-66E3-4773-B54A-D2D316822FE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD6224D0-66E3-4773-B54A-D2D316822FE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB7DB2DB-D324-4AF8-A94C-FDAE6B3817BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB7DB2DB-D324-4AF8-A94C-FDAE6B3817BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB7DB2DB-D324-4AF8-A94C-FDAE6B3817BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB7DB2DB-D324-4AF8-A94C-FDAE6B3817BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
