@@ -25,7 +25,7 @@
   </owl:DatatypeProperty>
   <owl:ObjectProperty rdf:about="reflected">
     <rdfs:label xml:lang="ru">отражаемое</rdfs:label>
-    <rdfs:inverse-label xml:lang="ru">отраж. в документе</rdfs:inverse-label>  
+    <rdfs:inverse-label xml:lang="ru">персонаж</rdfs:inverse-label>  
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="indoc">
     <rdfs:label xml:lang="ru">в документе</rdfs:label>
