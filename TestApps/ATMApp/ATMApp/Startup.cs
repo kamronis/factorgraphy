@@ -8,9 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
-namespace Konstantin2
+namespace ATMApp
 {
     public class Startup
     {
@@ -46,11 +45,8 @@ namespace Konstantin2
             app.UseRouting();
 
             app.UseAuthorization();
-        
-            Infobase.engine = new RDFEngine.REngine();
-            XElement el = XElement.Load(@"C:\Home\Konstantin2\Family1234.xml");
-            Infobase.engine.Load(el.Elements());
-            Infobase.LoadOntology(@"C:\Home\RDFEngine\SimpleOntology.owl");
+
+            InfoATM.ATM = new ATMApp.Models.ATM();
 
             app.UseEndpoints(endpoints =>
             {

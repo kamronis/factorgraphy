@@ -8,8 +8,17 @@ namespace TesterConsole
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
+            RDFEngine.IEngine engine = new REngine(); //  new XMLEngine();
+            XElement element = XElement.Load(@"C:\Home\Konstantin2\Family1234.xml");
+            engine.Load(element.Elements());
+            engine.Build();
+        }
+        static void Main1(string[] args)
+        {
+
+
             Console.WriteLine("Start TesterConsole.");
 
             int npersons = 100;
@@ -67,6 +76,7 @@ namespace TesterConsole
             sw.Stop();
             Console.WriteLine($"n={n} duration of {nprobes} seaches for {npersons} persons: {sw.ElapsedMilliseconds} ms.");
             Console.WriteLine("====");
+
         }
     }
 }

@@ -50,6 +50,7 @@ namespace RDFEngine
             {
                 string id = pair.Key;
                 var list = pair.Value;
+                if (!rdatabase.ContainsKey(id)) continue;
                 var node = rdatabase[id];
                 node.Props = node.Props.Concat(list).ToArray();
             }

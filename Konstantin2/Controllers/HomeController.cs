@@ -27,13 +27,31 @@ namespace Konstantin2.Controllers
         public IActionResult Person(string id)
         {
             RRecord rr = Infobase.engine.GetRRecord(id);
+            if (rr == null)
+            {
+                return View("Index");
+            }
             return View("Person",rr);
         }
 
         public IActionResult Portrait(string id)
         {
             RRecord rr = Infobase.engine.GetRRecord(id);
+            if (rr == null)
+            {
+                return View("Index");
+            }
             return View("Portrait", rr);
+        }
+
+        public IActionResult Show(string id)
+        {
+            RRecord rr = Infobase.engine.GetRRecord(id);
+            if (rr == null)
+            {
+                return View("Index");
+            }
+            return View("Show", rr);
         }
 
         public IActionResult Privacy()
