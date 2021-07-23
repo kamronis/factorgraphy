@@ -78,6 +78,7 @@ namespace RDFEngine
 
         public IEnumerable<RRecord> RSearch(string searchstring)
         {
+            searchstring = searchstring.ToLower();
             return rdatabase
                 .Select(pair => pair.Value)
                 .Where(rr => 

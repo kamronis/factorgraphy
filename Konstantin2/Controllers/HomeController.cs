@@ -44,14 +44,22 @@ namespace Konstantin2.Controllers
             return View("Portrait", rr);
         }
 
-        public IActionResult Show(string id)
+        public IActionResult Show(string id, string searchstring)
         {
-            RRecord rr = Infobase.engine.GetRRecord(id);
-            if (rr == null)
+            if (searchstring == null)
             {
-                return View("Index");
+                RRecord rr = Infobase.engine.GetRRecord(id);
+                if (rr == null)
+                {
+                    return View("Index");
+                }
+                return View("Show", rr);
             }
-            return View("Show", rr);
+            else
+            {
+                IEnumerable<RRecord> rrs = Infobase.engine.RSearch(searchstring);
+                return View("Search", rrs);
+            }
         }
 
         public IActionResult Privacy()

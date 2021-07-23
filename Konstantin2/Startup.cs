@@ -48,9 +48,10 @@ namespace Konstantin2
             app.UseAuthorization();
         
             Infobase.engine = new RDFEngine.REngine();
-            XElement el = XElement.Load(@"C:\Home\Konstantin2\Family1234.xml");
+            XElement el = XElement.Load(@"C:\Home\Data\SypCassete\meta\SypCassete_current_new.rdf");
             Infobase.engine.Load(el.Elements());
             Infobase.LoadOntology(@"C:\Home\RDFEngine\SimpleOntology.owl");
+            Infobase.Init(env.ContentRootPath+"/wwwroot/");
 
             app.UseEndpoints(endpoints =>
             {

@@ -6,9 +6,19 @@
     Func<string, string> gt = Infobase.GetTerm;
     Func<string, string> git = Infobase.GetInvTerm;
 }
+
+
 <h2>Show</h2>
+
+@using (Html.BeginForm("Show", "Home", FormMethod.Post))
+{
+    <p><input type="text" name="searchstring" placeholder="Поиск" /></p>
+    <p><input type="submit" /></p>
+}
+
 <div>Тип: @gt(Model.Tp)</div>
 <div>Код: @Model.Id</div>
+
 <div>
     <table border="1">
         @foreach (var property in Model.Props)
@@ -17,7 +27,14 @@
             {
                 RField f = (RField)property;
                 string value = f.Value;
-                <tr><td>@gt(property.Prop)</td><td><b>@value</b></td></tr>
+                if (property.Prop == "uri")
+                {
+                    <tr><td>@gt(property.Prop)</td><td><b><img src="~/Doc/Index?u=@value&size=@false" /></b></td></tr>
+                }
+                else
+                {
+                    <tr><td>@gt(property.Prop)</td><td><b>@value</b></td></tr>
+                }
             }
             else if (property is RLink)
             {
@@ -53,10 +70,11 @@
                 var source = Infobase.engine.GetRRecord(src);
                 RProperty[] fildsdirects = source.Props.Where(p => p.Prop != property.Prop).ToArray();
                 <tr>
+
                     <td>@git(property.Prop)</td>
                     <td><span>@source.Tp</span></td>
                     <td>
-                        
+
                         @for (int j = 0; j < fildsdirects.Length; j++)
                         {
                             if (j > 0)
@@ -76,35 +94,37 @@
                             else if (fd is RLink)
                             {
                                 var target2 = Infobase.engine.GetRRecord(((RLink)fd).Resource);
-                                RField[] fields2 = target2.Props.Where(p => p is RField).Select(p => (RField)p).ToArray();
-                                <span> @(fd.Prop): (</span>
-                                <span>@target2.Tp</span>
-                                @for (int ii = 0; ii < fields2.Length; ii++)
+                                if (target2 != null)
                                 {
-                                    if (ii > 0)
-                                    {<span>, &nbsp;</span> }
-                                    var ff = fields2[ii];
-                                    if (ff.Prop == "name")
+                                    RField[] fields2 = target2.Props.Where(p => p is RField).Select(p => (RField)p).ToArray();
+                                    <span> @(fd.Prop): (</span>
+                                    <span>@target2.Tp</span>
+                                    @for (int ii = 0; ii < fields2.Length; ii++)
                                     {
-                                        <a href="@(((RLink)fd).Resource)">@ff.Value</a>
-                                    }
-                                    else
-                                    {
-                                        if (ff.Prop == "url")
+                                        if (ii > 0)
+                                        {<span>, &nbsp;</span> }
+                                        var ff = fields2[ii];
+                                        if (ff.Prop == "name")
                                         {
-                                            string rurl = ff.Value;
-                                            string url = "/img/" + rurl;
-                                            <img src="@url" height="100" />
+                                            <a href="@(((RLink)fd).Resource)">@ff.Value</a>
                                         }
                                         else
                                         {
-                                            <span> @(ff.Prop): </span> <span>@(ff.Value)</span>
+                                            if (ff.Prop == "uri")
+                                            {
+                                                string u = ff.Value;
+                                                <img src="~/Doc/Index/?u=@u&size=@true" height="100" />
+                                            }
+
+                                            else
+                                            {
+                                                <span> @(ff.Prop): </span> <span>@(ff.Value)</span>
+                                            }
+
                                         }
-
                                     }
+                                    <span>)</span>
                                 }
-                                <span>)</span>
-
                             }
                         }
                     </td>
