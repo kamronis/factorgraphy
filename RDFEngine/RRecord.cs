@@ -19,7 +19,9 @@ namespace RDFEngine
                 if (p is RField)      return "f^{<" + prop + ">, \"" + ((RField)p).Value + "\"}";
                 else if (p is RLink) return "l^{<" + prop + ">, <" + ((RLink)p).Resource + ">}";
                 // Добавленный вариант обратной ссылки
-                else return "i^{<" + prop + ">, <" + ((RInverse)p).Source + ">}";
+                else if (p is RInverseLink) return "il^{<" + prop + ">, <" + ((RInverseLink)p).Source + ">}";
+                else if (p is RDirect) return "d^{<" + prop + ">, <" + ((RDirect)p).DRec.ToString() + ">}";
+                /*else if (p is RDirect)*/ return "i^{<" + prop + ">, <" + ((RInverse)p).IRec.ToString() + ">}";
             }).Aggregate((a, s) => a + ", " + s);
             return "{ <" + Id + ">, <" + Tp + ">, " +         query                + "}";
         }
@@ -38,8 +40,18 @@ namespace RDFEngine
     }
 
     // Расширение вводится на странице 11 пособия "Делаем фактографию"
-    public class RInverse : RProperty
+    public class RInverseLink : RProperty
     {
         public string Source { get; set; }
+    }
+
+    // Новое расширение
+    public class RDirect : RProperty
+    {
+        public RRecord DRec { get; set; }
+    }
+    public class RInverse : RProperty
+    {
+        public RRecord IRec { get; set; }
     }
 }
