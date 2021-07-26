@@ -11,6 +11,7 @@ namespace Konstantin2
     {
         public static RDFEngine.REngine engine=null;
         public static XElement config;
+        public static IDictionary<string,string> cassettes_dict;
 
         private static XElement ontology = null;
         private static IDictionary<string, string> labels_ru;
@@ -19,6 +20,7 @@ namespace Konstantin2
         public static void Init(string path)
         {
             config = XElement.Load(path + "Config.xml");
+            cassettes_dict= config.Elements().Select(a => a.Value).ToDictionary(a => a.Remove(0, 13));
         }
         public static void LoadOntology(string path)
         {

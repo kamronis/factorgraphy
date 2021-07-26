@@ -49,7 +49,9 @@ namespace Konstantin2
         
             Infobase.engine = new RDFEngine.REngine();
             XElement el = XElement.Load(@"C:\Home\Data\SypCassete\meta\SypCassete_current_new.rdf");
-            Infobase.engine.Load(el.Elements());
+            XElement el2 = XElement.Load(@"C:\Home\Data\SypCasseteFamily\meta\SypCassete_current_Family.rdf");
+            IEnumerable<XElement> result = el.Elements().Select(a => a).Concat(el2.Elements());
+            Infobase.engine.Load(result);
             Infobase.LoadOntology(@"C:\Home\RDFEngine\SimpleOntology.owl");
             Infobase.Init(env.ContentRootPath+"/wwwroot/");
 
