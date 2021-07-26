@@ -5,6 +5,7 @@
 }
 
 @{
+    if (Model == null) return;
     Func<string, string> gt = Infobase.GetTerm;
     Func<string, string> git = Infobase.GetInvTerm;
 }
@@ -14,11 +15,11 @@
 <div>Id @Model.Id</div>
 <div>Tp @gt(Model.Tp)</div>
 
-@if (gt(Model.Tp) == "Фотография")
+@if (Model.Tp == "photo")
 {
     var rurl = ((RField)Model.Props.Where(a => a.Prop == "url").FirstOrDefault());
     string url = "/img/" + rurl.Value;
-    <img src="@url" width="350" height="250" />
+    <img src="@url" width="350" />
     @foreach (RProperty property in Model.Props)
     {
         if (property is RField)

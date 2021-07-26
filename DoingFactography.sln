@@ -9,13 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Resources", "Resources\Reso
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDFEngine", "RDFEngine\RDFEngine.csproj", "{BA3CA959-A946-4B76-AB47-3429F305DB1E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TesterConsole", "TesterConsole\TesterConsole.csproj", "{0D57F738-F92D-49E8-B8D4-A4193742DBBA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FactographyView", "FactographyView\FactographyView.csproj", "{8A030740-F622-4998-A48E-ABE5F74A8407}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KonstantinFactografyView", "KonstantinFactografyView\KonstantinFactografyView.csproj", "{CD6224D0-66E3-4773-B54A-D2D316822FE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Konstantin2", "Konstantin2\Konstantin2.csproj", "{BB7DB2DB-D324-4AF8-A94C-FDAE6B3817BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Konstantin2", "Konstantin2\Konstantin2.csproj", "{BB7DB2DB-D324-4AF8-A94C-FDAE6B3817BD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KonstantinConsole", "..\Users\shish\source\repos\DoingFactography\KonstantinConsole\KonstantinConsole.csproj", "{D03CA519-CFC7-4D2B-82A7-31729D0734FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TesterConsole", "..\Users\shish\source\repos\DoingFactography\TesterConsole\TesterConsole.csproj", "{A91D4BC6-E5A2-45C6-987E-981C83B48F75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +37,6 @@ Global
 		{BA3CA959-A946-4B76-AB47-3429F305DB1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA3CA959-A946-4B76-AB47-3429F305DB1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA3CA959-A946-4B76-AB47-3429F305DB1E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0D57F738-F92D-49E8-B8D4-A4193742DBBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0D57F738-F92D-49E8-B8D4-A4193742DBBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0D57F738-F92D-49E8-B8D4-A4193742DBBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0D57F738-F92D-49E8-B8D4-A4193742DBBA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8A030740-F622-4998-A48E-ABE5F74A8407}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8A030740-F622-4998-A48E-ABE5F74A8407}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A030740-F622-4998-A48E-ABE5F74A8407}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +49,14 @@ Global
 		{BB7DB2DB-D324-4AF8-A94C-FDAE6B3817BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB7DB2DB-D324-4AF8-A94C-FDAE6B3817BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB7DB2DB-D324-4AF8-A94C-FDAE6B3817BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D03CA519-CFC7-4D2B-82A7-31729D0734FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D03CA519-CFC7-4D2B-82A7-31729D0734FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D03CA519-CFC7-4D2B-82A7-31729D0734FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D03CA519-CFC7-4D2B-82A7-31729D0734FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A91D4BC6-E5A2-45C6-987E-981C83B48F75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A91D4BC6-E5A2-45C6-987E-981C83B48F75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A91D4BC6-E5A2-45C6-987E-981C83B48F75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A91D4BC6-E5A2-45C6-987E-981C83B48F75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

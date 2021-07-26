@@ -10,11 +10,16 @@ namespace Konstantin2
     public class Infobase
     {
         public static RDFEngine.REngine engine=null;
+        public static XElement config;
 
         private static XElement ontology = null;
         private static IDictionary<string, string> labels_ru;
         private static IDictionary<string, string> inverse_labels_ru;
 
+        public static void Init(string path)
+        {
+            config = XElement.Load(path + "Config.xml");
+        }
         public static void LoadOntology(string path)
         {
             ontology = XElement.Load(path);

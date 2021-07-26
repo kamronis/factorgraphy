@@ -33,19 +33,19 @@
 		<url>Galina.jpg</url>
 	</photo>
 	<photo rdf:about="f3">
-		<name>Сергей</name>
+		<name>Бемоль</name>
 		<url>Bemol.jpg</url>
 	</photo>
 	<photo rdf:about="f4">
-		<name>Сергей</name>
+		<name>Сергей и Бемоль</name>
 		<url>Sergey_Bemol.jpg</url>
 	</photo>
 	<photo rdf:about="f5">
-		<name>Сергей</name>
+		<name>Сергей и Галина</name>
 		<url>Sergey_Galina.jpg</url>
 	</photo>
 	<photo rdf:about="f6">
-		<name>Сергей</name>
+		<name>Сергей, Галина и Людмила </name>
 		<url>Sergey_Galina_Liudmila.jpg</url>
 	</photo>
 	<reflection rdf:about="r0">

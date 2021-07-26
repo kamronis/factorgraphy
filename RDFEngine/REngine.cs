@@ -50,6 +50,7 @@ namespace RDFEngine
             {
                 string id = pair.Key;
                 var list = pair.Value;
+                if (!rdatabase.ContainsKey(id)) continue;
                 var node = rdatabase[id];
                 node.Props = node.Props.Concat(list).ToArray();
             }
@@ -77,6 +78,7 @@ namespace RDFEngine
 
         public IEnumerable<RRecord> RSearch(string searchstring)
         {
+            searchstring = searchstring.ToLower();
             return rdatabase
                 .Select(pair => pair.Value)
                 .Where(rr => 
