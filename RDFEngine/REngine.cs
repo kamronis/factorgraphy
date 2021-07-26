@@ -13,10 +13,10 @@ namespace RDFEngine
         public void Load(IEnumerable<XElement> records)
         {
             // ДОБАВЛЕНИЕ обратных ссылок
-            Dictionary<string, List<RInverse>> inverseDic = new Dictionary<string, List<RInverse>>();
-            Action<string, RInverse> AddInverse = (id, ilink) =>
+            Dictionary<string, List<RInverseLink>> inverseDic = new Dictionary<string, List<RInverseLink>>();
+            Action<string, RInverseLink> AddInverse = (id, ilink) =>
             {
-                if (!inverseDic.ContainsKey(id)) inverseDic.Add(id, new List<RInverse>());
+                if (!inverseDic.ContainsKey(id)) inverseDic.Add(id, new List<RInverseLink>());
                 inverseDic[id].Add(ilink);
             };
 
@@ -38,7 +38,7 @@ namespace RDFEngine
                         else
                         {  // ссылка
                             // Создадим RInverse и добавим в inverseDic 
-                            AddInverse(resource.Value, new RInverse() { Prop = prop, Source = nodeId }); // ДОБАВЛЕНИЕ
+                            AddInverse(resource.Value, new RInverseLink() { Prop = prop, Source = nodeId }); // ДОБАВЛЕНИЕ
                             return new RLink() { Prop = prop, Resource = resource.Value };
                         }
                     }).ToArray()
