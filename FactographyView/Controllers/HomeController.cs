@@ -33,6 +33,11 @@ namespace FactographyView.Controllers
             var model = Infobase.engine.GetRRecord(id);
             return View("Portrait", model);
         }
+        public IActionResult ShowTree(string id)
+        {
+            var model = Infobase.engine.GetRTree(id, 2, null);
+            return View("ShowTree", model);
+        }
 
 
 

@@ -48,7 +48,7 @@
             }
             else if (property is RInverse)
             {
-                RInverse i = (RInverse)property;
+                var i = (RInverseLink)property;
                 string src = i.Source;
                 var source = Infobase.engine.GetRRecord(src);
                 RProperty[] fildsdirects = source.Props.Where(p => p.Prop != property.Prop).ToArray();
