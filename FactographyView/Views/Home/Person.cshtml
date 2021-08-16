@@ -22,9 +22,9 @@
                 string resource = l.Resource;
                 <tr><td>@property.Prop</td><td><a href='/Home/Person/@(resource)'>прямая ссылка</a></td></tr>
             }
-            else if (property is RInverse)
+            else if (property is RInverseLink)
             {
-                RInverse i = (RInverse)property;
+                var i = (RInverseLink)property;
                 string source = i.Source;
                 <tr><td>@property.Prop</td><td><a href='/Home/Person/@source'>обратная ссылка</a></td></tr>
             }

@@ -138,5 +138,10 @@ namespace RDFEngine
         {
             throw new NotImplementedException();
         }
+
+        public RRecord GetRTree(string id, int level, string forbidden)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

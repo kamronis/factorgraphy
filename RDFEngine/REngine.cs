@@ -86,5 +86,37 @@ namespace RDFEngine
                     return rr.Props.Any(p => p is RField && ((RField)p).Prop == "name" && ((RField)p).Value.ToLower().StartsWith(searchstring)); 
                 });
         }
+
+        /// <summary>
+        /// Создает запись в виде дерева, состоящее из полей (level=0+), RDirect (level=1+), RInverse (level=2+).
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="level"></param>
+        /// <param name="forbidden"></param>
+        /// <returns></returns>
+        public RRecord GetRTree(string id, int level, string forbidden)
+        {
+            RRecord node = GetRRecord(id);
+            if (node == null) return null;
+            RRecord result = new RRecord() { Id = node.Id, Tp = node.Tp, Props = node.Props.Select(p => 
+            {
+                if (p is RField) { return p; }
+                else if (p is RLink) 
+                {
+                    if (level < 1 || p.Prop == forbidden) return null;
+                    RRecord nd = GetRTree(((RLink)p).Resource, level - 1, null);
+                    if (nd == null) return null;
+                    return new RDirect() { Prop = p.Prop, DRec = nd };
+                }
+                else if (p is RInverseLink) 
+                {
+                    if (level < 2) return null;
+                    RRecord nd = GetRTree(((RInverseLink)p).Source, level - 1, p.Prop);
+                    return new RInverse() { Prop = p.Prop, IRec = nd };
+                }
+                return null;
+            }).Where(r => r != null).ToArray() };
+            return result;
+        }
     }
 }

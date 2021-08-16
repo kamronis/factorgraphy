@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Konstantin2", "Konstantin2\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KonstantinConsole", "..\Users\shish\source\repos\DoingFactography\KonstantinConsole\KonstantinConsole.csproj", "{D03CA519-CFC7-4D2B-82A7-31729D0734FF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TesterConsole", "..\Users\shish\source\repos\DoingFactography\TesterConsole\TesterConsole.csproj", "{A91D4BC6-E5A2-45C6-987E-981C83B48F75}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTester", "ConsoleTester\ConsoleTester.csproj", "{36674049-4510-4BF5-B23C-869BA7E9BB94}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewPortraitConsoleKonstantin", "ViewPortraitConsoleKonstantin\ViewPortraitConsoleKonstantin.csproj", "{1E99FB99-8F16-4ECD-8D34-1C62238533A9}"
 EndProject

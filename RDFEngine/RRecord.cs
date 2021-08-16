@@ -20,10 +20,10 @@ namespace RDFEngine
                 else if (p is RLink) return "l^{<" + prop + ">, <" + ((RLink)p).Resource + ">}";
                 // Добавленный вариант обратной ссылки
                 else if (p is RInverseLink) return "il^{<" + prop + ">, <" + ((RInverseLink)p).Source + ">}";
-                else if (p is RDirect) return "d^{<" + prop + ">, <" + ((RDirect)p).DRec.ToString() + ">}";
-                /*else if (p is RDirect)*/ return "i^{<" + prop + ">, <" + ((RInverse)p).IRec.ToString() + ">}";
+                else if (p is RDirect) return "d^{<" + prop + ">, " + ((RDirect)p).DRec.ToString() + "}";
+                /*else if (p is RDirect)*/ return "i^{<" + prop + ">, " + ((RInverse)p).IRec.ToString() + "}";
             }).Aggregate((a, s) => a + ", " + s);
-            return "{ <" + Id + ">, <" + Tp + ">, " +         query                + "}";
+            return "{ <" + Id + ">, <" + Tp + ">, " + "[" +       query      + "]}";
         }
     }
     public abstract class RProperty
