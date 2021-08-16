@@ -27,9 +27,9 @@
         string value = ((RLink)rr).Resource;
         <div><a href="@value">@rr.Prop</a></div>
     }
-    else if (rr is RInverse)
+    else if (rr is RInverseLink)
     {
-        string value = ((RInverse)rr).Source;
+        string value = ((RInverseLink)rr).Source;
         <div><a href="@value">@rr.Prop</a></div>
     }
 }

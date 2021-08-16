@@ -569,7 +569,7 @@
 		<from-date>1961</from-date>
 	</person>
 	<family rdf:about="famwf1234_1140">
-		<husband rdf:resource="famwf1234_1139" />
+		<husband rdf:resource="famwf1234_1139" />f
 		<wife rdf:resource="famwf1234_1141" />
 	</family>
 	<person rdf:about="famwf1234_1141">

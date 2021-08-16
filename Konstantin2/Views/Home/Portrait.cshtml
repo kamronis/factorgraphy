@@ -42,9 +42,9 @@
             string age = field_age.Value;
             <div><a href="@value.Resource">Отраженная персона @value.Resource (@name, @age) </a></div>
         }
-        if (property is RInverse)
+        if (property is RInverseLink)
         {
-            RInverse link = (RInverse)property;
+            RInverseLink link = (RInverseLink)property;
             string sourse = link.Source;
             RRecord rr = Infobase.engine.GetRRecord(sourse);
 
@@ -78,9 +78,9 @@ else // persona
             var value = ((RLink)(rr.Props[1])); //indoc
             <div><a href="@value.Resource">Отражен в @value.Resource </a></div>
         }
-        if (property is RInverse)
+        if (property is RInverseLink)
         {
-            RInverse link = (RInverse)property;
+            RInverseLink link = (RInverseLink)property;
             string sourse = link.Source;
             RRecord rr = Infobase.engine.GetRRecord(sourse);
 

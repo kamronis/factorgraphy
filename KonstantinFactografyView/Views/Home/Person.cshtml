@@ -41,9 +41,9 @@
         string value = ((RLink)pr).Resource;
         <div>@prop <a href="/Home/Person/@value">Ссылка</a></div>
     }
-    else if (pr is RInverse)
+    else if (pr is RInverseLink)
     {
-        string value = ((RInverse)pr).Source;
+        string value = ((RInverseLink)pr).Source;
         <div>@prop <a href="/Home/Person/@value">Обратная ссылка</a></div>
     }
 
