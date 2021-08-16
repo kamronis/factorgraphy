@@ -4,9 +4,7 @@
 @{
     var m = Model;
     Func<RDFEngine.RRecord, XElement> MkS = null;
-    MkS = rec =>
-    {
-        return new XElement("table", new XAttribute("border", "0"),
+    MkS = rec =>  new XElement("table", new XAttribute("border", "0"),
             new XElement("tr",
                 new XElement("td", new XAttribute("colspan", 3),
                     new XElement("span", rec.Tp + " ", new XElement("a", new XAttribute("href", "?id=" + rec.Id), "@")))),
@@ -36,10 +34,11 @@
                 return null;
             }),
             null);
-    };
+    
  }
-@{
+
     <div>
         @Html.Raw(MkS(m).ToString())
     </div>
-}
+
+
