@@ -63,9 +63,9 @@
                     </td>
                 </tr>
             }
-            else if (property is RInverse)
+            else if (property is RInverseLink)
             {
-                RInverse i = (RInverse)property;
+                RInverseLink i = (RInverseLink)property;
                 string src = i.Source;
                 var source = Infobase.engine.GetRRecord(src);
                 RProperty[] fildsdirects = source.Props.Where(p => p.Prop != property.Prop).ToArray();
