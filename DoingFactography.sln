@@ -17,13 +17,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Konstantin2", "Konstantin2\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KonstantinConsole", "..\Users\shish\source\repos\DoingFactography\KonstantinConsole\KonstantinConsole.csproj", "{D03CA519-CFC7-4D2B-82A7-31729D0734FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleTester", "ConsoleTester\ConsoleTester.csproj", "{36674049-4510-4BF5-B23C-869BA7E9BB94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTester", "ConsoleTester\ConsoleTester.csproj", "{36674049-4510-4BF5-B23C-869BA7E9BB94}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewPortraitConsoleKonstantin", "ViewPortraitConsoleKonstantin\ViewPortraitConsoleKonstantin.csproj", "{1E99FB99-8F16-4ECD-8D34-1C62238533A9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KonstantinSimpleWebApp", "KonstantinSimpleWebApp\KonstantinSimpleWebApp.csproj", "{9F61377E-49A3-4FCD-8B7B-3330C786648B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Konstantin3", "Konstantin3\Konstantin3.csproj", "{75CF784F-7D62-43A5-B995-2A6D028FEDA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Konstantin3", "Konstantin3\Konstantin3.csproj", "{75CF784F-7D62-43A5-B995-2A6D028FEDA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,10 +59,10 @@ Global
 		{D03CA519-CFC7-4D2B-82A7-31729D0734FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D03CA519-CFC7-4D2B-82A7-31729D0734FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D03CA519-CFC7-4D2B-82A7-31729D0734FF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A91D4BC6-E5A2-45C6-987E-981C83B48F75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A91D4BC6-E5A2-45C6-987E-981C83B48F75}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A91D4BC6-E5A2-45C6-987E-981C83B48F75}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A91D4BC6-E5A2-45C6-987E-981C83B48F75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36674049-4510-4BF5-B23C-869BA7E9BB94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36674049-4510-4BF5-B23C-869BA7E9BB94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36674049-4510-4BF5-B23C-869BA7E9BB94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36674049-4510-4BF5-B23C-869BA7E9BB94}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1E99FB99-8F16-4ECD-8D34-1C62238533A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1E99FB99-8F16-4ECD-8D34-1C62238533A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E99FB99-8F16-4ECD-8D34-1C62238533A9}.Release|Any CPU.ActiveCfg = Release|Any CPU

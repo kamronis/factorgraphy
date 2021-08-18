@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using RDFEngine;
 
 namespace FactographyView.Controllers
 {
@@ -85,6 +86,68 @@ namespace FactographyView.Controllers
             var model = BuildPortrait(id, 2, null);
             return View("Portrait2", model);
         }
+
+        /// <summary>
+        /// Класс состоит из элементов и структур, требуемых для отрисовки портрета
+        /// Логическая структура отрисовки: тип, идентификатор, name, uri
+        /// Потом - массив полей и прямых свойств
+        /// Потом - массив групп обратных свойств. Каждая группа определяется именем предиката ОС и типом записи ОС
+        /// </summary>
+        public class PModel
+        {
+            public string Id, Tp, name, uri;
+            public RProperty[] row;
+            public RInverse[] inv;
+        }
+        private PModel MkPModel(RRecord erec)
+        {
+            PModel pm = new PModel() { Id = erec.Id, Tp = erec.Tp };
+            List<RDFEngine.RProperty> rowlist = new List<RDFEngine.RProperty>();
+            List<RInverse> inverselist = new List<RInverse>();
+            foreach (var p in erec.Props)
+            {
+                if (p is RField)
+                {
+                    RField f = (RField)p;
+                    if (f.Prop == "name") pm.name = f.Value;
+                    else if (f.Prop == "uri") pm.uri = f.Value;
+                    else
+                    {
+                        rowlist.Add(new RField() { Prop = f.Prop, Value = f.Value });
+                    }
+                }
+                else if (p is RDirect)
+                {
+                    RDirect d = (RDirect)p;
+                    rowlist.Add(new RDirect() { Prop = d.Prop, DRec = d.DRec });
+                }
+                else if (p is RInverse)
+                {
+                    RInverse ri = (RInverse)p;
+                    rowlist.Add(new RInverse() { Prop = ri.Prop, IRec = ri.IRec });
+                }
+            }
+            pm.row = rowlist.ToArray();
+            pm.inv = inverselist.ToArray();
+            return pm;
+        }
+
+
+        public IActionResult Portrait3(string id)
+        {
+            //var rec = Infobase.engine.GetRRecord(id);
+            //string tp = rec.Tp;
+            // Сформируем портрет второго уровня
+            var rec = BuildPortrait(id, 2, null);
+
+            PModel model = new PModel() { Id = rec.Id, Tp = rec.Tp };
+            
+            return View("Portrait3", model);
+        }
+
+
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
