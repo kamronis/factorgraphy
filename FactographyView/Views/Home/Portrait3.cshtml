@@ -1,10 +1,27 @@
-﻿@using RDFEngine
-@model RRecord
+﻿@using System.Xml.Linq
+@using RDFEngine
+@model P3Model
 
 @{
     var m = Model;
+    XElement xlook = new XElement("xrec",
+        new XAttribute("id", m.Id),
+        new XAttribute("tp", m.Tp),
+        new XAttribute("name", m.name??""),
+        new XAttribute("uri", m.uri??""),
+        new XElement("row", m.row.Select(el =>
+            new XElement(el is RField ? "f" : "d", new XAttribute("prop", el.Prop)))),
+        new XElement("inv", m.inv.Select(iel =>
+            new XElement("i", new XAttribute("prop", iel.Prop),
+            iel.lists.Select(li => new XElement("list", new XAttribute("tp", li.Tp),
+                li.list.Select(l => new XElement("li", ((RInverse)l).IRec.Id)))),
+            null))),
+        null);
+    Func<P3Model, XElement> ShowP3Record = (P3Model p3m) =>
+    {
 
+    }
 }
 
-<h1>@m.Tp</h1>
-
+<h1>@m.Id</h1>
+<pre>@xlook.ToString()</pre>
