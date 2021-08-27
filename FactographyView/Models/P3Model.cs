@@ -26,23 +26,23 @@ namespace FactographyView.Models
     /// </summary>
     public class P3Model
     {
-        public string Id, Tp, name, uri;
+        public string Id, Tp;
         public RProperty[] row;
         public InverseProps[] inv;
         public P3Model(RRecord erec)
         {
             this.Id = erec.Id;
             this.Tp = erec.Tp;
-            List<RDFEngine.RProperty> rowlist = new List<RDFEngine.RProperty>();
+            List<RProperty> rowlist = new List<RProperty>();
             List<RInverse> inverselist = new List<RInverse>();
             foreach (var p in erec.Props)
             {
                 if (p is RField)
                 {
                     RField f = (RField)p;
-                    if (f.Prop == "name") name = f.Value;
-                    else if (f.Prop == "uri") uri = f.Value;
-                    else
+                    //if (f.Prop == "name") name = f.Value;
+                    //else if (f.Prop == "uri") uri = f.Value;
+                    //else
                     {
                         rowlist.Add(new RField() { Prop = f.Prop, Value = f.Value });
                     }
