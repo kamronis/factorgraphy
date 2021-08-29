@@ -81,11 +81,19 @@ namespace FactographyView.Controllers
             };
             return result_rec;
         }
+
+        RRecord erecord = new RRecord()
+        {
+            Id = "o19302",
+            Tp = "org-sys",
+            Props = new RProperty[3]
+        };
         public IActionResult Portrait2(string id)
         {
             var model = BuildPortrait(id, 2, null);
             return View("Portrait2", model);
         }
+
 
         /// <summary>
         /// Класс состоит из элементов и структур, требуемых для отрисовки портрета
