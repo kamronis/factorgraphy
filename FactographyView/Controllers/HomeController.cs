@@ -148,7 +148,7 @@ namespace FactographyView.Controllers
             // Сформируем портрет второго уровня
             var rec = BuildPortrait(id, 2, null);
 
-            PModel model = new PModel() { Id = rec.Id, Tp = rec.Tp };
+            P3Model model = new P3Model(rec);
             
             return View("Portrait3", model);
         }

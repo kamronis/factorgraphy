@@ -24,9 +24,40 @@ namespace Konstantin3.Controllers
             return View();
         }
 
-        public IActionResult Portrait(string id)
+        private static RRecord BuildRRecord(string id, int level, string forbidden)
         {
             RRecord rec = Infobase.engine.GetRRecord(id);
+            if (rec == null)
+            {
+                return null;
+            }
+            return new RRecord()
+            {
+                Id = rec.Id,
+                Tp = rec.Tp,
+                Props = rec.Props.Select<RProperty, RProperty>(p =>
+                {
+                    if (p is RField)
+                    {
+                        return new RField() { Prop = p.Prop, Value = ((RField)p).Value };
+                    }
+                    else if (p is RLink && level>0 && p.Prop!=forbidden)
+                    {
+                        return new RDirect() { Prop = p.Prop, DRec = BuildRRecord(((RLink)p).Resource,0, null) };
+                    }
+                    else if (p is RInverseLink && level>1)
+                    {
+                        return new RInverse() { Prop = p.Prop, IRec = BuildRRecord(((RInverseLink)p).Source,1, p.Prop) };
+                    }
+                    return null;
+                }
+                ).Where(p=>p!=null).ToArray()                                                                                                                                  
+            };
+        }
+
+        public IActionResult Portrait(string id)
+        {
+            RRecord rec = BuildRRecord(id,2, null);
             if (rec != null)
             {
                 return View("Portrait", rec);
