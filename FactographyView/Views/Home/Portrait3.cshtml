@@ -4,17 +4,7 @@
 
 @{
     var m = Model;
-    XElement xlook = new XElement("xrec",
-        new XAttribute("id", m.Id),
-        new XAttribute("tp", m.Tp),
-        new XElement("row", m.row.Select(el =>
-            new XElement(el is RField ? "f" : "d", new XAttribute("prop", el.Prop)))),
-        new XElement("inv", m.inv.Select(iel =>
-            new XElement("i", new XAttribute("prop", iel.Prop),
-            iel.lists.Select(li => new XElement("list", new XAttribute("tp", li.Tp),
-                li.list.Select(l => new XElement("li", ((RInverse)l).IRec.Id)))),
-            null))),
-        null);
+
     Func<RRecord, string> GetName = (RRecord rec) =>
     {
         return ((RField)rec.Props.FirstOrDefault(p => p is RField && p.Prop == "name"))?.Value;
@@ -22,11 +12,11 @@
 }
 
 <table border="1">
-    <tr><td colspan="@m.row.Length">@m.Tp</td></tr>
+    <tr><td colspan="@m.row.Length" class="cl">@m.Tp</td></tr>
     <tr>
         @foreach (var c in m.row)
         {
-            <td>@c.Prop</td>
+            <th>@c.Prop</th>
         }
     </tr>
     <tr>
@@ -51,30 +41,35 @@
     foreach (var it in ip.lists)
     {
         var itype = it.Tp;
-        <table border="1">
-            <tr><td colspan="@((RInverse)(it.list[0])).IRec.Props.Length)">@iprop @itype</td></tr>
-            @foreach (RInverse li in it.list)
-            {
-                <tr>
-                    @foreach (var p in li.IRec.Props)
+<table border="1">
+    <tr><td colspan="@(((RInverse)(it.list[0])).IRec.Props.Length)"><span class="pr">@iprop</span> <span class="cl">@itype</span></td></tr>
+    <tr>
+        @foreach (var p in ((RInverse)it.list[0]).IRec.Props)
+        {
+            <th>@p.Prop</th>
+        }
+    </tr>
+        @foreach (RInverse li in it.list)
+        {
+            <tr>
+                @foreach (var p in li.IRec.Props)
+                {
+                    if (p is RField)
                     {
-                        if (p is RField)
-                        {
-                            var f = (RField)p;
-                            <td>@f.Value</td>
-                        }
-                        else if (p is RDirect)
-                        {
-                            var d = (RDirect)p;
-                            <td>
-                                <a href="">@(GetName(d.DRec))</a>
-                            </td>
-                        }
+                        var f = (RField)p;
+                        <td>@f.Value</td>
                     }
-                </tr>
-            }
-        </table>
+                    else if (p is RDirect)
+                    {
+                        var d = (RDirect)p;
+                        <td>
+                            <a href=""><span class="lnk">@(GetName(d.DRec))</span></a>
+                        </td>
+                    }
+                }
+            </tr>
+        }
+    </table>
     }
 }
 
-<pre>@xlook.ToString()</pre>

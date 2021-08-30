@@ -47,7 +47,42 @@ namespace FactographyView
             app.UseAuthorization();
 
             Infobase.engine = new RDFEngine.REngine();
+
+            // ============= Загрузка базы данных из фототеки
             Infobase.engine.Load(RDFEngine.PhototekaGenerator.Generate(100));
+
+            // ============= Загрузка базы данных из текста модели
+            if (true)
+            {
+                Infobase.engine.Clear();
+                string graphModelText = @"<?xml version='1.0' encoding='utf-8'?>
+<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+  <person rdf:about='p3817'>
+    <name xml:lang='ru'>Иванов</name>
+    <birth>1988</birth>
+  </person>
+  <person rdf:about='p3818'>
+    <name xml:lang='ru'>Петров</name>
+    <birth>1999</birth>
+  </person>
+  <org-sys rdf:about='o19302'>
+    <name>НГУ</name>
+  </org-sys>
+  <participation rdf:about='r1111'>
+    <participant rdf:resource='p3817' />
+    <in-org rdf:resource='o19302' />
+    <role>профессор</role>
+  </participation>
+  <participation rdf:about='r1112'>
+    <participant rdf:resource='p3818' />
+    <in-org rdf:resource='o19302' />
+    <role>ассистент</role>
+  </participation>
+</rdf:RDF>";
+                System.Xml.Linq.XElement graphModelXml = System.Xml.Linq.XElement.Parse(graphModelText);
+                Infobase.engine.Load(graphModelXml.Elements());
+            }
+
             Infobase.engine.Build();
             Infobase.LoadOntology("../RDFEngine/SimpleOntology.owl");
 

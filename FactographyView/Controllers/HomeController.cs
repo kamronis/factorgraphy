@@ -91,6 +91,7 @@ namespace FactographyView.Controllers
         public IActionResult Portrait2(string id)
         {
             var model = BuildPortrait(id, 2, null);
+            if (model == null) return View("Index");
             return View("Portrait2", model);
         }
 
