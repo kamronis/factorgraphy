@@ -7,7 +7,7 @@
     MkS = rec => new XElement("table", new XAttribute("border", "0"),
             new XElement("tr",
                 new XElement("td", new XAttribute("colspan", 3),
-                    new XElement("span", rec.Tp + " ", new XElement("a", new XAttribute("href", "?id=" + rec.Id), "@")))),
+                    new XElement("span", rec.Tp + " ", new XElement("a", new XAttribute("href", "/Home/Portrait/" + rec.Id), "@")))),
             rec.Props.Select(p =>
             {
                 if (p is RField)
