@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using RDFEngine;
 
 namespace FactographyView
 {
@@ -36,5 +37,15 @@ namespace FactographyView
             if (!inverse_labels_ru.ContainsKey(id)) return id;
             return inverse_labels_ru[id];
         }
+
+        // ROntology
+        RRecord[] rontology = new RRecord[] 
+        { 
+            new RRecord 
+            { 
+                //Tp = "person",
+                //Label= "Персона"
+            }
+        };
     }
 }
