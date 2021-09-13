@@ -6,7 +6,13 @@
 
   <owl:Class rdf:about="person">
     <rdfs:label xml:lang="ru">Персона</rdfs:label>
+    <dlink rdf:resource="father"/>
+    <direct prop="father" rdf:resource="person"/>
   </owl:Class>
+  <owl:ObjectProperty rdf:about="father">
+    <rdfs:label xml:lang="ru">отец</rdfs:label>
+    
+  </owl:ObjectProperty>
   <owl:Class rdf:about="photo">
     <rdfs:label xml:lang="ru">Фотография</rdfs:label>
   </owl:Class>
@@ -16,6 +22,7 @@
 
   <owl:DatatypeProperty rdf:about="name">
     <rdfs:label xml:lang="ru">имя</rdfs:label>
+    <rdfs:domain rdf:resource="person"/>
   </owl:DatatypeProperty>
   <owl:DatatypeProperty rdf:about="age">
     <rdfs:label xml:lang="ru">возраст</rdfs:label>
@@ -25,7 +32,9 @@
   </owl:DatatypeProperty>
   <owl:ObjectProperty rdf:about="reflected">
     <rdfs:label xml:lang="ru">отражаемое</rdfs:label>
-    <rdfs:inverse-label xml:lang="ru">отраж. в документе</rdfs:inverse-label>  
+    <rdfs:inverse-label xml:lang="ru">отраж. в документе</rdfs:inverse-label>
+    <rdfs:domain rdf:resource="reflection"/>
+    <rdfs:range rdf:resource="SysObject"/>
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="indoc">
     <rdfs:label xml:lang="ru">в документе</rdfs:label>

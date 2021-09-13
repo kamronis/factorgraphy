@@ -11,6 +11,7 @@ namespace RDFEngine
         public string Id { get; set; }
         public string Tp { get; set; }
         public RProperty[] Props { get; set; }
+        //public string Label { get; set; } // поле понадобится для хранения метки
         public override string ToString()
         {
             var query = Props.Select(p =>

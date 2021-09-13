@@ -10,12 +10,12 @@ namespace FactographyView
     public class Infobase
     {
         public static RDFEngine.IEngine engine = null;
-        private static XElement ontology = null;
+        
         private static Dictionary<string, string> labels_ru;
         private static Dictionary<string, string> inverse_labels_ru;
         public static void LoadOntology(string path)
         {
-            ontology = XElement.Load(path);
+            XElement ontology = XElement.Load(path);
             labels_ru = ontology.Elements()
                 .SelectMany(el => el.Elements("{http://www.w3.org/2000/01/rdf-schema#}label"))
                 .Where(lab => lab.Attribute("{http://www.w3.org/XML/1998/namespace}lang")?.Value == "ru")
@@ -26,6 +26,16 @@ namespace FactographyView
                 .Where(lab => lab.Attribute("{http://www.w3.org/XML/1998/namespace}lang")?.Value == "ru")
                 .ToDictionary(lab => lab.Parent.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value,
                     lab => lab.Value);
+            
+            // Альтернативно
+
+            ront = new ROntology(null);
+            labels_ru = ront.rontology
+                .Select(d => new { d.Id, ((RField)(d.Props.FirstOrDefault(p => p.Prop == "Label")))?.Value })
+                .ToDictionary(pa => pa.Id, pa => pa.Value);
+            inverse_labels_ru = ront.rontology
+                .Select(d => new { d.Id, ((RField)(d.Props.FirstOrDefault(p => p.Prop == "InvLabel")))?.Value })
+                .ToDictionary(pa => pa.Id, pa => pa.Value);
         }
         public static string GetTerm(string id)
         {
@@ -38,14 +48,7 @@ namespace FactographyView
             return inverse_labels_ru[id];
         }
 
-        // ROntology
-        RRecord[] rontology = new RRecord[] 
-        { 
-            new RRecord 
-            { 
-                //Tp = "person",
-                //Label= "Персона"
-            }
-        };
-    }
+        // ROntology - объектная онтология
+        public static ROntology ront = null;
+    } 
 }

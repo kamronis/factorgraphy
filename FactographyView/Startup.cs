@@ -59,13 +59,14 @@ namespace FactographyView
 <rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
   <person rdf:about='p3817'>
     <name xml:lang='ru'>Иванов</name>
-    <birth>1988</birth>
+    <from-date>1988</from-date>
   </person>
   <person rdf:about='p3818'>
+    <from-date>1999</from-date>
     <name xml:lang='ru'>Петров</name>
-    <birth>1999</birth>
   </person>
   <org-sys rdf:about='o19302'>
+    <from-date>1959</from-date>
     <name>НГУ</name>
   </org-sys>
   <participation rdf:about='r1111'>
@@ -76,6 +77,7 @@ namespace FactographyView
   <participation rdf:about='r1112'>
     <participant rdf:resource='p3818' />
     <in-org rdf:resource='o19302' />
+    <from-date>2008</from-date>
     <role>ассистент</role>
   </participation>
 </rdf:RDF>";
