@@ -60,22 +60,26 @@ namespace FactographyView.Controllers
             return View("Portrait1", model);
         }
 
-        private static RDFEngine.RRecord BuildPortrait(string id, int level, string forbidden)
+        private static RRecord BuildPortrait(string id)
+        {
+            return BuPo(id, 2, null);
+        }
+        private static RRecord BuPo(string id, int level, string forbidden)
         {
             var rec = Infobase.engine.GetRRecord(id);
             if (rec == null) return null;
-            RDFEngine.RRecord result_rec = new RDFEngine.RRecord()
+            RRecord result_rec = new RRecord()
             {
                 Id = rec.Id,
                 Tp = rec.Tp,
-                Props = rec.Props.Select<RDFEngine.RProperty, RDFEngine.RProperty>(p => 
+                Props = rec.Props.Select<RProperty, RProperty>(p => 
                 {
-                    if (p is RDFEngine.RField)
-                        return new RDFEngine.RField() { Prop = p.Prop, Value = ((RDFEngine.RField)p).Value };
-                    else if (level > 0 && p is RDFEngine.RLink && p.Prop != forbidden)
-                        return new RDFEngine.RDirect() { Prop = p.Prop, DRec = BuildPortrait(((RDFEngine.RLink)p).Resource, 0, null) };
-                    else if (level > 1 && p is RDFEngine.RInverseLink)
-                        return new RDFEngine.RInverse() { Prop = p.Prop, IRec = BuildPortrait(((RDFEngine.RInverseLink)p).Source, 1, p.Prop) };
+                    if (p is RField)
+                        return new RField() { Prop = p.Prop, Value = ((RField)p).Value };
+                    else if (level > 0 && p is RLink && p.Prop != forbidden)
+                        return new RDirect() { Prop = p.Prop, DRec = BuPo(((RLink)p).Resource, 0, null) };
+                    else if (level > 1 && p is RInverseLink)
+                        return new RInverse() { Prop = p.Prop, IRec = BuPo(((RInverseLink)p).Source, 1, p.Prop) };
                     return null;
                 }).Where(p => p != null).ToArray()
             };
@@ -90,7 +94,7 @@ namespace FactographyView.Controllers
         };
         public IActionResult Portrait2(string id)
         {
-            var model = BuildPortrait(id, 2, null);
+            var model = BuildPortrait(id);
             if (model == null) return View("Index");
             return View("Portrait2", model);
         }
@@ -147,7 +151,7 @@ namespace FactographyView.Controllers
             //var rec = Infobase.engine.GetRRecord(id);
             //string tp = rec.Tp;
             // Сформируем портрет второго уровня
-            var rec = BuildPortrait(id, 2, null);
+            var rec = BuildPortrait(id);
 
             P3Model model = new P3Model(rec);
             

@@ -87,36 +87,33 @@ namespace RDFEngine
                 });
         }
 
-        /// <summary>
-        /// Создает запись в виде дерева, состоящее из полей (level=0+), RDirect (level=1+), RInverse (level=2+).
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="level"></param>
-        /// <param name="forbidden"></param>
-        /// <returns></returns>
-        public RRecord GetRTree(string id, int level, string forbidden)
+        // ==== Определения, созданные для Portrait2, Portrait3
+
+
+        public RRecord BuildPortrait(string id)
         {
-            RRecord node = GetRRecord(id);
-            if (node == null) return null;
-            RRecord result = new RRecord() { Id = node.Id, Tp = node.Tp, Props = node.Props.Select(p => 
+            return BuPo(id, 2, null);
+        }
+        private RRecord BuPo(string id, int level, string forbidden)
+        {
+            var rec = GetRRecord(id);
+            if (rec == null) return null;
+            RRecord result_rec = new RRecord()
             {
-                if (p is RField) { return p; }
-                else if (p is RLink) 
+                Id = rec.Id,
+                Tp = rec.Tp,
+                Props = rec.Props.Select<RProperty, RProperty>(p =>
                 {
-                    if (level < 1 || p.Prop == forbidden) return null;
-                    RRecord nd = GetRTree(((RLink)p).Resource, level - 1, null);
-                    if (nd == null) return null;
-                    return new RDirect() { Prop = p.Prop, DRec = nd };
-                }
-                else if (p is RInverseLink) 
-                {
-                    if (level < 2) return null;
-                    RRecord nd = GetRTree(((RInverseLink)p).Source, level - 1, p.Prop);
-                    return new RInverse() { Prop = p.Prop, IRec = nd };
-                }
-                return null;
-            }).Where(r => r != null).ToArray() };
-            return result;
+                    if (p is RField)
+                        return new RField() { Prop = p.Prop, Value = ((RField)p).Value };
+                    else if (level > 0 && p is RLink && p.Prop != forbidden)
+                        return new RDirect() { Prop = p.Prop, DRec = BuPo(((RLink)p).Resource, 0, null) };
+                    else if (level > 1 && p is RInverseLink)
+                        return new RInverse() { Prop = p.Prop, IRec = BuPo(((RInverseLink)p).Source, 1, p.Prop) };
+                    return null;
+                }).Where(p => p != null).ToArray()
+            };
+            return result_rec;
         }
     }
 }

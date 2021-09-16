@@ -6,12 +6,12 @@ using RDFEngine;
 namespace FactographyView.Models
 {
     /// Вспомогательный класс - группировка списков обратных свойств
-    /// 
     public class InversePropType
     {
         public string Prop;
         public InverseType[] lists; 
     }
+    /// Вспомогательный класс - группировка списков по типам ссылающихся записей
     public class InverseType
     {
         public string Tp;
