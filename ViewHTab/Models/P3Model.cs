@@ -16,7 +16,7 @@ namespace ViewHTab.Models
     public class InverseType
     {
         public string Tp;
-        public RProperty[] list;
+        public RRecord[] list;
     }
     /// Класс модели
     public class P3Model
@@ -35,7 +35,7 @@ namespace ViewHTab.Models
                     lists =
                     kd.GroupBy(d => d.IRec.Tp)
                         .Select(dd => {
-                            var qu = dd.Select(x => x).ToArray();
+                            var qu = dd.Select(x => x.IRec).ToArray();
                             return new InverseType
                             {
                                 Tp = dd.Key,
