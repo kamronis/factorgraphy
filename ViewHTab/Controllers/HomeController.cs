@@ -29,6 +29,7 @@ namespace ViewHTab.Controllers
             var model = Infobase.engine.GetRRecord(id);
             return View("Portrait", model);
         }
+        // Контроллер
         public IActionResult Portrait3(string id)
         {
             var erec = Infobase.engine.BuildPortrait(id);

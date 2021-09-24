@@ -9,13 +9,44 @@ namespace RDFEngine
     // public enum RVid { RClass, DatatypeProperety, ObjectProperty }
     public class ROntology
     {
+        // Массив определений
+        internal RRecord[] rontology = null;
+        // Словарь онтологических объектов имя -> номер в массивах
+        public Dictionary<string, int> dicOnto = null;
+
+        /// <summary>
+        /// Массив словарей свойств для записей. Элементы массива позиционно соответствуют массиву утверждений.
+        /// Элемент массива - словарь, отображений имен свойств в номера позиции в массиве онтологии.
+        /// </summary>
+        public Dictionary<string, int>[] dicsProps = null;
+
+        public ROntology(IEnumerable<RRecord> statements)
+        {
+            rontology = statements.ToArray();
+            dicOnto = rontology
+               .Select((rr, nom) => new { rr.Id, nom })
+               .ToDictionary(pair => pair.Id, pair => pair.nom);
+            dicsProps = new Dictionary<string, int>[rontology.Length];
+            for (int i = 0; i < rontology.Length; i++)
+            {
+                RLink[] links = rontology[i].Props
+                    .Where(p => p.Prop == "DatatypeProperty" || p.Prop == "ObjectProperty")
+                    .Cast<RLink>().ToArray();
+                dicsProps[i] = links
+                    .Select((p, n) => new { p.Resource, n })
+                    .ToDictionary(pair => pair.Resource, pair => pair.n);
+            }
+        }
+        // Использование константно заданной онтологии sampleontology
+        public ROntology() : this(samplerontology) { }
+
         /// <summary>
         /// Онтология состоит из (пронумерованных) утверждений формата RRecord в которых Id - имя понятия,
         /// Tp - вид понятия (RClass, DatatypeProperty, ObjectProperty) и есть набор свойств. Свойства RField
         /// используются со свойствами Label и InverseLabel. Свойства RLink определяют исходящие "стрелки" - их вид 
         /// и имя.
         /// </summary>
-        public RRecord[] rontology = new RRecord[]
+        public static RRecord[] samplerontology = new RRecord[]
         {
             new RRecord
             {
@@ -45,7 +76,7 @@ namespace RDFEngine
             {
                 Id = "org-sys",
                 Tp = "Class",
-                Props = new RProperty[] { 
+                Props = new RProperty[] {
                     new RField { Prop = "Label", Value = "Орг.система" },
                     new RLink { Prop = "DatatypeProperty", Resource = "name"},
                     new RLink { Prop = "DatatypeProperty", Resource = "from-date"}
@@ -61,8 +92,8 @@ namespace RDFEngine
             {
                 Id = "participation",
                 Tp = "Class",
-                Props = new RProperty[] 
-                { 
+                Props = new RProperty[]
+                {
                     new RField { Prop = "Label", Value = "Участие" },
                     new RLink { Prop = "DatatypeProperty", Resource = "role"},
                     new RLink { Prop = "DatatypeProperty", Resource = "from-date"},
@@ -74,8 +105,8 @@ namespace RDFEngine
             {
                 Id = "in-org",
                 Tp = "ObjectProperty",
-                Props = new RProperty[] 
-                { 
+                Props = new RProperty[]
+                {
                     new RField { Prop = "Label", Value = "орг. сист." },
                     new RField { Prop = "InvLabel", Value = "в орг. сист." },
                 }
@@ -93,31 +124,5 @@ namespace RDFEngine
 
         };
 
-        // Словарь онтологических объектов имя -> номер в массивах
-        public Dictionary<string, int> dicOnto = null;
-
-        /// <summary>
-        /// Массив словарей свойств для записей. Элементы массива позиционно соответствуют массиву утверждений.
-        /// Элемент массива - словарь, отображений имен свойств в номера позиции в массиве онтологии.
-        /// </summary>
-        public Dictionary<string, int>[] dicsProps = null;
-
-        public ROntology(IEnumerable<RRecord> statements)
-        {
-            if (statements != null) rontology = statements.ToArray(); // Это для отладки
-            dicOnto = rontology
-               .Select((rr, nom) => new { rr.Id, nom })
-               .ToDictionary(pair => pair.Id, pair => pair.nom);
-            dicsProps = new Dictionary<string, int>[rontology.Length];
-            for (int i = 0; i < rontology.Length; i++)
-            {
-                RLink[] links = rontology[i].Props
-                    .Where(p => p.Prop == "DatatypeProperty" || p.Prop == "ObjectProperty")
-                    .Cast<RLink>().ToArray();
-                dicsProps[i] = links
-                    .Select((p, n) => new { p.Resource, n })
-                    .ToDictionary(pair => pair.Resource, pair => pair.n);
-            }
-        }
     }
 }
