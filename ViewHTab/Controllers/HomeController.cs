@@ -33,7 +33,7 @@ namespace ViewHTab.Controllers
         public IActionResult Portrait3(string id)
         {
             var erec = Infobase.engine.BuildPortrait(id);
-            P3Model model = (new P3Model()).Build0(erec);
+            P3Model model = (new P3Model()).Build(erec);
             return View("Portrait3", model);
         }
 

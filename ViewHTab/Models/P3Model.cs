@@ -51,6 +51,38 @@ namespace ViewHTab.Models
             };
         }
 
+        /// "Правильное" преобразование расширенной записи в модель
+        public P3Model Build(RRecord erec)
+        {
+            var query = erec.Props.Where(p => p is RInverse)
+                .Cast<RInverse>()
+                .GroupBy(d => d.Prop)
+                .Select(kd => new InversePropType
+                {
+                    Prop = kd.Key,
+                    lists =
+                    kd.GroupBy(d => d.IRec.Tp)
+                        .Select(dd => {
+                            var qu = dd.Select(x => x.IRec)
+                                .Select(rr => new RRecord { Id = rr.Id, Tp = rr.Tp, Props = Infobase.ront.ReorderFieldsDirects(rr)})
+                                .ToArray();
+                            return new InverseType
+                            {
+                                Tp = dd.Key,
+                                list = qu
+                            };
+                        }).ToArray()
+                });
+            return new P3Model
+            {
+                Id = erec.Id,
+                Tp = erec.Tp,
+                //row = erec.Props.Where(p => p is RField || p is RDirect).ToArray(),
+                row = Infobase.ront.ReorderFieldsDirects(erec),
+                inv = query.ToArray()
+            };
+        }
+
     }
 
 }
