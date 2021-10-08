@@ -9,5 +9,6 @@ namespace ViewHTab
     public class Infobase
     {
         public static REngine engine;
+        public static ROntology ront;
     }
 }

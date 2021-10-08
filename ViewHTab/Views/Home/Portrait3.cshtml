@@ -1,4 +1,5 @@
-﻿@using RDFEngine
+﻿@* Вьюер *@
+@using RDFEngine
 @model P3Model
 @{
     var m = Model;
@@ -26,7 +27,7 @@
             {
                 <td>@(((RField)c).Value)</td>
             }
-            else if (c is RDirect)
+            else if (c is RDirect && ((RDirect)c).DRec != null)
             {
                 var rr = ((RDirect)c).DRec;
                 <td><a href='?id=@(rr.Id)'>@(GetName(rr))</a></td>
@@ -41,7 +42,7 @@
         RRecord defrow = t.list[0];
 <table border="1">
     <tr>
-        <td colspan="@(t.list.Length)">
+        <td colspan="@(defrow.Props.Length-1)">
             <span>@(p.Prop)</span>
             <span>@(defrow.Tp)</span>
         </td>
@@ -49,6 +50,7 @@
     <tr>
         @foreach (var c in defrow.Props)
         {
+            if (c.Prop == p.Prop) { continue; }
             <td>@(c.Prop)</td>
         }
     </tr>
@@ -57,11 +59,12 @@
         <tr>
             @foreach (var c in r.Props)
             {
+                if (c.Prop == p.Prop) { continue; }
                 if (c is RField)
                 {
                     <td>@(((RField)c).Value)</td>
                 }
-                else if (c is RDirect)
+                else if (c is RDirect && ((RDirect)c).DRec != null)
                 {
                     var rr = ((RDirect)c).DRec;
 
