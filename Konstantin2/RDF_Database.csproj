@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RDFEngine\RDFEngine.csproj" />
+    <ProjectReference Include="..\..\RDF_VizualizationDB\RDFEngine\RDFEngine.csproj" />
   </ItemGroup>
 
 </Project>
