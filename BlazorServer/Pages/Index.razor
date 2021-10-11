@@ -1,0 +1,161 @@
+﻿@page "/"
+@using RDFEngine
+
+<h3>Index</h3>
+
+<div>
+    <input @bind="searchsample" />
+</div>
+@if (!string.IsNullOrEmpty(searchsample))
+{
+    var query = Infobase.engine.RSearch(searchsample);
+    foreach (RRecord rec in query)
+    {
+        <div>
+            <span>@rec.Tp</span> &nbsp;
+            <a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rec.Id))">@rec.GetName()</a>
+        </div>
+    }
+}
+else if (model != null)
+{
+    var m = model;
+    <table border="1">
+        <tr>
+            <td colspan="@(m.row.Length+1)">@m.Tp @m.Id</td>
+        </tr>
+        <tr>
+            @foreach (var c in m.row)
+            {
+                <td>@c.Prop</td>
+            }
+            <td></td>
+        </tr>
+        <tr>
+            @foreach (var c in m.row)
+            {
+                if (c is RField)
+                {
+                    <td>@(((RField)c).Value)</td>
+                }
+                else if (c is RDirect)
+                {
+                    var rr = ((RDirect)c).DRec;
+                    if (rr != null)
+                    {
+                        <td><a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
+                }
+                else
+                {
+                    <td>???</td>
+                }
+            }
+            <td>
+                <a href="javascript:void(0)" @onclick="@(e =>SetEditItem(model.Id, null))">ред</a>
+            </td>
+        </tr>
+    </table>
+    @foreach (var p in m.inv)
+    {
+        foreach (var t in p.lists)
+        {
+            RRecord defrow = t.list[0];
+            <table border="1">
+                <tr>
+                    <td colspan="@(defrow.Props.Length)">
+                        <span>@(p.Prop)</span>
+                        <span>@(defrow.Tp)</span>
+                    </td>
+                </tr>
+                <tr>
+                    @foreach (var c in defrow.Props)
+                    {
+                        if (c.Prop == p.Prop) { continue; }
+                        <td>@(c.Prop)</td>
+                    }
+                    <td></td>
+                </tr>
+                @foreach (var r in t.list)
+                {
+            <tr>
+                @foreach (var c in r.Props)
+                {
+                    if (c.Prop == p.Prop) { continue; }
+                    if (c is RField)
+                    {
+                        <td>@(((RField)c).Value)</td>
+                    }
+                    else if (c is RDirect && ((RDirect)c).DRec != null)
+                    {
+                        var rr = ((RDirect)c).DRec;
+                        if (rr != null)
+                        {
+                            <td><a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    }
+                    else
+                    {
+                        <td>???</td>
+                    }
+                }
+                <td><a href="javascript:void(0)" @onclick="@(e =>SetEditItem(r.Id, p.Prop))">ред</a></td>
+            </tr>
+                }
+
+            </table>
+        }
+    }
+
+}
+
+
+@code {
+    private string searchsample = "и";
+    Models.P3Model model = null;
+    private void BuildPortrait(string id)
+    {
+        searchsample = null;
+        RRecord rec = ((REngine)(Infobase.engine)).BuildPortrait(id);
+        model = (new Models.P3Model()).Build(rec);
+    }
+    // идентификаторы редактируемой записи и обратного свойства
+    private string eid, forbidden;
+    // Массив зачений записи для редактирования
+    string[] edit_arr;
+    private void SetEditItem(string eid, string forbidden)
+    {
+        this.eid = eid;
+        this.forbidden = forbidden;
+        // Находим нужную запись и переписываем имеющиеся значения в отдельный массив для редактирования
+        RRecord erecord = null;
+        if (eid == model.Id) erecord = 
+    }
+
+    string look = null;
+}
+
+<div>@look</div>
+
+
+@code{
+    //override async Task OnInitializedAsync()
+    //{
+    //    bool ok = await Init();
+    //}
+    //private Task<bool> Init()
+    //{
+    //Infobase.Init(XElement.Parse(Infobase.sampleRDFText).Elements());
+    //Start("p3817");
+    //isloaded = true;
+    //return Task.FromResult<bool>(true);
+    //}
+}

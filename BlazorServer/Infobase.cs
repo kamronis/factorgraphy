@@ -5,12 +5,15 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using RDFEngine;
 
-namespace FactographyView
+namespace BlazorServer
 {
     public class Infobase
     {
+        // Движок базы данных
         public static RDFEngine.IEngine engine = null;
-        
+        // ROntology - объектная онтология
+        public static ROntology ront = null;
+
         private static Dictionary<string, string> labels_ru;
         private static Dictionary<string, string> inverse_labels_ru;
         public static void LoadOntology(string path)
@@ -26,7 +29,7 @@ namespace FactographyView
                 .Where(lab => lab.Attribute("{http://www.w3.org/XML/1998/namespace}lang")?.Value == "ru")
                 .ToDictionary(lab => lab.Parent.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value,
                     lab => lab.Value);
-            
+
             // Альтернативно
 
             ront = new ROntology(ROntology.samplerontology);
@@ -48,7 +51,5 @@ namespace FactographyView
             return inverse_labels_ru[id];
         }
 
-        // ROntology - объектная онтология
-        public static ROntology ront = null;
-    } 
+    }
 }

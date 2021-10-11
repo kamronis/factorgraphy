@@ -1,0 +1,52 @@
+﻿@page "/simpleeditor"
+
+@code{
+    string look = "";
+    string[][] rowsToEdit = new string[][]
+    {
+        new string[] { "colName1", "colName2", "colName3" },
+        new string[] { "colCont1a", "colCont2a", "colCont3a" },
+        new string[] { "colCont1b", "colCont2b", "colCont3b" },
+        new string[] { "colCont1c", "colCont2c", "colCont3c" }
+            };
+    int rowi = -1;
+    void EditRow(int i) { look = "EditRow(" + i + ")"; rowi = i; }
+    void Ok() { rowi = -1; }
+}
+
+<table border="1">
+    <tr>
+        @for (int j = 0; j < rowsToEdit[0].Length; j++)
+        {
+            <th>@rowsToEdit[0][j]</th>
+        }
+        <th></th>
+    </tr>
+    @for (int i = 1; i < rowsToEdit.Length; i++)
+    {
+        int ii = i;
+        if (ii != rowi)
+        {
+            <tr>
+                @for (int j = 0; j < rowsToEdit[ii].Length; j++)
+                {
+                    <td>@rowsToEdit[ii][j]</td>
+                }
+                <td><a href="javascript:void(0)" @onclick="@(e =>EditRow(ii))">edit</a></td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                @for (int j = 0; j < rowsToEdit[ii].Length; j++)
+                {
+                    int jj = j;
+                    <td><input @bind="@rowsToEdit[ii][jj]"/></td>
+                }
+                <td><input type="submit" @onclick="@(e =>Ok())" value="Ok"/></td>
+            </tr>
+        }
+    }
+</table>
+
+<div>@look</div>
