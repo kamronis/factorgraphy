@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using RDFEngine;
 
 namespace Konstantin2
 {
@@ -48,9 +49,10 @@ namespace Konstantin2
             app.UseAuthorization();
         
             Infobase.engine = new RDFEngine.REngine();
-            XElement el = XElement.Load(@"C:\Home\Data\SypCassete\meta\SypCassete_current_new.rdf");
-            XElement el2 = XElement.Load(@"C:\Home\Data\SypCasseteFamily\meta\SypCassete_current_Family.rdf");
+            XElement el = XElement.Load(@"SypCassete\meta\SypCassete_current_new.rdf");
+            XElement el2 = XElement.Load(@"SypCasseteFamily\meta\SypCassete_current_Family.rdf");
             IEnumerable<XElement> result = el.Elements().Select(a => a).Concat(el2.Elements());
+            IEnumerable<XElement> gener = PhototekaGenerator.Generate(1000);
             Infobase.engine.Load(result);
             Infobase.LoadOntology(@"C:\Home\RDFEngine\SimpleOntology.owl");
             Infobase.Init(env.ContentRootPath+"/wwwroot/");

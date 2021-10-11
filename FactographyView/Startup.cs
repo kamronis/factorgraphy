@@ -82,8 +82,10 @@ namespace FactographyView
     <role>ассистент</role>
   </participation>
 </rdf:RDF>";
+                
                 System.Xml.Linq.XElement graphModelXml = System.Xml.Linq.XElement.Parse(graphModelText);
-                Infobase.engine.Load(graphModelXml.Elements());
+                System.Xml.Linq.XElement elem = System.Xml.Linq.XElement.Load(@"C:\Users\shish\source\repos\DoingFactography\Konstantin2\family1234.xml");
+                Infobase.engine.Load(elem.Elements());
             }
 
             Infobase.engine.Build();
