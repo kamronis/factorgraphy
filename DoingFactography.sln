@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FactographyView", "Factogra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KonstantinFactografyView", "KonstantinFactografyView\KonstantinFactografyView.csproj", "{CD6224D0-66E3-4773-B54A-D2D316822FE1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Konstantin2", "Konstantin2\Konstantin2.csproj", "{BB7DB2DB-D324-4AF8-A94C-FDAE6B3817BD}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleTester", "ConsoleTester\ConsoleTester.csproj", "{36674049-4510-4BF5-B23C-869BA7E9BB94}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewPortraitConsoleKonstantin", "ViewPortraitConsoleKonstantin\ViewPortraitConsoleKonstantin.csproj", "{1E99FB99-8F16-4ECD-8D34-1C62238533A9}"
@@ -29,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLConsole", "SQLConsole\SQ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCAppKonstantin", "MVCAppKonstantin\MVCAppKonstantin.csproj", "{65CA0D9B-E303-41DB-8881-A1DA549B809E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewHTab", "ViewHTab\ViewHTab.csproj", "{F6EF6359-8325-4CD9-BCC2-C45342FCA246}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewHTab", "ViewHTab\ViewHTab.csproj", "{F6EF6359-8325-4CD9-BCC2-C45342FCA246}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDF_Database", "RDF_Database\RDF_Database.csproj", "{86384BE3-83A1-42F8-9C95-AF7B9D09D524}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,10 +57,6 @@ Global
 		{CD6224D0-66E3-4773-B54A-D2D316822FE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD6224D0-66E3-4773-B54A-D2D316822FE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD6224D0-66E3-4773-B54A-D2D316822FE1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BB7DB2DB-D324-4AF8-A94C-FDAE6B3817BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BB7DB2DB-D324-4AF8-A94C-FDAE6B3817BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BB7DB2DB-D324-4AF8-A94C-FDAE6B3817BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BB7DB2DB-D324-4AF8-A94C-FDAE6B3817BD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{36674049-4510-4BF5-B23C-869BA7E9BB94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{36674049-4510-4BF5-B23C-869BA7E9BB94}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{36674049-4510-4BF5-B23C-869BA7E9BB94}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -93,6 +89,10 @@ Global
 		{F6EF6359-8325-4CD9-BCC2-C45342FCA246}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6EF6359-8325-4CD9-BCC2-C45342FCA246}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6EF6359-8325-4CD9-BCC2-C45342FCA246}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86384BE3-83A1-42F8-9C95-AF7B9D09D524}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86384BE3-83A1-42F8-9C95-AF7B9D09D524}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86384BE3-83A1-42F8-9C95-AF7B9D09D524}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86384BE3-83A1-42F8-9C95-AF7B9D09D524}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
