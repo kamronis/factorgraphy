@@ -1,0 +1,69 @@
+﻿@page "/"
+@using MatBlazor; 
+
+<h1>Basic CRUD using MAtBlazor Library</h1>
+
+@code{
+    Person person = new Person();
+    Person selectedPers = null;
+    Person tempPers = null;
+    int _index = -1;
+    bool _isDelete = false;
+    bool dialogIsOpen = false;
+    bool _isEdit = false;
+    bool snackBar = false;
+
+    List<Person> persons = new List<Person>()
+    {
+        new Person(1,"Nikolai",20),
+        new Person(2,"Andrey",15),
+        new Person(2,"Dmitriy",83)
+    };
+
+    public class Person
+    {
+        public int PersonId { get; set; }
+        public string Name { get; set; }
+        public int Age { get; set; }
+
+        #region Constructors
+        public Person() { }
+        public Person(int personId,
+                        string name,
+                        int age)
+        {
+            PersonId = personId;
+            Name = name;
+            Age = age;
+        }
+        #endregion
+    }
+
+    #region Methods
+    private void AddPerson(Person pers)
+    {
+        pers.PersonId = persons.Count + 1;
+        persons.Add(pers);
+    }
+
+    private void EditPerson(Person pers)
+    {
+        if (pers!=null && pers.PersonId > 0)
+        {
+            int index = persons.FindIndex(a => a.PersonId == pers.PersonId);
+            persons.RemoveAll(a => a.PersonId == pers.PersonId);
+            persons.Insert(index, pers);
+        }
+    }
+
+    private void DeletePerson(Person pers)
+    {
+        if (pers != null && pers.PersonId > 0)
+        {
+            _isDelete = true;
+
+        }
+    }
+    #endregion
+}
+
