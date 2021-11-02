@@ -1,0 +1,125 @@
+﻿@page "/viewer"
+@using RDFEngine
+
+<h3>Index</h3>
+
+<div>
+    <input @bind="searchsample" />
+</div>
+@if (!string.IsNullOrEmpty(searchsample))
+{
+    var query = Infobase.engine.RSearch(searchsample);
+    foreach (RRecord rec in query)
+    {
+        <div>
+            <span>@rec.Tp</span> &nbsp;
+            <a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rec.Id))">@rec.GetName()</a>
+        </div>
+    }
+}
+else if (model != null)
+{
+    var m = model;
+    <table border="1">
+        <tr>
+            <td colspan="@m.row.Length">@m.Tp @m.Id</td>
+        </tr>
+        <tr>
+            @foreach (var c in m.row)
+            {
+                <td>@c.Prop</td>
+            }
+        </tr>
+        <tr>
+            @foreach (var c in m.row)
+            {
+                if (c is RField)
+                {
+                    <td>@(((RField)c).Value)</td>
+                }
+                else if (c is RDirect && ((RDirect)c).DRec != null)
+                {
+                    var rr = ((RDirect)c).DRec;
+                    <td><a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
+                }
+            }
+        </tr>
+    </table>
+    @foreach (var p in m.inv)
+    {
+        foreach (var t in p.lists)
+        {
+            RRecord defrow = t.list[0];
+            <table border="1">
+                <tr>
+                    <td colspan="@(defrow.Props.Length-1)">
+                        <span>@(p.Prop)</span>
+                        <span>@(defrow.Tp)</span>
+                    </td>
+                </tr>
+                <tr>
+                    @foreach (var c in defrow.Props)
+                    {
+                        if (c.Prop == p.Prop) { continue; }
+                        <td>@(c.Prop)</td>
+                    }
+                </tr>
+                @foreach (var r in t.list)
+                {
+                    <tr>
+                        @foreach (var c in r.Props)
+                        {
+                            if (c.Prop == p.Prop) { continue; }
+                            if (c is RField)
+                            {
+                                <td>@(((RField)c).Value)</td>
+                            }
+                            else if (c is RDirect && ((RDirect)c).DRec != null)
+                            {
+                                var rr = ((RDirect)c).DRec;
+
+                                <td><a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
+                            }
+                            else
+                            {
+                                <td>???</td>
+                            }
+                        }
+                    </tr>
+                }
+
+            </table>
+        }
+    }
+
+}
+
+
+@code {
+    private string searchsample = "";
+    Models.P3Model model = null;
+    private void BuildPortrait(string id)
+    {
+        searchsample = null;
+        RRecord rec = ((REngine)(Infobase.engine)).BuildPortrait(id);
+        model = (new Models.P3Model()).Build(rec);
+    }
+    string look = null;
+}
+
+<div>@look</div>
+
+
+@code{
+    //override async Task OnInitializedAsync()
+    //{
+    //    bool ok = await Init();
+    //}
+    //private Task<bool> Init()
+    //{
+    //Infobase.Init(XElement.Parse(Infobase.sampleRDFText).Elements());
+    //Start("p3817");
+    //isloaded = true;
+    //return Task.FromResult<bool>(true);
+    //}
+}

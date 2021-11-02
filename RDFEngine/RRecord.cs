@@ -26,6 +26,10 @@ namespace RDFEngine
             }).Aggregate((a, s) => a + ", " + s);
             return "{ <" + Id + ">, <" + Tp + ">, " + "[" +       query      + "]}";
         }
+        public string GetName()
+        {
+            return ((RField)this.Props.FirstOrDefault(p => p is RField && p.Prop == "name"))?.Value;
+        }
     }
     public abstract class RProperty
     {
@@ -55,4 +59,5 @@ namespace RDFEngine
     {
         public RRecord IRec { get; set; }
     }
+
 }

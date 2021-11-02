@@ -43,7 +43,7 @@ namespace RDFEngine
         public ROntology() : this(samplerontology) { }
 
         /// <summary>
-        /// Формирует набор "столбцов" в виде вариантов RProperty, опираясь на данную онтологию.
+        /// Формирует из записи набор "столбцов" в виде вариантов RProperty, опираясь на данную онтологию.
         /// </summary>
         /// <param name="record"></param>
         /// <returns></returns>

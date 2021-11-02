@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCAppKonstantin", "MVCAppK
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewHTab", "ViewHTab\ViewHTab.csproj", "{F6EF6359-8325-4CD9-BCC2-C45342FCA246}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RDF_Database", "RDF_Database\RDF_Database.csproj", "{86384BE3-83A1-42F8-9C95-AF7B9D09D524}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServer", "BlazorServer\BlazorServer.csproj", "{61D04581-3B5B-4155-B175-3E0C586E3934}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorKonstantin", "BlazorKonstantin\BlazorKonstantin.csproj", "{A23CD4DF-FEF1-4A8C-A706-86B8820ABC73}"
 EndProject

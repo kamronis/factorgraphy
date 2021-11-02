@@ -1,4 +1,6 @@
+using BlazorServer.Data;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
@@ -8,9 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using RDFEngine;
 
-namespace FactographyView
+namespace BlazorServer
 {
     public class Startup
     {
@@ -22,9 +23,12 @@ namespace FactographyView
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddRazorPages();
+            services.AddServerSideBlazor();
+            services.AddSingleton<WeatherForecastService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,16 +40,13 @@ namespace FactographyView
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
 
             Infobase.engine = new RDFEngine.REngine();
 
@@ -82,22 +83,22 @@ namespace FactographyView
     <role>ассистент</role>
   </participation>
 </rdf:RDF>";
-                
                 System.Xml.Linq.XElement graphModelXml = System.Xml.Linq.XElement.Parse(graphModelText);
-                System.Xml.Linq.XElement elem = System.Xml.Linq.XElement.Load(@"C:\Users\shish\source\repos\DoingFactography\Konstantin2\family1234.xml");
-                Infobase.engine.Load(elem.Elements());
+                Infobase.engine.Load(graphModelXml.Elements());
             }
 
             Infobase.engine.Build();
-            Infobase.LoadOntology("wwwroot/SimpleOntology.owl");
+            Infobase.ront = new RDFEngine.ROntology(); // тестовая онтология
+
+
+
+            app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapBlazorHub();
+                endpoints.MapFallbackToPage("/_Host");
             });
         }
     }
 }
-
