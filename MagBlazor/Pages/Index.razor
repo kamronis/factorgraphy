@@ -1,0 +1,154 @@
+﻿@page "/"
+@using RDFEngine
+
+<h1>страница /Home</h1>
+
+<div>
+    <input @bind="searchsample" />
+</div>
+@if (!string.IsNullOrEmpty(searchsample))
+{
+    var query = Infobase.engine.RSearch(searchsample);
+    foreach (RRecord rec in query)
+    {
+        <div>
+            <span>@rec.Tp</span> &nbsp;
+            <a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rec.Id))">@rec.GetName()</a>
+        </div>
+    }
+}
+else if (model != null)
+{
+    var m = model;
+    <table border="1">
+        <tr>
+            <td colspan="@(m.row.Length+1)">@m.Tp @m.Id</td>
+        </tr>
+        <tr>
+            @foreach (var c in m.row)
+            {
+                <td>@c.Prop</td>
+            }
+            <td></td>
+        </tr>
+        <tr>
+            @if (erecord != null && m.Id == erecord.Id)
+            {
+            <td colspan="@(m.row.Length+1)" style="border:dashed;">
+                <button @onclick="Ok">ok</button>
+                <button @onclick="Cancel">cancel</button>
+            </td>
+            }
+            else
+            {
+                @foreach (var c in m.row)
+                {
+                    if (c is RField)
+                    {
+                        <td>@(((RField)c).Value)</td>
+                    }
+                    else if (c is RDirect)
+                    {
+                        var rr = ((RDirect)c).DRec;
+                        if (rr != null)
+                        {
+                            <td><a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    }
+                    else
+                    {
+                        <td>???</td>
+                    }
+                }
+                <td>
+                    <a href="javascript:void(0)" @onclick="@(e =>SetEditItem(model.Id, null))">ред</a>
+                </td>
+            }
+        </tr>
+    </table>
+    @foreach (var p in m.inv)
+    {
+        foreach (var t in p.lists)
+        {
+            RRecord defrow = t.list[0];
+            <table border="1">
+                <tr>
+                    <td colspan="@(defrow.Props.Length)">
+                        <span>@(p.Prop)</span>
+                        <span>@(defrow.Tp)</span>
+                    </td>
+                </tr>
+                <tr>
+                    @foreach (var c in defrow.Props)
+                    {
+                        if (c.Prop == p.Prop) { continue; }
+                        <td>@(c.Prop)</td>
+                    }
+                    <td></td>
+                </tr>
+                @foreach (var r in t.list)
+                {
+                    <tr>
+                        @foreach (var c in r.Props)
+                        {
+                            if (c.Prop == p.Prop) { continue; }
+                            if (c is RField)
+                            {
+                                <td>@(((RField)c).Value)</td>
+                            }
+                            else if (c is RDirect && ((RDirect)c).DRec != null)
+                            {
+                                var rr = ((RDirect)c).DRec;
+                                if (rr != null)
+                                {
+                                    <td><a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                }
+                            }
+                            else
+                            {
+                                <td>???</td>
+                            }
+                        }
+                        <td><a href="javascript:void(0)" @onclick="@(e =>SetEditItem(r.Id, p.Prop))">ред</a></td>
+                    </tr>
+                }
+
+            </table>
+        }
+    }
+
+}
+
+@code{
+    private string searchsample = "и";
+    Models.P3Model model = null;
+    private void BuildPortrait(string id)
+    {
+        searchsample = null;
+        RRecord rec = ((REngine)(Infobase.engine)).BuildPortrait(id);
+        model = (new Models.P3Model()).Build(rec);
+    }
+
+    // редактируемая запись и идентификатор обратного свойства
+    private RRecord erecord = null;
+    private string forbidden;
+    private void SetEditItem(string eid, string forbidden)
+    {
+        erecord = new RRecord() { Id = eid };
+        this.forbidden = forbidden;
+    }
+
+    private void Ok() { erecord = null; }
+    private void Cancel() { erecord = null; }
+
+    string look = null;
+
+}

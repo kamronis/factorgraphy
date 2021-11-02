@@ -31,6 +31,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewHTab", "ViewHTab\ViewHT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServer", "BlazorServer\BlazorServer.csproj", "{61D04581-3B5B-4155-B175-3E0C586E3934}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagWABlazor", "MagWABlazor\MagWABlazor.csproj", "{95CF5153-1C80-4FF9-8B8F-115868C7D185}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagBlazor", "MagBlazor\MagBlazor.csproj", "{7B53F171-B9EF-4270-B594-3FAB6F3499EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +97,14 @@ Global
 		{61D04581-3B5B-4155-B175-3E0C586E3934}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61D04581-3B5B-4155-B175-3E0C586E3934}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61D04581-3B5B-4155-B175-3E0C586E3934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95CF5153-1C80-4FF9-8B8F-115868C7D185}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95CF5153-1C80-4FF9-8B8F-115868C7D185}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95CF5153-1C80-4FF9-8B8F-115868C7D185}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95CF5153-1C80-4FF9-8B8F-115868C7D185}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B53F171-B9EF-4270-B594-3FAB6F3499EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B53F171-B9EF-4270-B594-3FAB6F3499EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B53F171-B9EF-4270-B594-3FAB6F3499EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B53F171-B9EF-4270-B594-3FAB6F3499EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
