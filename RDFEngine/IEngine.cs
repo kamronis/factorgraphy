@@ -12,7 +12,11 @@ namespace RDFEngine
         public void Load(IEnumerable<XElement> records);
         public void Build();
         public IEnumerable<RRecord> RSearch(string searchstring);
+
+        public IEnumerable<RRecord> RSearch(string searchstring, string type);
         public RRecord GetRRecord(string id);
+
+        public void UpdateRRecord(RRecord record, string forbidden, string modelId);
         //public RRecord GetRTree(string id, int level, string forbidden);
 
         // Константы для удобства работы с RDF/XML

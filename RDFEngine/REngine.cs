@@ -75,7 +75,81 @@ namespace RDFEngine
             }
             return null;
         }
+        public void UpdateRRecord(RRecord record, string forbidden, string modelId, bool delete)
+        {
+            if (rdatabase.ContainsKey(record.Id))
+            {
+                if (delete)
+                {
+                    foreach (var prop in rdatabase[record.Id].Props)
+                    {
+                        if (prop is RLink)
+                        {
+                            rdatabase[((RLink)prop).Resource].Props = rdatabase[((RLink)prop).Resource].Props
+                                .Where(x => (x is RField) || (x is RInverseLink && ((RInverseLink)x).Source != record.Id))
+                                .ToArray();
+                        }
+                    }
+                    rdatabase.Remove(record.Id);
+                }
+                else
+                {
+                    rdatabase[record.Id] = generateRecordToAdd(record, forbidden, modelId);
+                }
+            }
+            else
+            {
+                rdatabase.Add(record.Id, generateRecordToAdd(record, forbidden, modelId));
+                var modelInverse = new RInverseLink();
+                modelInverse.Prop = forbidden;
+                modelInverse.Source = record.Id;
+                var linkId = ((RDirect)record.Props.FirstOrDefault(x => (x is RDirect) && (x.Prop != forbidden))).DRec.Id;
+                var linkInverse = new RInverseLink();
+                linkInverse.Prop = record.Props.FirstOrDefault(x => (x is RDirect) && (x.Prop != forbidden)).Prop;
+                linkInverse.Source = record.Id;
+                rdatabase[modelId].Props = rdatabase[modelId].Props.Append(modelInverse).ToArray();
+                rdatabase[linkId].Props = rdatabase[linkId].Props.Append(linkInverse).ToArray();
+            }
+        }
+        public void UpdateRRecord(RRecord record, string forbidden, string modelId)
+        {
+            UpdateRRecord(record, forbidden, modelId, false);
+        }
+        private RRecord generateRecordToAdd(RRecord record, string forbidden, string modelId)
+        {
+            RRecord toAdd = new RRecord();
+            toAdd.Id = record.Id;
+            toAdd.Tp = record.Tp;
+            toAdd.Props = new RProperty[record.Props.Length];
+            for (int i = 0; i < record.Props.Length; i++)
+            {
+                var prop = record.Props[i];
+                if (prop is RField)
+                {
+                    toAdd.Props[i] = prop;
+                }
+                if (prop is RDirect)
+                {
+                    if (prop.Prop == forbidden)
+                    {
+                        RLink link = new RLink();
+                        link.Prop = prop.Prop;
+                        link.Resource = modelId;
+                        toAdd.Props[i] = link;
+                    }
+                    else
+                    {
+                        RLink link = new RLink();
+                        link.Prop = prop.Prop;
+                        link.Resource = ((RDirect)prop).DRec.Id;
+                        toAdd.Props[i] = link;
+                    }
 
+                }
+
+            }
+            return toAdd;
+        }
         public IEnumerable<RRecord> RSearch(string searchstring)
         {
             searchstring = searchstring.ToLower();
@@ -84,6 +158,18 @@ namespace RDFEngine
                 .Where(rr => 
                 {
                     return rr.Props.Any(p => p is RField && ((RField)p).Prop == "name" && ((RField)p).Value.ToLower().StartsWith(searchstring)); 
+                });
+        }
+
+        public IEnumerable<RRecord> RSearch(string searchstring, string type)
+        {
+            searchstring = searchstring.ToLower();
+            return rdatabase
+                .Select(pair => pair.Value)
+                .Where(rr => rr.Tp == type)
+                .Where(rr =>
+                {
+                    return rr.Props.Any(p => p is RField && ((RField)p).Prop == "name" && ((RField)p).Value.ToLower().StartsWith(searchstring));
                 });
         }
 

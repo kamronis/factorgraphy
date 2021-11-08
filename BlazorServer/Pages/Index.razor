@@ -13,7 +13,7 @@
     {
         <div>
             <span>@rec.Tp</span> &nbsp;
-            <a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rec.Id))">@rec.GetName()</a>
+            <a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rec.Id))">@rec.GetName()</a>
         </div>
     }
 }
@@ -22,7 +22,7 @@ else if (model != null)
     var m = model;
     <table border="1">
         <tr>
-            <td colspan="@(m.row.Length+1)">@m.Tp @m.Id</td>
+            <td colspan="@(m.row.Length + 1)">@m.Tp @m.Id</td>
         </tr>
         <tr>
             @foreach (var c in m.row)
@@ -32,31 +32,41 @@ else if (model != null)
             <td></td>
         </tr>
         <tr>
-            @foreach (var c in m.row)
+            @for (int i = 0; i < m.row.Length; i++)
             {
-                if (c is RField)
+                var c = m.row[i];
+                var tempI = i;
+                if (eid == model.Id)
                 {
-                    <td>@(((RField)c).Value)</td>
-                }
-                else if (c is RDirect)
-                {
-                    var rr = ((RDirect)c).DRec;
-                    if (rr != null)
-                    {
-                        <td><a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
-                    }
-                    else
-                    {
-                        <td></td>
-                    }
+                    <td><input @bind="@edit_arr[tempI]" /></td>
                 }
                 else
                 {
-                    <td>???</td>
+                    if (c is RField)
+                    {
+                        <td>@(((RField)c).Value)</td>
+                    }
+                    else if (c is RDirect)
+                    {
+                        var rr = ((RDirect)c).DRec;
+                        if (rr != null)
+                        {
+                            <td><a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    }
+                    else
+                    {
+                        <td>???</td>
+                    }
                 }
+
             }
             <td>
-                <a href="javascript:void(0)" @onclick="@(e =>SetEditItem(model.Id, null))">ред</a>
+                <a href="javascript:void(0)" @onclick="@(e => SetEditItem(model.Id, null))">ред</a>
             </td>
         </tr>
     </table>
@@ -83,32 +93,41 @@ else if (model != null)
                 @foreach (var r in t.list)
                 {
             <tr>
-                @foreach (var c in r.Props)
+                @for (int i = 0; i < r.Props.Length; i++)
                 {
+                    var c = r.Props[i];
+                    var tempI = i;
                     if (c.Prop == p.Prop) { continue; }
-                    if (c is RField)
+                    if (eid == r.Id)
                     {
-                        <td>@(((RField)c).Value)</td>
-                    }
-                    else if (c is RDirect && ((RDirect)c).DRec != null)
-                    {
-                        var rr = ((RDirect)c).DRec;
-                        if (rr != null)
-                        {
-                            <td><a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
-                        }
-                        else
-                        {
-                            <td></td>
-                        }
+                        <td><input @bind="@edit_arr[tempI]" /></td>
                     }
                     else
                     {
-                        <td>???</td>
+                        if (c is RField)
+                        {
+                            <td>@(((RField)c).Value)</td>
+                        }
+                        else if (c is RDirect && ((RDirect)c).DRec != null)
+                        {
+                            var rr = ((RDirect)c).DRec;
+                            if (rr != null)
+                            {
+                                <td><a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                        }
+                        else
+                        {
+                            <td>???</td>
+                        }
                     }
                 }
-                <td><a href="javascript:void(0)" @onclick="@(e =>SetEditItem(r.Id, p.Prop))">ред</a></td>
-            </tr>
+                    <td><a href="javascript:void(0)" @onclick="@(e => SetEditItem(r.Id, p.Prop))">ред</a></td>
+                </tr>
                 }
 
             </table>
@@ -117,31 +136,55 @@ else if (model != null)
 
 }
 
+@for (int i = 0; i < edit_arr.Length; i++)
+            {
+    <div>@edit_arr[i]</div>
+            }
 
-@code {
-    private string searchsample = "и";
-    Models.P3Model model = null;
-    private void BuildPortrait(string id)
-    {
-        searchsample = null;
-        RRecord rec = ((REngine)(Infobase.engine)).BuildPortrait(id);
-        model = (new Models.P3Model()).Build(rec);
-    }
-    // идентификаторы редактируемой записи и обратного свойства
-    private string eid, forbidden;
-    // Массив зачений записи для редактирования
-    string[] edit_arr;
-    private void SetEditItem(string eid, string forbidden)
-    {
-        this.eid = eid;
-        this.forbidden = forbidden;
-        // Находим нужную запись и переписываем имеющиеся значения в отдельный массив для редактирования
-        RRecord erecord = null;
-        //if (eid == model.Id) erecord = 
-    }
+    @code {
+        private string searchsample = "и";
+        Models.P3Model model = null;
+        private void BuildPortrait(string id)
+        {
+            searchsample = null;
+            RRecord rec = ((REngine)(Infobase.engine)).BuildPortrait(id);
+            model = (new Models.P3Model()).Build(rec);
+        }
+        // идентификаторы редактируемой записи и обратного свойства
+        private string eid, forbidden;
+        // Массив зачений записи для редактирования
+        string[] edit_arr = { };
+        private void SetEditItem(string eid, string forbidden)
+        {
+            if (eid == this.eid && eid == model.Id)
+            {
+                this.eid = null;
+                return;
+            }
+            this.eid = eid;
+            this.forbidden = forbidden;
+            // Находим нужную запись и переписываем имеющиеся значения в отдельный массив для редактирования
+            RRecord erecord = null;
+            RProperty[] fields;
+            if (eid == model.Id)
+            {
+                fields = model.row.Select(x => x).ToArray();
+                edit_arr = fields.Select(f =>
+                {
+                    if (f is RField)
+                    {
+                        return ((RField)f).Value;
+                    }
+                    else
+                    {
+                        return "";
+                    }
+                }).ToArray();
+            }
+        }
 
-    string look = null;
-}
+        string look = null;
+    }
 
 <div>@look</div>
 
