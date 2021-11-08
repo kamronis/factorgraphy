@@ -31,6 +31,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ViewHTab", "ViewHTab\ViewHT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServer", "BlazorServer\BlazorServer.csproj", "{61D04581-3B5B-4155-B175-3E0C586E3934}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorKonstantin", "BlazorKonstantin\BlazorKonstantin.csproj", "{A23CD4DF-FEF1-4A8C-A706-86B8820ABC73}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchKonstantin", "SearchKonstantin\SearchKonstantin.csproj", "{A013291B-9A11-42DB-9680-6395D32CB501}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +97,14 @@ Global
 		{61D04581-3B5B-4155-B175-3E0C586E3934}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61D04581-3B5B-4155-B175-3E0C586E3934}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61D04581-3B5B-4155-B175-3E0C586E3934}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A23CD4DF-FEF1-4A8C-A706-86B8820ABC73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A23CD4DF-FEF1-4A8C-A706-86B8820ABC73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A23CD4DF-FEF1-4A8C-A706-86B8820ABC73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A23CD4DF-FEF1-4A8C-A706-86B8820ABC73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A013291B-9A11-42DB-9680-6395D32CB501}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A013291B-9A11-42DB-9680-6395D32CB501}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A013291B-9A11-42DB-9680-6395D32CB501}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A013291B-9A11-42DB-9680-6395D32CB501}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -37,7 +37,7 @@ else if (model != null)
             {
                 if (c is RField)
                 {
-                    <td>@(((RField)c).Value)</td>
+                    <td @onclick="@(e => EditCell(m.Id, c.Prop))">@(((RField)c).Value)</td>
                 }
                 else if (c is RDirect)
                 {
@@ -299,6 +299,10 @@ else if (model != null)
         RRecord rec = ((REngine)(Infobase.engine)).BuildPortrait(id);
         originalRecord = rec;
         model = (new Models.P3Model()).Build(rec);
+    }
+    private void EditCell(string recId, string prop)
+    {
+        look = $"Cell: {recId} {prop}";
     }
     string look = null;
 }

@@ -46,6 +46,7 @@ namespace RDFEngine
             }).ToDictionary(rr => rr.Id);
 
             // ДОБАВЛЕНИЕ Вставим наработанные обратные ссылки
+            // TODO: Можно не вставлять, но об этом надо подумать...
             foreach (var pair in inverseDic)
             {
                 string id = pair.Key;
@@ -55,6 +56,43 @@ namespace RDFEngine
                 node.Props = node.Props.Concat(list).ToArray();
             }
         }
+
+        /// <summary>
+        /// Тестовая загрузка данных
+        /// </summary>
+        public void Load()
+        {
+            Load(XElement.Parse(testRDFText).Elements()); ;
+        }
+        /// <summary>
+        /// Тестовая база данных
+        /// </summary>
+        private const string testRDFText = @"<?xml version='1.0' encoding='utf-8'?>
+<rdf:RDF xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#'>
+  <person rdf:about='p3817'>
+    <name xml:lang='ru'>Иванов</name>
+    <from-date>1988</from-date>
+  </person>
+  <person rdf:about='p3818'>
+    <from-date>1999</from-date>
+    <name xml:lang='ru'>Петров</name>
+  </person>
+  <org-sys rdf:about='o19302'>
+    <from-date>1959</from-date>
+    <name>НГУ</name>
+  </org-sys>
+  <participation rdf:about='r1111'>
+    <participant rdf:resource='p3817' />
+    <in-org rdf:resource='o19302' />
+    <role>профессор</role>
+  </participation>
+  <participation rdf:about='r1112'>
+    <participant rdf:resource='p3818' />
+    <in-org rdf:resource='o19302' />
+    <from-date>2008</from-date>
+    <role>ассистент</role>
+  </participation>
+</rdf:RDF>";
 
         public void Build()
         {
@@ -173,6 +211,33 @@ namespace RDFEngine
                 });
         }
 
+        public void Update(RRecord rec)
+        {
+            // Найдем текущее значение записи
+            RRecord dbrec = rdatabase[rec.Id];
+            // На всякий случай, проверим тип 
+            if (rec.Tp != dbrec.Tp) throw new Exception("Err: 223902");
+            // Нужно "перебрать" прямые свойства, из полей что-то убрать, что-то добавить, ссылки обработать специально.
+            //RProperty[] props = null;
+            //var query = dbrec.Props
+            //    .Select(p =>
+            //    {
+            //        if (p is RField)
+            //        {
+            //            RField f = (RField)p;
+            //            return new RField { Prop = f.Prop, Value = f.Value };
+            //        }
+            //        else // if (p is RLink)
+            //        {
+            //            RLink l = (RLink)p;
+            //            return new RLink { Prop = l.Prop, Resource = l.Resource };
+            //        }
+            //        //else return null;
+            //    })
+            //    .ToArray();
+            
+        }
+
         // ==== Определения, созданные для Portrait2, Portrait3
 
 
@@ -201,5 +266,6 @@ namespace RDFEngine
             };
             return result_rec;
         }
+
     }
 }
