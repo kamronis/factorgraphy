@@ -10,15 +10,17 @@ namespace RDFEngine
     {
         // База данных будет:
         private IDictionary<string, RRecord> rdatabase;
+        private Dictionary<string, List<RInverseLink>> inverseDic;
+        private void AddInverse(string id, RInverseLink ilink)         
+        {
+            if (!inverseDic.ContainsKey(id)) inverseDic.Add(id, new List<RInverseLink>());
+            inverseDic[id].Add(ilink);
+        }
+
         public void Load(IEnumerable<XElement> records)
         {
             // ДОБАВЛЕНИЕ обратных ссылок
-            Dictionary<string, List<RInverseLink>> inverseDic = new Dictionary<string, List<RInverseLink>>();
-            Action<string, RInverseLink> AddInverse = (id, ilink) =>
-            {
-                if (!inverseDic.ContainsKey(id)) inverseDic.Add(id, new List<RInverseLink>());
-                inverseDic[id].Add(ilink);
-            };
+            inverseDic = new Dictionary<string, List<RInverseLink>>();
 
             rdatabase = records.Select(x =>
             {
@@ -125,6 +127,8 @@ namespace RDFEngine
                 });
         }
 
+        private RProperty GetProp(RRecord rec, string prop) { return rec.Props.FirstOrDefault(p => p.Prop == prop); }
+
         public void Update(RRecord rec)
         {
             // Найдем текущее значение записи
@@ -132,24 +136,25 @@ namespace RDFEngine
             // На всякий случай, проверим тип 
             if (rec.Tp != dbrec.Tp) throw new Exception("Err: 223902");
             // Нужно "перебрать" прямые свойства, из полей что-то убрать, что-то добавить, ссылки обработать специально.
-            //RProperty[] props = null;
-            //var query = dbrec.Props
-            //    .Select(p =>
-            //    {
-            //        if (p is RField)
-            //        {
-            //            RField f = (RField)p;
-            //            return new RField { Prop = f.Prop, Value = f.Value };
-            //        }
-            //        else // if (p is RLink)
-            //        {
-            //            RLink l = (RLink)p;
-            //            return new RLink { Prop = l.Prop, Resource = l.Resource };
-            //        }
-            //        //else return null;
-            //    })
-            //    .ToArray();
-            
+            var query = dbrec.Props
+                .Select(p =>
+                {
+                    RProperty pr = null;
+                    if (p is RField)
+                    {
+                        RField f = (RField)p;
+                        pr = new RField { Prop = f.Prop, Value = f.Value };
+                    }
+                    else if (p is RLink)
+                    {
+                        RLink l = (RLink)p;
+                        pr = new RLink { Prop = l.Prop, Resource = l.Resource };
+                    }
+
+                    return pr;
+                });
+            dbrec.Props = query.ToArray();
+
         }
 
         // ==== Определения, созданные для Portrait2, Portrait3
