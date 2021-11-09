@@ -22,14 +22,16 @@ else if (model != null)
     var m = model;
     <table border="1">
         <tr>
-            <td colspan="@m.row.Length">@m.Tp @m.Id</td>
+            <td colspan="@(m.row.Length+1)">@m.Tp @m.Id</td>
         </tr>
         <tr>
-            @foreach (var c in m.row)
-            {
-                <td>@c.Prop</td>
-            }
-        </tr>
+                @foreach (var c in m.row)
+                {
+                    <td>@c.Prop</td>
+                }
+
+            <td></td>
+            </tr>
         <tr>
             @foreach (var c in m.row)
             {
@@ -37,25 +39,36 @@ else if (model != null)
                 {
                     <td @onclick="@(e => EditCell(m.Id, c.Prop))">@(((RField)c).Value)</td>
                 }
-                else if (c is RDirect && ((RDirect)c).DRec != null)
+                else if (c is RDirect)
                 {
-                    var rr = ((RDirect)c).DRec;
-                    <td><a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
+                    if (((RDirect)c).DRec != null)
+                    {
+                        var rr = ((RDirect)c).DRec;
+                        <td><a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(rr.GetName())</a></td>                      
+                    }
+                    else
+                    {
+                        <td></td>
+                    }
                 }
             }
+            <td><a href="javascript:void(0)" @onclick="(e => { editFields = true; })">ред</a></td>
         </tr>
     </table>
     @foreach (var p in m.inv)
     {
         foreach (var t in p.lists)
         {
-            RRecord defrow = t.list[0];
+            if (t.list.Any())
+            {
+                RRecord defrow = t.list[0];
             <table border="1">
                 <tr>
-                    <td colspan="@(defrow.Props.Length-1)">
+                    <td colspan="@(defrow.Props.Length - 1)">
                         <span>@(p.Prop)</span>
                         <span>@(defrow.Tp)</span>
                     </td>
+                    <td colspan="2"><a href="javascript:void(0)" @onclick="e => Add(defrow, p.Prop)">доб</a></td>
                 </tr>
                 <tr>
                     @foreach (var c in defrow.Props)
@@ -64,45 +77,227 @@ else if (model != null)
                         <td>@(c.Prop)</td>
                     }
                 </tr>
+                @if (addRecord)
+                {
+                <tr>
+                    <td colspan="@(defrow.Props.Length + 1)">
+                        <table>
+                            <tbody>
+                                @if(addRecord && recToAdd.Id == null)
+                                {
+                                    recToAdd.Props = new RProperty[defrow.Props.Length];
+                                    recToAdd.Tp = new String(defrow.Tp);
+                                    recToAdd.Id = "newrec" + new Random().Next(1000);
+                                    recToAdd.Props = new RProperty[defrow.Props.Length];
+                                    for (int i = 0; i < defrow.Props.Length; i++)
+                                    {
+                                        var c = defrow.Props[i];
+
+                                        if (c.Prop == p.Prop)
+                                        {
+                                            recToAdd.Props[i] = new RDirect();
+                                            recToAdd.Props[i].Prop = c.Prop;
+                                            ((RDirect)recToAdd.Props[i]).DRec = null;
+                                        }
+                                        if (c is RField)
+                                        {
+                                            recToAdd.Props[i] = new RField();
+                                            recToAdd.Props[i].Prop = c.Prop;
+                                            ((RField)recToAdd.Props[i]).Value = "";
+                                        }
+                                        else if (c is RDirect)
+                                        {
+                                            recToAdd.Props[i] = new RDirect();
+                                            recToAdd.Props[i].Prop = c.Prop;
+                                            ((RDirect)recToAdd.Props[i]).DRec = null;
+                                        }
+                                    }
+
+
+                                }
+                                @for (int i = 0; i < defrow.Props.Length; i++)
+                                {
+                                    var index = i;
+                                    var c = defrow.Props[index];
+
+
+                                    if (c.Prop == p.Prop)
+                                    {
+                                        continue;
+                                    }
+                                    <tr>
+                                        <td>@(c.Prop)</td>
+                                        <td>
+                                            @if (c is RField)
+                                            {
+                                                <span><input type="text" @bind-value="@(((RField)recToAdd.Props[index]).Value)" /></span>
+                                            }
+                                            else if (c is RDirect)
+                                            {
+                                                var rr = ((RDirect)recToAdd.Props[index]).DRec;
+                                                if (editProp != ((RDirect)recToAdd.Props[index]).Prop)
+                                                {
+                                                    if (rr != null)
+                                                    {
+                                                        <a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">@(rr.GetName())</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>Нет значения</span>
+                                                    }
+                                                    <a href="javascript:void(0)" @onclick="@(e => { editProp = ((RDirect)recToAdd.Props[index]).Prop; })">ред.</a>
+                                                }
+                                                else
+                                                {
+                                                    <div>
+                                                        <input @bind="fieldsearch" />
+                                                    </div>
+                                                    if (!string.IsNullOrEmpty(fieldsearch))
+                                                    {
+                                                        IEnumerable<RRecord> query = null;
+                                                        if (rr != null)
+                                                        {
+                                                            query = Infobase.engine.RSearch(fieldsearch, rr.Tp);
+                                                        }
+                                                        else
+                                                        {
+                                                            query = Infobase.engine.RSearch(fieldsearch);
+                                                        }
+                                                        foreach (RRecord rec in query)
+                                                        {
+                                                            <div>
+                                                                <span>@rec.Tp</span> &nbsp;
+                                                                <a href="javascript:void(0)" @onclick="@(e => { editProp = null; ((RDirect)recToAdd.Props[index]).DRec = rec; })">@rec.GetName()</a>
+                                                            </div>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span>???</span>
+                                            }
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td><button @onclick="@(e => Save(recToAdd, true))">Сохранить</button></td>
+                                        <td><button @onclick="@(e => Cancel())">Отмена</button></td>
+                                    </tr>
+                                </tbody>
+                        </table>
+                    </td>
+                </tr>
+                }
                 @foreach (var r in t.list)
                 {
-                    <tr>
-                        @foreach (var c in r.Props)
-                        {
-                            if (c.Prop == p.Prop) { continue; }
-                            if (c is RField)
-                            {
-                                <td>@(((RField)c).Value)</td>
-                            }
-                            else if (c is RDirect && ((RDirect)c).DRec != null)
-                            {
-                                var rr = ((RDirect)c).DRec;
+                    if (r.Id == eid)
+                    {
+                        var ind = 0;
+                        <tr>
+                            <td colspan="@(r.Props.Length + 2)">
+                                <table>
+                                    <tbody>
+                                        @foreach (var c in r.Props.Where(x => x.Prop != forbidden))
+                                        {
+                                            <tr>
+                                                <td>@defrow.Props[ind].Prop</td>
+                                                <td>
+                                                    @if (c is RField)
+                                                    {
+                                                        <span><input type="text" @bind-value="@(((RField)c).Value)" /></span>
+                                                    }
+                                                    else if (c is RDirect && ((RDirect)c).DRec != null)
+                                                    {
+                                                        var rr = ((RDirect)c).DRec;
+                                                        if (editProp != ((RDirect)c).Prop)
+                                                        {
+                                                            <a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">@(rr.GetName())</a>
+                                                            <a href="javascript:void(0)" @onclick="@(e => { editProp = ((RDirect)c).Prop; })">ред.</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div>
+                                                                <input @bind="fieldsearch" />
+                                                            </div>
+                                                            if (!string.IsNullOrEmpty(fieldsearch))
+                                                            {
+                                                                var query = Infobase.engine.RSearch(fieldsearch, rr.Tp);
+                                                                foreach (RRecord rec in query)
+                                                                {
+                                                                    <div>
+                                                                        <span>@rec.Tp</span> &nbsp;
+                                                                        <a href="javascript:void(0)" @onclick="@(e => { editProp = null; ((RDirect)c).DRec = rec; })">@rec.GetName()</a>
+                                                                    </div>
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <span>???</span>
+                                                    }
 
-                                <td><a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
-                            }
-                            else
+                                                </td>
+                                            </tr>
+
+                                            ind++;
+                                        }
+                                        <tr><td><button @onclick="@(e => { Save(r, false); t.list = t.list.Append(r).ToArray(); })">Сохранить</button></td>
+                                            <td><button @onclick="@(e => Cancel())">Отмена</button></td></tr>
+                                        </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr>
+                            @foreach (var c in r.Props)
                             {
-                                <td>???</td>
+                                if (c.Prop == p.Prop) { continue; }
+                                if (c is RField)
+                                {
+                                    <td>@(((RField)c).Value)</td>
+                                }
+                                else if (c is RDirect && ((RDirect)c).DRec != null)
+                                {
+                                    var rr = ((RDirect)c).DRec;
+
+                                    <td><a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
+                                }
+                                else
+                                {
+                                    <td>???</td>
+                                }
+
                             }
-                        }
-                    </tr>
+                            <td><a href="javascript:void(0)" @onclick="@(e => Edit(r.Id, p.Prop))">ред</a></td>
+                            <td><a href="javascript:void(0)" @onclick="@(e => { Delete(r, p.Prop); t.list = t.list.Where(x => x.Id != r.Id).ToArray(); })">уд</a></td>
+                        </tr>
+
+                    }
                 }
 
             </table>
+                }
+            }
         }
-    }
-    <div>Look: @look</div>
 
-}
+    }
 
 
 @code {
     private string searchsample = "";
     Models.P3Model model = null;
+    private string fieldsearch = "";
+    private RRecord originalRecord;
     private void BuildPortrait(string id)
     {
         searchsample = null;
+        eid = null;
         RRecord rec = ((REngine)(Infobase.engine)).BuildPortrait(id);
+        originalRecord = rec;
         model = (new Models.P3Model()).Build(rec);
     }
     private void EditCell(string recId, string prop)
@@ -116,6 +311,67 @@ else if (model != null)
 
 
 @code{
+
+    private string eid;
+
+    private string forbidden;
+
+    private RRecord recToAdd = new RRecord();
+
+    private string editProp;
+
+    private bool editFields = false;
+
+    private bool addRecord = false;
+
+    private void Add(RRecord record, string forbidden)
+    {
+        addRecord = true;
+        eid = null;
+        editFields = false;
+        this.forbidden = forbidden;
+    }
+
+    private void Cancel()
+    {
+        eid = null;
+        editProp = null;
+        fieldsearch = null;
+        addRecord = false;
+        model = (new Models.P3Model()).Build(originalRecord);
+    }
+
+    private void Edit(string eid, string forbidden)
+    {
+        addRecord = false;
+        this.eid = eid;
+        this.forbidden = forbidden;
+
+    }
+
+    private void Delete(RRecord record, string link)
+    {
+        ((REngine)(Infobase.engine)).UpdateRRecord(record, link, model.Id, true);
+    }
+
+    private void Save(RRecord record, bool isInverse)
+    {
+        this.eid = null;
+        fieldsearch = null;
+
+        if (!isInverse)
+        {
+            //originalRecord = record;
+        }
+
+        recToAdd = new RRecord();
+
+        addRecord = false;
+        ((REngine)(Infobase.engine)).UpdateRRecord(record, forbidden, model.Id);
+        forbidden = null;
+
+        //model = (new Models.P3Model()).Build(originalRecord);
+    }
     //override async Task OnInitializedAsync()
     //{
     //    bool ok = await Init();
