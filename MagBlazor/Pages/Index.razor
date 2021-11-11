@@ -258,7 +258,7 @@ else if (model != null)
                             }
                             else
                             {
-                                <td>???</td>
+                                <td>??? @(c.GetType().Name)</td>
                             }
                         }
                         <td><a href="javascript:void(0)" @onclick="@(e => SetEditItem(r.Id, p.Prop))">ред</a></td>
@@ -341,7 +341,25 @@ else if (model != null)
             .Value;
     }
 
-    private void Ok() { Infobase.engine.Update(erecord); erecord = null; }
+    private void Ok()
+    {
+        if (editfieldprop != null)
+        {
+            var pr = erecord.Props.Where(p => p is RField)
+            .Cast<RField>()
+            .FirstOrDefault(f => f.Prop == editfieldprop);
+            pr.Value = fieldvalue;
+        }
+        if (forbidden != null)
+        {
+            RDirect dpro = (RDirect)erecord.Props.First(p => p.Prop == forbidden);
+            dpro.DRec = new RRecord { Id = model.Id, Tp = model.Tp };
+        }
+        Infobase.engine.Update(erecord);
+        //Infobase.engine.UpdateRRecord(erecord, forbidden, model.Id);
+        erecord = null;
+        BuildPortrait(model.Id);
+    }
     private void Cancel() { erecord = null; }
 
     private void DeleteLink(string prop)

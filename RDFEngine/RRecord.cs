@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,9 +40,19 @@ namespace RDFEngine
     {
         public string Value { get; set; }
     }
-    public class RLink : RProperty
+    public class RLink : RProperty, IEqualityComparer<RLink>
     {
         public string Resource { get; set; }
+
+        public bool Equals(RLink x, RLink y)
+        {
+            return x.Prop == y.Prop && x.Resource == y.Resource;
+        }
+
+        public int GetHashCode([DisallowNull] RLink obj)
+        {
+            return obj.Prop.GetHashCode() ^ obj.Resource.GetHashCode();
+        }
     }
 
     // Расширение вводится на странице 11 пособия "Делаем фактографию"
