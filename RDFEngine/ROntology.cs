@@ -92,6 +92,15 @@ namespace RDFEngine
             return res_arr;
         }
 
+        public IEnumerable<string> RangesOfProp(string prop)
+        {
+            int nom = dicOnto[prop];
+            return rontology[nom].Props
+                .Where(p => p is RLink)
+                .Cast<RLink>()
+                .Where(rl => rl.Prop == "range")
+                .Select(rl => rl.Resource);
+        }
 
         /// <summary>
         /// Онтология состоит из (пронумерованных) утверждений формата RRecord в которых Id - имя понятия,
@@ -171,6 +180,8 @@ namespace RDFEngine
                 {
                     new RField { Prop = "Label", Value = "орг. сист." },
                     new RField { Prop = "InvLabel", Value = "в орг. сист." },
+                    new RLink { Prop = "domain", Resource = "participation"},
+                    new RLink { Prop = "range", Resource = "org-sys" }
                 }
             }
             , new RRecord
@@ -181,6 +192,20 @@ namespace RDFEngine
                 {
                     new RField { Prop = "Label", Value = "участник" },
                     new RField { Prop = "InvLabel", Value = "участник в орг." },
+                    new RLink { Prop = "domain", Resource = "participation"},
+                    new RLink { Prop = "range", Resource = "person" }
+                }
+            }
+            , new RRecord
+            {
+                Id = "father",
+                Tp = "ObjectProperty",
+                Props = new RProperty[]
+                {
+                    new RField { Prop = "Label", Value = "отец" },
+                    new RField { Prop = "InvLabel", Value = "ребенок" },
+                    new RLink { Prop = "domain", Resource = "person"},
+                    new RLink { Prop = "range", Resource = "person" }
                 }
             }
 

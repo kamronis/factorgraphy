@@ -355,3 +355,4 @@ MigrationBackup/
 /RDF_Database/SypCassete
 /RDF_Database/SypCasseteFamily
 /RDF_Database/wwwroot/img
+/GenerateRDF/output.rdf

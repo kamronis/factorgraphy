@@ -19,6 +19,11 @@ namespace RDFEngine
         public void UpdateRRecord(RRecord record, string forbidden, string modelId);
         //public RRecord GetRTree(string id, int level, string forbidden);
 
+        public void Update(RRecord record);
+        public bool DeleteRecord(string id); // возвращает true если успешно
+        public string NewRecord(string type, string name); // возвращает идентификаторо созданной записи 
+        public string NewRelation(string type, string inverseprop, string source);
+
         // Константы для удобства работы с RDF/XML
         public static XName rdfabout = XName.Get("about", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
         public static XName rdfresource = XName.Get("resource", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
