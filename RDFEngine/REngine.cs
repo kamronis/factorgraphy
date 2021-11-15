@@ -220,6 +220,7 @@ namespace RDFEngine
 
         public IEnumerable<RRecord> RSearch(string searchstring, string type)
         {
+            if (string.IsNullOrEmpty(type)) return RSearch(searchstring);
             searchstring = searchstring.ToLower();
             return rdatabase
                 .Select(pair => pair.Value)
@@ -302,6 +303,63 @@ namespace RDFEngine
             // Поставим на место
             dbrec.Props = result;
         }
+        public bool DeleteRecord(string id)
+        {
+            // Делаем выборку записи
+            RRecord dbrec = rdatabase[id];
+            if (dbrec == null) return false;
+            // Запись полностью извлекается из базы данных. Если на запись есть ссылки, то они обнуляются
+            foreach (RInverseLink ilink in dbrec.Props.Where(p => p is RInverseLink))
+            {
+                RRecord rec = rdatabase[ilink.Source];
+                // Убираем прямые ссылки со свойством и идентификатором
+                rec.Props = rec.Props.Where(p => !(p is RLink && 
+                    ((RLink)p).Prop == ilink.Prop &&
+                    ((RLink)p).Resource == ilink.Source)
+                    ).ToArray();
+            }
+            // Если в записи есть ссылки, убираются соответсвующие (обратные) свойства в целевых объектах
+            foreach (RLink link in dbrec.Props.Where(p => p is RLink))
+            {
+                RRecord rec = rdatabase[link.Resource];
+                rec.Props = rec.Props.Where(p => !(p is RInverseLink &&
+                    ((RInverseLink)p).Prop == link.Prop && ((RInverseLink)p).Source == id)
+                ).ToArray();
+            }
+            // Уничтожим саму запись
+            rdatabase.Remove(id);
+            return true;
+        }
+        public static string prefix = "sdjkj";
+        public static int counter = 1001;
+        public string NewRecord(string type, string name)
+        {
+            string id = prefix + counter; counter++;
+            RRecord nrecord = new RRecord
+            {
+                Id = id,
+                Tp = type,
+                Props = new RProperty[] { new RField { Prop = "name", Value = name } }
+            };
+            rdatabase.Add(id, nrecord);
+            return id;
+        }
+        // создает запись указанного типа
+        public string NewRelation(string type, string prop, string resource)
+        {
+            string id = prefix + counter; counter++;
+            RRecord nrecord = new RRecord
+            {
+                Id = id,
+                Tp = type,
+                Props = new RProperty[] { new RLink { Prop = prop, Resource = resource } }
+            };
+            rdatabase.Add(id, nrecord);
+            // Коррекция узла с идентификатором resource: добавление в список свойств обратной стрелки RInverseLink, ведущей от id
+            RRecord srecord = rdatabase[resource];
+            srecord.Props = srecord.Props.Append(new RInverseLink { Prop = prop, Source = id }).ToArray();
+            return id;
+        }
 
         // ==== Определения, созданные для Portrait2, Portrait3
 
@@ -332,5 +390,10 @@ namespace RDFEngine
             return result_rec;
         }
 
+        // ================ Определение для отладки =================
+        public IEnumerable<RRecord> Records()
+        {
+            return rdatabase.Select(r => r.Value);
+        }
     }
 }

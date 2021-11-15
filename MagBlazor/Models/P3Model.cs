@@ -57,7 +57,7 @@ namespace MagBlazor.Models
         /// "Правильное" преобразование расширенной записи в модель
         public P3Model Build(RRecord erec)
         {
-            var query = erec.Props.Where(p => p is RInverse)
+            var query = erec.Props.Where(p => p is RInverse && ((RInverse)p).IRec != null)
                 .Cast<RInverse>()
                 .GroupBy(d => d.Prop)
                 .Select(kd => new InversePropType

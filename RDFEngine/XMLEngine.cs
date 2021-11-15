@@ -154,5 +154,19 @@ namespace RDFEngine
         {
 
         }
+
+        public bool DeleteRecord(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string NewRecord(string type, string name)
+        {
+            throw new NotImplementedException();
+        }
+        public string NewRelation(string type, string inverseprop, string source)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
