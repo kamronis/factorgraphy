@@ -1,0 +1,47 @@
+﻿@using RDFEngine
+
+<div>
+    <input @bind="searchsample" />
+</div>
+@if (!string.IsNullOrEmpty(searchsample) && resShown)
+{
+    IEnumerable<RRecord> query = null;
+    if (!string.IsNullOrEmpty(type))
+    {
+        query = Infobase.engine.RSearch(searchsample, type);
+    }
+    else
+    {
+        query = Infobase.engine.RSearch(searchsample);
+    }
+    foreach (RRecord rec in query)
+    {
+        <div>
+            <span>@rec.Tp</span> &nbsp;
+            <a href="javascript:void(0)" @onclick="@(e =>SearchResultClick(rec))">@rec.GetName()</a>
+        </div>
+    }
+}
+
+@code{
+    private string searchsample = "";
+
+    [Parameter]
+    public EventCallback onSearchResultClick { get; set; }
+
+    [Parameter]
+    public bool hideResults { get; set; } = false;
+
+    [Parameter]
+    public string type { get; set; } = null;
+
+    private bool resShown = true;
+
+    protected async Task SearchResultClick(RRecord rec)
+    {
+        resShown = !hideResults;
+        await onSearchResultClick.InvokeAsync(rec);
+    }
+
+
+}

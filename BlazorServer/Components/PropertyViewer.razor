@@ -1,0 +1,37 @@
+﻿@using RDFEngine
+
+@foreach (var c in properties)
+{
+    if (c.Prop == forbidden) { continue; }
+    if (c is RField)
+    {
+        <td>@(((RField)c).Value)</td>
+    }
+    else if (c is RDirect && ((RDirect)c).DRec != null)
+    {
+        var rr = ((RDirect)c).DRec;
+
+        <td><a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
+    }
+    else
+    {
+        <td>Нет данных</td>
+    }
+
+}
+
+@code {
+    [Parameter]
+    public RProperty[] properties { get; set; }
+
+    [Parameter]
+    public string forbidden { get; set; } = null;
+
+    [Parameter]
+    public EventCallback onBuildPortrait { get; set; }
+
+    protected async Task BuildPortrait(string id)
+    {
+        await onBuildPortrait.InvokeAsync(id);
+    }
+}

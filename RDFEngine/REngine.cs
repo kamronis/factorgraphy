@@ -132,7 +132,7 @@ namespace RDFEngine
                 }
                 else
                 {
-                    rdatabase[record.Id] = generateRecordToAdd(record, forbidden, modelId);
+                   rdatabase[record.Id] = generateRecordToAdd(record, forbidden, modelId);
                 }
             }
             else
@@ -183,6 +183,13 @@ namespace RDFEngine
                         toAdd.Props[i] = link;
                     }
 
+                }
+                if (prop is RInverse)
+                {
+                    RInverseLink link = new RInverseLink();
+                    link.Prop = prop.Prop;
+                    link.Source = ((RInverse)prop).IRec.Id;
+                    toAdd.Props[i] = link;
                 }
 
             }

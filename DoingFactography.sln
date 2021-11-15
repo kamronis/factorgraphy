@@ -33,7 +33,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorServer", "BlazorServe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorKonstantin", "BlazorKonstantin\BlazorKonstantin.csproj", "{A23CD4DF-FEF1-4A8C-A706-86B8820ABC73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchKonstantin", "SearchKonstantin\SearchKonstantin.csproj", "{A013291B-9A11-42DB-9680-6395D32CB501}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchKonstantin", "SearchKonstantin\SearchKonstantin.csproj", "{A013291B-9A11-42DB-9680-6395D32CB501}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
