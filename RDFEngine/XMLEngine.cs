@@ -134,14 +134,25 @@ namespace RDFEngine
             throw new NotImplementedException();
         }
 
+        public IEnumerable<RRecord> RSearch(string searchstring, string type)
+        {
+            throw new NotImplementedException();
+        }
+
         public RRecord GetRRecord(string id)
         {
             throw new NotImplementedException();
         }
 
-        public RRecord GetRTree(string id, int level, string forbidden)
+
+        public void Update(RRecord rec)
         {
             throw new NotImplementedException();
+        }
+
+        public void UpdateRRecord(RRecord record, string forbidden, string modelId)
+        {
+
         }
     }
 }

@@ -71,6 +71,10 @@ namespace BlazorServer
     <from-date>1959</from-date>
     <name>Õ√”</name>
   </org-sys>
+  <org-sys rdf:about='o19305'>
+    <from-date>1959</from-date>
+    <name>»—»</name>
+  </org-sys>
   <participation rdf:about='r1111'>
     <participant rdf:resource='p3817' />
     <in-org rdf:resource='o19302' />

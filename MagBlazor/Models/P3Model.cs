@@ -25,7 +25,7 @@ namespace MagBlazor.Models
         public RProperty[] row;
         public InversePropType[] inv;
 
-        /// "Неправильное" преобразование расширенной записи в модель
+        /// "Неправильное" (без онтологии) преобразование расширенной записи в модель
         public P3Model Build0(RRecord erec)
         {
             var query = erec.Props.Where(p => p is RInverse)
