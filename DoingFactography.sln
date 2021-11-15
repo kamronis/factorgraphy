@@ -35,7 +35,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorKonstantin", "BlazorK
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchKonstantin", "SearchKonstantin\SearchKonstantin.csproj", "{A013291B-9A11-42DB-9680-6395D32CB501}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagBlazor", "MagBlazor\MagBlazor.csproj", "{5054137A-7224-4BF8-A8BB-BC4F996FA4DD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagBlazor", "MagBlazor\MagBlazor.csproj", "{7A6F7C47-0326-4C81-BF96-D4EF1C41362A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SearchTextKonstantin", "SearchTextKonstantin\SearchTextKonstantin.csproj", "{523D1DBB-4617-4475-A746-D482BBEED19D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -107,10 +109,6 @@ Global
 		{A013291B-9A11-42DB-9680-6395D32CB501}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A013291B-9A11-42DB-9680-6395D32CB501}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A013291B-9A11-42DB-9680-6395D32CB501}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5054137A-7224-4BF8-A8BB-BC4F996FA4DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5054137A-7224-4BF8-A8BB-BC4F996FA4DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5054137A-7224-4BF8-A8BB-BC4F996FA4DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5054137A-7224-4BF8-A8BB-BC4F996FA4DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
