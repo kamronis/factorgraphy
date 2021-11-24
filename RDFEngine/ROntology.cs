@@ -21,6 +21,7 @@ namespace RDFEngine
         /// Элемент массива - словарь, отображений имен свойств в номера позиции в массиве онтологии.
         /// </summary>
         public Dictionary<string, int>[] dicsProps = null;
+        public Dictionary<string, int[]>[] dicsInverseProps = null;
 
         public ROntology(IEnumerable<RRecord> statements)
         {
@@ -37,6 +38,11 @@ namespace RDFEngine
                 dicsProps[i] = links
                     .Select((p, n) => new { p.Resource, n })
                     .ToDictionary(pair => pair.Resource, pair => pair.n);
+            }
+            dicsInverseProps = new Dictionary<string, int[]>[rontology.Length];
+            for (int i = 0; i< rontology.Length; i++)
+            {
+
             }
         }
         // Использование константно заданной онтологии sampleontology
@@ -76,6 +82,7 @@ namespace RDFEngine
             foreach (var p in record.Props)
             {
                 if (p is RInverse) continue;
+                if (!dicProps.ContainsKey(p.Prop)) continue;
                 int n = dicProps[p.Prop];
                 if (p is RField)
                 {

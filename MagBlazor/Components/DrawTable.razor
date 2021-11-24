@@ -1,0 +1,64 @@
+﻿@using RDFEngine
+
+@{ RRecord defrow = tlist[0]; }
+<table border="1">
+    <tr>
+        <td colspan="@(tlist.Length)">
+            <span>@(pProp)</span>
+            <span>@(defrow.Tp)</span>
+        </td>
+    </tr>
+    <tr>
+        @foreach (var c in defrow.Props)
+        {
+            <td>@(c.Prop)</td>
+        }
+    </tr>
+    @foreach (var r in tlist)
+    {
+<tr>
+    @foreach (var c in r.Props)
+    {
+        if (c is RField)
+        {
+            <td>@(((RField)c).Value)</td>
+        }
+        else if (c is RDirect)
+        {
+            var rr = ((RDirect)c).DRec;
+            if (rr != null)
+            {
+                <td><a href="javascript:void(0)" @onclick="@(e =>LinkClick(rr.Id))">@(rr.GetName())</a></td>
+            }
+            else
+            {
+                <td></td>
+            }
+        }
+        else
+        {
+            <td>???</td>
+        }
+    }
+</tr>
+    }
+</table>
+
+
+
+
+@code {
+    [Parameter]
+    public string pProp { get; set; }
+
+    [Parameter]
+    public RRecord[] tlist { get; set; }
+
+    [Parameter] 
+    public EventCallback onGo { get; set; }
+
+    private async Task LinkClick(string id)
+    {
+        await onGo.InvokeAsync(id);
+    }
+}
