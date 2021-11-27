@@ -20,7 +20,9 @@
     [Parameter]
     public EventCallback onSelected { get; set; }
 
-    private string searchsample;
+    [Parameter]
+    public string searchsample { get; set; }
+
     private async Task SearchResultClick(RRecord rec)
     {
         searchsample = null;
