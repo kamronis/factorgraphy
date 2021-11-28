@@ -21,6 +21,15 @@ namespace RDFEngine
         /// Элемент массива - словарь, отображений имен свойств в номера позиции в массиве онтологии.
         /// </summary>
         public Dictionary<string, int>[] dicsProps = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<string, string[]> dicsInversePropsForType = null;
+        public IEnumerable<string> GetInversePropsByType(string tp) 
+        {
+            return dicsInversePropsForType[tp];
+                //.Select(ps => )
+        }
 
         public ROntology(IEnumerable<RRecord> statements)
         {
@@ -38,6 +47,13 @@ namespace RDFEngine
                     .Select((p, n) => new { p.Resource, n })
                     .ToDictionary(pair => pair.Resource, pair => pair.n);
             }
+            // Вычисляем обратные свойства для типов
+            dicsInversePropsForType = rontology.Where(rr => rr.Tp == "ObjectProperty")
+                .SelectMany(rr => rr.Props
+                    .Where(p => p is RLink && p.Prop == "range")
+                    .Select(p => new { pr = rr.Id, tp = ((RLink)p).Resource }))
+                .GroupBy(pair => pair.tp)
+                .ToDictionary(keypair => keypair.Key, keypair => keypair.Select(x => x.pr).ToArray());
         }
         // Использование константно заданной онтологии sampleontology
         public ROntology() : this(samplerontology) { }
@@ -76,6 +92,7 @@ namespace RDFEngine
             foreach (var p in record.Props)
             {
                 if (p is RInverse) continue;
+                if (!dicProps.ContainsKey(p.Prop)) continue;
                 int n = dicProps[p.Prop];
                 if (p is RField)
                 {
@@ -99,6 +116,15 @@ namespace RDFEngine
                 .Where(p => p is RLink)
                 .Cast<RLink>()
                 .Where(rl => rl.Prop == "range")
+                .Select(rl => rl.Resource);
+        }
+        public IEnumerable<string> DomainsOfProp(string prop)
+        {
+            int nom = dicOnto[prop];
+            return rontology[nom].Props
+                .Where(p => p is RLink)
+                .Cast<RLink>()
+                .Where(rl => rl.Prop == "domain")
                 .Select(rl => rl.Resource);
         }
 
