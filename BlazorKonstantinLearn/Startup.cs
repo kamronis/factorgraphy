@@ -67,7 +67,7 @@ namespace BlazorKonstantinLearn
         
             Infobase.engine = new RDFEngine.REngine();
             //((RDFEngine.REngine)Infobase.engine).Load();
-            ((RDFEngine.REngine)Infobase.engine).Load(xml_led.Elements());
+            ((RDFEngine.REngine)Infobase.engine).Load(xml_rdf.Elements());
             Infobase.engine.Build();
             Infobase.rontology = new RDFEngine.ROntology();
 
