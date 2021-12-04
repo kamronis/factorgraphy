@@ -29,6 +29,14 @@ else
         </tr>
         @foreach (var r in records)
         {
+            if (toedit)
+                    {
+                        <tr>
+                            <td>
+                                <a href="javascript:void(0)" @onclick="@(e =>NewItem())">нов.</a>
+                            </td>
+                        </tr>
+                    }
             <tr>
                 @foreach (var c in r.Props)
                 {
@@ -72,9 +80,12 @@ else
 
             [Parameter]
             public EventCallback onGo { get; set; }
+            [Parameter]
+            public bool toedit { get; set; }
 
             private async Task LinkClick(string id)
             {
                 await onGo.InvokeAsync(id);
             }
+            private void NewItem() { }
         }
