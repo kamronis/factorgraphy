@@ -1,7 +1,7 @@
 ﻿@using RDFEngine
 @page "/"
 
-<MagBlazor.Components.Search onSelected="(rec) => UtilizeRecord((RRecord)rec)" searchsample="И" />
+<MagBlazor.Components.Search onSelected="(rid) => UtilizeRecord((string)rid)" searchsample="И" />
 @if (focusRec != null)
 {
     <MagBlazor.Components.DrawTable inverseTp="@focusRec.Tp" records="@(new RRecord[] { focusRec })" onGo="(id) => Build((string)id)" />
@@ -17,14 +17,19 @@
 }
 
 @code{
-    //Models.P3Model model = null;
+    // Признак редактирования
+    private bool toedit { get { return Infobase.toedit; } }
+
+    // Запись фокусного элемента и списки обратных свойств для него
     private RRecord focusRec = null;
     private Models.InversePropType[] focusInversePropTypes = null;
-    private void UtilizeRecord(RRecord rec)
+
+    private void UtilizeRecord(string id)
     {
-        Build(rec.Id);
+        Build(id);
     }
 
+    // Построение фокусного элемента по его идентификатору 
     private void Build(string recId)
     {
         RRecord erec = ((REngine)(Infobase.engine)).BuildPortrait(recId);
@@ -52,6 +57,7 @@
         focusRec = new RRecord { Id = erec.Id, Tp = erec.Tp, Props = Infobase.rontology.ReorderFieldsDirects(erec) };
     }
 
+    // Переменная для отладки-просмотра
     private string look = "";
 }
 

@@ -9,5 +9,6 @@ namespace MagBlazor
     {
         public static RDFEngine.IEngine engine = null;
         public static RDFEngine.ROntology rontology = null;
+        public static bool toedit = true;
     }
 }

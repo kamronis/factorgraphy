@@ -2,6 +2,11 @@
 
 <div>
     <input @bind="searchsample" />
+    <select @bind="searchtype">
+        <option value=""></option>
+        <option value="person">Персона</option>
+        <option value="org-sys">Орг. сист.</option>
+    </select>
 </div>
 @if (!string.IsNullOrEmpty(searchsample))
 {
@@ -14,18 +19,30 @@
     <a href="javascript:void(0)" @onclick="@(e =>SearchResultClick(rec))">@rec.GetName()</a>
 </div>
     }
+    if (!string.IsNullOrEmpty(searchtype)) 
+    {
+        <div><a href="javascript:void(0)" @onclick="@(e =>NewItemClick(searchtype))">нов.</a></div>
+    }
 }
 
 @code{
     [Parameter]
     public EventCallback onSelected { get; set; }
-
     [Parameter]
     public string searchsample { get; set; }
+    [Parameter]
+    public bool toedit { get; set; }
 
     private async Task SearchResultClick(RRecord rec)
     {
         searchsample = null;
-        await onSelected.InvokeAsync(rec);
+        await onSelected.InvokeAsync(rec.Id);
     }
+    private async Task NewItemClick(string tp)
+    {
+        string nid = Infobase.engine.NewRecord(searchtype, searchsample);
+        searchsample = null;
+        await onSelected.InvokeAsync(nid);
+    }
+    private string searchtype;
 }
