@@ -21,6 +21,15 @@ namespace RDFEngine
         /// Элемент массива - словарь, отображений имен свойств в номера позиции в массиве онтологии.
         /// </summary>
         public Dictionary<string, int>[] dicsProps = null;
+        /// <summary>
+        /// 
+        /// </summary>
+        private Dictionary<string, string[]> dicsInversePropsForType = null;
+        public IEnumerable<string> GetInversePropsByType(string tp) 
+        {
+            return dicsInversePropsForType[tp];
+                //.Select(ps => )
+        }
 
         // Словарь родителей с именами родителей.
         public static Dictionary<string, string[]> parentsDictionary = null;
@@ -182,6 +191,13 @@ namespace RDFEngine
                         .ToDictionary(pair => pair.V, pair => pair.n);
                 }
             }
+            // Вычисляем обратные свойства для типов
+            dicsInversePropsForType = rontology.Where(rr => rr.Tp == "ObjectProperty")
+                .SelectMany(rr => rr.Props
+                    .Where(p => p is RLink && p.Prop == "range")
+                    .Select(p => new { pr = rr.Id, tp = ((RLink)p).Resource }))
+                .GroupBy(pair => pair.tp)
+                .ToDictionary(keypair => keypair.Key, keypair => keypair.Select(x => x.pr).ToArray());
         }
         public ROntology(string path):this(LoadROntology(path)){        }
         // Использование константно заданной онтологии sampleontology
@@ -252,6 +268,15 @@ namespace RDFEngine
                 .Where(p => p is RLink)
                 .Cast<RLink>()
                 .Where(rl => rl.Prop == "range")
+                .Select(rl => rl.Resource);
+        }
+        public IEnumerable<string> DomainsOfProp(string prop)
+        {
+            int nom = dicOnto[prop];
+            return rontology[nom].Props
+                .Where(p => p is RLink)
+                .Cast<RLink>()
+                .Where(rl => rl.Prop == "domain")
                 .Select(rl => rl.Resource);
         }
 

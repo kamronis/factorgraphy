@@ -1,0 +1,91 @@
+﻿@using RDFEngine
+
+@if (records == null || records.Length == 0)
+{
+    <table border="1">
+        <tr>
+            <td>
+                <span>@(inverseProp)</span>
+                <span style="color:red;">@(inverseTp)</span>
+            </td>
+        </tr>
+    </table>
+}
+else
+{
+    RRecord defrow = records[0];
+    <table border="1">
+        <tr>
+            <td colspan="@(defrow.Props.Length)">
+                <span>@(inverseProp)</span>
+                <span style="color:red;">@(inverseTp)</span>
+            </td>
+        </tr>
+        <tr>
+            @foreach (var c in defrow.Props)
+            {
+                <td>@(c.Prop)</td>
+            }
+        </tr>
+        @foreach (var r in records)
+        {
+            if (toedit)
+                    {
+                        <tr>
+                            <td>
+                                <a href="javascript:void(0)" @onclick="@(e =>NewItem())">нов.</a>
+                            </td>
+                        </tr>
+                    }
+            <tr>
+                @foreach (var c in r.Props)
+                {
+                    if (c is RField)
+                    {
+                        <td>@(((RField)c).Value)</td>
+                    }
+                    else if (c is RDirect)
+                    {
+                        var rr = ((RDirect)c).DRec;
+                        if (rr != null)
+                        {
+                            <td><a href="javascript:void(0)" @onclick="@(e =>LinkClick(rr.Id))">@(rr.GetName())</a></td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                    }
+                    else
+                    {
+                        <td>???</td>
+                    }
+                }
+            </tr>
+        }
+    </table>
+}
+
+
+
+
+        @code {
+            [Parameter]
+            public string inverseProp { get; set; }
+            [Parameter]
+            public string inverseTp { get; set; }
+
+            [Parameter]
+            public RRecord[] records { get; set; }
+
+            [Parameter]
+            public EventCallback onGo { get; set; }
+            [Parameter]
+            public bool toedit { get; set; }
+
+            private async Task LinkClick(string id)
+            {
+                await onGo.InvokeAsync(id);
+            }
+            private void NewItem() { }
+        }

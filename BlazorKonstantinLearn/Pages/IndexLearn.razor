@@ -1,4 +1,5 @@
-﻿@page "/"
+﻿@page "/IndexLearn"
+
 @using RDFEngine
 
 <h1>страница /Home</h1>
@@ -24,11 +25,14 @@ else if (model != null)
 
 @code{
     private string searchsample = "";
-    private P3Model model = null;
+    private RRecord model = null;
     private void BuildPortrait(string id)
     {
-        RRecord rec = Infobase.engine.GetRRecord(id);
-        model = new P3Model().Build(rec);
-        if (model != null) searchsample = null;
+        model = Infobase.engine.GetRRecord(id);
+        if (model != null)
+        {
+            searchsample = null;
+        }
     }
 }
+

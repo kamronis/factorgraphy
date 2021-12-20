@@ -39,6 +39,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MagBlazor", "MagBlazor\MagB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SearchTextKonstantin", "SearchTextKonstantin\SearchTextKonstantin.csproj", "{523D1DBB-4617-4475-A746-D482BBEED19D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorKonstantinLearn", "BlazorKonstantinLearn\BlazorKonstantinLearn.csproj", "{DCED54EA-E6D4-4094-A9F4-890AC9C1DE06}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorKonstantinLearn", "BlazorKonstantinLearn\BlazorKonstantinLearn.csproj", "{DCED54EA-E6D4-4094-A9F4-890AC9C1DE06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dotNetRDF", "dotNetRDF\dotNetRDF.csproj", "{2543E0DB-8B55-4FC9-A0F0-7CE9FBF0D956}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +123,14 @@ Global
 		{523D1DBB-4617-4475-A746-D482BBEED19D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{523D1DBB-4617-4475-A746-D482BBEED19D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{523D1DBB-4617-4475-A746-D482BBEED19D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCED54EA-E6D4-4094-A9F4-890AC9C1DE06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCED54EA-E6D4-4094-A9F4-890AC9C1DE06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCED54EA-E6D4-4094-A9F4-890AC9C1DE06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCED54EA-E6D4-4094-A9F4-890AC9C1DE06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2543E0DB-8B55-4FC9-A0F0-7CE9FBF0D956}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2543E0DB-8B55-4FC9-A0F0-7CE9FBF0D956}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2543E0DB-8B55-4FC9-A0F0-7CE9FBF0D956}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2543E0DB-8B55-4FC9-A0F0-7CE9FBF0D956}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

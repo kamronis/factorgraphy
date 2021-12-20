@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using RDFEngine;
 
-namespace MagWABlazor
+namespace BlazorKonstantinLearn
 {
     // ====================== Модельные построения ===================
     /// Вспомогательный класс - группировка списков обратных свойств
