@@ -2,7 +2,10 @@
 @using RDFEngine
 @using BlazorServer.Components
 
+
+<div><input type="checkbox" @bind="lookDb" /></div>
 <h3>Index</h3>
+
 
 <Search onSearchResultClick="@(arg => BuildPortrait(((RRecord)arg).Id))" hideResults="true"></Search>
 @if (model != null)
@@ -13,106 +16,146 @@
             <td colspan="@(m.row.Length+1)">@m.Tp @m.Id</td>
         </tr>
         <tr>
-                @foreach (var c in m.row)
-                {
-                    <td>@c.Prop</td>
-                }
+            @foreach (var c in ont.FirstOrDefault(r => r.Id == m.Tp).Props.Where(p => p is RLink))
+            {
+                <td>@(((RLink)c).Resource)</td>
+            }
 
             <td></td>
-            </tr>
+        </tr>
         <tr>
             @if (editFields)
             {
-                <Editor r="@originalRecord" defrow="@originalRecord" forbidden="@forbidden"
-                        onSave="@((arg) => { Save((RRecord)arg, true); })"
-                        onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"></Editor>
+                <td colspan="@(m.row.Length+1)">
+                <EditorV2 r="@originalRecord" forbidden="@forbidden"
+                        onSave="@((arg) => { Save((RRecord)arg); })"
+                        onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"></EditorV2>
+                </td>
             }
             else
             {
                 <PropertyViewer properties="m.row" onBuildPortrait="@(arg => BuildPortrait((string)arg))"></PropertyViewer>
                 <td><a href="javascript:void(0)" @onclick="@EditFields">ред</a></td>
             }
-            </tr>
+        </tr>
     </table>
-    @foreach (var p in m.inv)
+    <br />
+
+    var possibleInvs = ont.Where(rec => rec.Tp == "ObjectProperty" &&
+        rec.Props.Any(prop => prop is RLink && prop.Prop == "range" && parentTypes.Contains(((RLink)prop).Resource)))
+        .Where(inv => inv.Props.FirstOrDefault(prop => prop.Prop == "range" && ((RLink)prop).Resource == "sys-obj") != null)
+        .OrderBy(inv => {
+           var val = ((RField)inv.Props.FirstOrDefault(prop => prop.Prop == "priority"))?.Value;
+            return val == null ? "zzz" : val;
+        });
+    //.OrderBy(inv => inv.);
+
+    foreach (var inv in possibleInvs)
     {
-        foreach (var t in p.lists)
+
+        RProperty[] domains = inv.Props.Where(prop => prop.Prop == "domain").ToArray();
+        foreach (var domain in domains)
         {
-            if (t.list.Any())
+            RProperty[] domFields = ont.FirstOrDefault(rec => rec.Tp == "Class" && rec.Id == ((RLink)domain).Resource)
+                .Props.Where(prop => prop is RLink && ((RLink)prop).Resource != inv.Id).ToArray();
+
+<table border="1">
+    <tr>
+        <td colspan="@domFields.Length">
+            <span>@(inv.Id)</span>
+            <span>@(((RLink)domain).Resource)</span>
+        </td>
+        <td colspan="2"><a href="javascript:void(0)" @onclick="e => Add(inv.Id, ((RLink)domain).Resource)">доб</a></td>
+    </tr>
+
+    @if (inv.Id == forbidden && ((RLink)domain).Resource == addRecordType)
+    {
+        <tr>
+            <td colspan="@(domFields.Length + 1)">
+                <EditorV2 r="@inv" type="@(((RLink)domain).Resource)" forbidden="@forbidden"
+                          onSave="@((arg) => { Save((RRecord)arg, true); /* t.list = t.list.Append((RRecord)arg).ToArray();*/ })"
+                          onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))" addRecord="true"
+                          origId="@originalRecord.Id"></EditorV2>
+            </td>
+        </tr>
+    }
+    @{ var pTypes = m.inv.Where(propT => propT.Prop == inv.Id); }
+    @if (pTypes.Any())
+    {
+        foreach (var pType in pTypes)
+        {
+            if (pType.lists.Any())
             {
-                RRecord defrow = t.list[0];
-            <table border="1">
-                <tr>
-                    <td colspan="@(defrow.Props.Length - 1)">
-                        <span>@(p.Prop)</span>
-                        <span>@(defrow.Tp)</span>
-                    </td>
-                    <td colspan="2"><a href="javascript:void(0)" @onclick="e => Add(defrow, p.Prop)">доб</a></td>
-                </tr>
-                <tr>
-                    @foreach (var c in defrow.Props)
-                    {
-                        if (c.Prop == p.Prop) { continue; }
-                        <td>@(c.Prop)</td>
-                    }
-                </tr>
-                @if (addRecord)
+                foreach (var list in pType.lists)
                 {
-                <tr>
-                    <td colspan="@(defrow.Props.Length + 1)">
-                        <Editor r="@defrow" defrow="@defrow" forbidden="@forbidden" 
-                                onSave="@((arg) => { Save((RRecord)arg, true);  t.list = t.list.Append((RRecord)arg).ToArray(); })"
-                                onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))" addRecord="@addRecord"></Editor>
-                    </td>
-                </tr>
-                }
-                @foreach (var r in t.list)
-                {
-                    if (r.Id == eid && eid != null)
+                    if (list.Tp == (((RLink)domain).Resource))
                     {
-                        <tr>
-                            <td colspan="@(r.Props.Length + 2)">
-                                <Editor r="@r" defrow="@defrow" forbidden="@forbidden"
-                                        onSave="@((arg) => Save((RRecord)arg, false))"
-                                        onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"></Editor>
-                            </td>
-                        </tr>
-                    }
-                    else
-                    {
-                        <tr>
-                            <PropertyViewer onBuildPortrait="@(arg => BuildPortrait((string)arg))" properties="@r.Props" forbidden="@p.Prop"></PropertyViewer>
-                            <td><a href="javascript:void(0)" @onclick="@(e => Edit(r.Id, p.Prop))">ред</a></td>
-                            <td><a href="javascript:void(0)" @onclick="@(e => { Delete(r, p.Prop); t.list = t.list.Where(x => x.Id != r.Id).ToArray(); })">уд</a></td>
-                        </tr>
+                        if (list.list.Length > 0)
+                        {
+                            <tr>
+                                @foreach (RLink field in domFields)
+                                {
+                                    <td>@field.Resource</td>
+                                }
+                            </tr>
+                        }
+                        foreach (RRecord r in list.list)
+                        {
+                            if (r.Id == eid && eid != null)
+                            {
+                                <tr>
+                                    <td colspan="@(r.Props.Length + 2)">
+                                        <EditorV2 r="@r" forbidden="@forbidden"
+                                                  onSave="@((arg) => Save((RRecord)arg))"
+                                                  onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"
+                                                  origId="@originalRecord.Id"></EditorV2>
+                                    </td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <PropertyViewer onBuildPortrait="@(arg => BuildPortrait((string)arg))" properties="@r.Props" forbidden="@inv.Id"></PropertyViewer>
+                                    <td><a href="javascript:void(0)" @onclick="@(e => Edit(r.Id, inv.Id))">ред</a></td>
+                                    <td><a href="javascript:void(0)" @onclick="@(e => { Delete(r.Id); list.list = list.list.Where(x => x.Id != r.Id).ToArray(); })">уд</a></td>
+                                </tr>
 
+                            }
+                        }
                     }
-                }
-
-            </table>
                 }
             }
         }
-
     }
+</table>
+            <br />
+        }
+    }
+
+}
 
 
 @code {
     private string searchsample = "";
     Models.P3Model model = null;
     private RRecord originalRecord;
+    private string[] parentTypes;
+
+    private RRecord[] ont = Infobase.ront.rontology;
     private void BuildPortrait(string id)
     {
         searchsample = null;
         eid = null;
         RRecord rec = ((REngine)(Infobase.engine)).BuildPortrait(id);
         originalRecord = rec;
+        parentTypes = ROntology.parentsDictionary[rec.Tp];
         model = (new Models.P3Model()).Build(rec);
     }
 }
 
 
 @code{
+    private bool lookDb = false;
 
     private string eid;
 
@@ -120,11 +163,11 @@
 
     private bool editFields = false;
 
-    private bool addRecord = false;
+    private string addRecordType = null;
 
-    private void Add(RRecord record, string forbidden)
+    private void Add(string forbidden, string addRecordType)
     {
-        addRecord = true;
+        this.addRecordType = addRecordType;
         eid = null;
         editFields = false;
         this.forbidden = forbidden;
@@ -133,25 +176,25 @@
     private void Cancel()
     {
         eid = null;
-        addRecord = false;
+        addRecordType = null;
         editFields = false;
         model = (new Models.P3Model()).Build(originalRecord);
     }
 
     private void Edit(string eid, string forbidden)
     {
-        addRecord = false;
+        addRecordType = null;
         this.eid = eid;
         this.forbidden = forbidden;
 
     }
 
-    private void Delete(RRecord record, string link)
+    private void Delete(string id)
     {
-        ((REngine)(Infobase.engine)).UpdateRRecord(record, link, model.Id, true);
+        ((REngine)(Infobase.engine)).DeleteRecord(id);
     }
 
-    private void Save(RRecord record, bool isInverse)
+    private void Save(RRecord record)
     {
         this.eid = null;
         if (editFields == true)
@@ -160,16 +203,23 @@
             editFields = false;
         }
 
-        if (!isInverse)
-        {
-            //originalRecord = record;
-        }
+        ((REngine)(Infobase.engine)).Update(record);
+        
+        addRecordType = null;
 
-        addRecord = false;
-        ((REngine)(Infobase.engine)).UpdateRRecord(record, forbidden, model.Id);
         forbidden = null;
 
         //model = (new Models.P3Model()).Build(originalRecord);
+    }
+
+    private void Save(RRecord record, bool addInverse)
+    {
+        Save(record);
+        if (addInverse)
+        {
+            RRecord rec = ((REngine)(Infobase.engine)).BuildPortrait(model.Id);
+            model = (new Models.P3Model()).Build(rec);
+        }
     }
 
     private void EditFields()
@@ -178,4 +228,60 @@
         forbidden = null;
         this.eid = null;
     }
+
+}
+
+
+@if (lookDb)
+{
+    <hr />
+    <!-- Таблица из 4-х столбцов. Запись начинается объединенным столбцом с типом и идентификатором -->
+    <table>
+        @foreach (var rec in ((REngine)Infobase.engine).Records())
+        {
+            <tr><td colspan="4" style="background-color:aquamarine;">@(rec.Tp) &nbsp; @(rec.Id)</td></tr>
+            @foreach (var p in rec.Props)
+            {
+                if (p is RField)
+                {
+                    var f = (RField)p;
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>@(f.Prop)</td>
+                        <td>@(f.Value)</td>
+                    </tr>
+                }
+                else if (p is RLink)
+                {
+                    var d = (RLink)p;
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>@(d.Prop)</td>
+                        <td>@(d.Resource)</td>
+                    </tr>
+                }
+                else if (p is RInverseLink)
+                {
+                    var il = (RInverseLink)p;
+                    <tr>
+                        <td>@(il.Source)</td>
+                        <td>@(il.Prop)</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                }
+                else
+                {
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>Error in data!</td>
+                    </tr>
+                }
+            }
+        }
+    </table>
 }

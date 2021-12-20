@@ -125,94 +125,6 @@ namespace RDFEngine
             return null;
         }
 
-        // =============== Вариант Трошкова =================
-        public void UpdateRRecord(RRecord record, string forbidden, string modelId, bool delete)
-        {
-            // Есть два варианта: запись уж существует в базе данных или нет
-            if (rdatabase.ContainsKey(record.Id))
-            {   // Запись есть
-                // теперь таже два варианта действий: уничтожить текущую запись и изменить (это и будет Update)
-                if (delete)
-                {
-                    // Для уничтожения записи сначала в элементах, на которые указывают линки, убираются обратные ссылки
-                    foreach (var prop in rdatabase[record.Id].Props)
-                    {
-                        if (prop is RLink)
-                        {
-                            rdatabase[((RLink)prop).Resource].Props = rdatabase[((RLink)prop).Resource].Props
-                                .Where(x => (x is RField) || (x is RInverseLink && ((RInverseLink)x).Source != record.Id))
-                                .ToArray();
-                        }
-                    }
-                    // потом уничтожается сама запись
-                    rdatabase.Remove(record.Id);
-                }
-                else
-                {   // Это настоящий Update
-                    rdatabase[record.Id] = generateRecordToAdd(record, forbidden, modelId);
-                }
-            }
-            else
-            {
-                rdatabase.Add(record.Id, generateRecordToAdd(record, forbidden, modelId));
-                var modelInverse = new RInverseLink();
-                modelInverse.Prop = forbidden;
-                modelInverse.Source = record.Id;
-                var linkId = ((RDirect)record.Props.FirstOrDefault(x => (x is RDirect) && (x.Prop != forbidden))).DRec.Id;
-                var linkInverse = new RInverseLink();
-                linkInverse.Prop = record.Props.FirstOrDefault(x => (x is RDirect) && (x.Prop != forbidden)).Prop;
-                linkInverse.Source = record.Id;
-                rdatabase[modelId].Props = rdatabase[modelId].Props.Append(modelInverse).ToArray();
-                rdatabase[linkId].Props = rdatabase[linkId].Props.Append(linkInverse).ToArray();
-            }
-        }
-        public void UpdateRRecord(RRecord record, string forbidden, string modelId)
-        {
-            UpdateRRecord(record, forbidden, modelId, false);
-        }
-        private RRecord generateRecordToAdd(RRecord record, string forbidden, string modelId)
-        {
-            RRecord toAdd = new RRecord();
-            toAdd.Id = record.Id;
-            toAdd.Tp = record.Tp;
-            toAdd.Props = new RProperty[record.Props.Length];
-            for (int i = 0; i < record.Props.Length; i++)
-            {
-                var prop = record.Props[i];
-                if (prop is RField)
-                {
-                    toAdd.Props[i] = prop;
-                }
-                if (prop is RDirect)
-                {
-                    if (prop.Prop == forbidden)
-                    {
-                        RLink link = new RLink();
-                        link.Prop = prop.Prop;
-                        link.Resource = modelId;
-                        toAdd.Props[i] = link;
-                    }
-                    else
-                    {
-                        RLink link = new RLink();
-                        link.Prop = prop.Prop;
-                        link.Resource = ((RDirect)prop).DRec?.Id;
-                        toAdd.Props[i] = link;
-                    }
-
-                }
-                if (prop is RInverse)
-                {
-                    RInverseLink link = new RInverseLink();
-                    link.Prop = prop.Prop;
-                    link.Source = ((RInverse)prop).IRec.Id;
-                    toAdd.Props[i] = link;
-                }
-
-            }
-            return toAdd;
-        }
-        // =============== конец ================
 
         public IEnumerable<RRecord> RSearch(string searchstring)
         {
@@ -296,10 +208,12 @@ namespace RDFEngine
 
             // Теперь выполним основное действие - вычислим новое списка свойств записи dbrec.
             // Для этого перепишем обратные ссылки и добавим все остальное, не забыв отфильтровать несущественные значения
-            RProperty[] result = rec.Props.Select(p =>
+            RProperty[] result = rec.Props.Where(p => p is not RInverse).Select(p =>
                 (p is RDirect) ?
                 (((RDirect)p).DRec == null ? (RProperty)null : new RLink { Prop = p.Prop, Resource = ((RDirect)p).DRec.Id }) :
-                (string.IsNullOrEmpty(((RField)p).Value) ? (RProperty)null : p) )
+                ((p is RInverse) ? 
+                (((RInverse)p).IRec == null ? (RProperty)null : new RLink { Prop = p.Prop, Resource = ((RInverse)p).IRec.Id }) :
+                (string.IsNullOrEmpty(((RField)p).Value) ? (RProperty)null : p) ) )
                 .Concat(
                 dbrec.Props
                 .Where(p => p is RInverseLink)

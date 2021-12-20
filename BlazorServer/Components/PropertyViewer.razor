@@ -5,13 +5,33 @@
     if (c.Prop == forbidden) { continue; }
     if (c is RField)
     {
-        <td>@(((RField)c).Value)</td>
+        if (c.Prop == "uri")
+        {
+            <img src="@("docs/GetImage?u=" + ((RField)c).Value +"&s=small")" />
+        }
+        else
+        {
+            <td>@(((RField)c).Value)</td>
+        }
+
     }
     else if (c is RDirect && ((RDirect)c).DRec != null)
     {
         var rr = ((RDirect)c).DRec;
 
-        <td><a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
+        if (rr.Props.FirstOrDefault(p => p.Prop == "documenttype") != null && rr.Props.FirstOrDefault(p => p.Prop == "uri") != null)
+        {
+            <td>
+                <a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">
+                    <img src="@("docs/GetImage?u=" + ((RField)rr.Props.FirstOrDefault(p => p.Prop == "uri")).Value +"&s=small")" />
+                </a>
+            </td>
+        }
+        else
+        {
+            <td><a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
+        }
+
     }
     else
     {

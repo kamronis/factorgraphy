@@ -16,7 +16,7 @@ namespace RDFEngine
         public IEnumerable<RRecord> RSearch(string searchstring, string type);
         public RRecord GetRRecord(string id);
 
-        public void UpdateRRecord(RRecord record, string forbidden, string modelId);
+        //public void UpdateRRecord(RRecord record, string forbidden, string modelId);
         //public RRecord GetRTree(string id, int level, string forbidden);
 
         public void Update(RRecord record);

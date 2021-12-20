@@ -16,6 +16,8 @@ namespace BlazorServer
 
         private static Dictionary<string, string> labels_ru;
         private static Dictionary<string, string> inverse_labels_ru;
+
+        public static string cassPath;
         public static void LoadOntology(string path)
         {
             XElement ontology = XElement.Load(path);

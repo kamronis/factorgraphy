@@ -150,11 +150,6 @@ namespace RDFEngine
             throw new NotImplementedException();
         }
 
-        public void UpdateRRecord(RRecord record, string forbidden, string modelId)
-        {
-
-        }
-
         public bool DeleteRecord(string id)
         {
             throw new NotImplementedException();
