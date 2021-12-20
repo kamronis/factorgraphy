@@ -10,8 +10,7 @@
     <direct prop="father" rdf:resource="person"/>
   </owl:Class>
   <owl:ObjectProperty rdf:about="father">
-    <rdfs:label xml:lang="ru">отец</rdfs:label>
-    
+    <rdfs:label xml:lang="ru">отец</rdfs:label>   
   </owl:ObjectProperty>
   <owl:Class rdf:about="photo">
     <rdfs:label xml:lang="ru">Фотография</rdfs:label>
@@ -34,7 +33,7 @@
     <rdfs:label xml:lang="ru">отражаемое</rdfs:label>
     <rdfs:inverse-label xml:lang="ru">отраж. в документе</rdfs:inverse-label>
     <rdfs:domain rdf:resource="reflection"/>
-    <rdfs:range rdf:resource="SysObject"/>
+    <rdfs:range rdf:resource="SysObject"/>  
   </owl:ObjectProperty>
   <owl:ObjectProperty rdf:about="indoc">
     <rdfs:label xml:lang="ru">в документе</rdfs:label>
