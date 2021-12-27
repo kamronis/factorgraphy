@@ -43,7 +43,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorKonstantinLearn", "Bl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dotNetRDF", "dotNetRDF\dotNetRDF.csproj", "{2543E0DB-8B55-4FC9-A0F0-7CE9FBF0D956}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Konstantin2", "..\..\..\..\..\Home\Konstantin2\Konstantin2.csproj", "{99036A5C-237B-44A6-B6FD-D4CF38DE4CB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Konstantin2", "..\..\..\..\Home\Konstantin2\Konstantin2.csproj", "{99036A5C-237B-44A6-B6FD-D4CF38DE4CB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

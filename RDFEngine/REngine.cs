@@ -178,7 +178,17 @@ namespace RDFEngine
                 .Cast<RLink>().Distinct();
 
             // Коррекция стрелок первого множества
-            foreach (var arrow in oSet.Except(nSet))
+            var traverseSet = oSet.Where(rlink => {
+                foreach (var el in nSet)
+                {
+                    if (rlink.Equals(el))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            });
+            foreach (var arrow in traverseSet)
             {
                 string target = arrow.Resource;
                 // Находим целевую запись
@@ -194,7 +204,7 @@ namespace RDFEngine
             }
 
             // Коллекция стрелок второго множества
-            foreach (var arrow in nSet.Except(oSet))
+            foreach (var arrow in traverseSet)
             {
                 string target = arrow.Resource;
                 // Находим целевую запись

@@ -1,51 +1,50 @@
-﻿@page "/viewer"
+﻿@page "/viewer/{entityId?}"
 @using RDFEngine
 @using BlazorServer.Components
 
 
-<div><input type="checkbox" @bind="lookDb" /></div>
-<h3>Index</h3>
+@*<div><input type="checkbox" @bind="lookDb" /></div>*@
+<h3>Viewer</h3>
 
 
 <Search onSearchResultClick="@(arg => BuildPortrait(((RRecord)arg).Id))" hideResults="true"></Search>
 @if (model != null)
 {
     var m = model;
+    var link = "/editor/" + originalRecord.Id;
+    <NavLink href="@link">Редактировать</NavLink>
     <table border="1">
         <tr>
             <td colspan="@(m.row.Length+1)">@m.Tp @m.Id</td>
         </tr>
         <tr>
-            @foreach (var c in ont.FirstOrDefault(r => r.Id == m.Tp).Props.Where(p => p is RLink))
+            @code{
+                List<string> nonEmptyFields = new List<string>();
+            }
+            @foreach (var row in m.row)
             {
-                <td>@(((RLink)c).Resource)</td>
+                if ((row is RDirect && ((RDirect)row).DRec != null)
+                    || ((row is RField) && ((RField)row).Value != null))
+                {
+                    nonEmptyFields.Add(row.Prop);
+                    <td>@row.Prop</td>
+                }
+
             }
 
-            <td></td>
         </tr>
         <tr>
-            @if (editFields)
-            {
-                <td colspan="@(m.row.Length+1)">
-                <EditorV2 r="@originalRecord" forbidden="@forbidden"
-                        onSave="@((arg) => { Save((RRecord)arg); })"
-                        onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"></EditorV2>
-                </td>
-            }
-            else
-            {
-                <PropertyViewer properties="m.row" onBuildPortrait="@(arg => BuildPortrait((string)arg))"></PropertyViewer>
-                <td><a href="javascript:void(0)" @onclick="@EditFields">ред</a></td>
-            }
+            <PropertyViewer properties="m.row" onBuildPortrait="@(arg => BuildPortrait((string)arg))" nonEmptyFields="@nonEmptyFields"></PropertyViewer>
         </tr>
     </table>
     <br />
 
     var possibleInvs = ont.Where(rec => rec.Tp == "ObjectProperty" &&
         rec.Props.Any(prop => prop is RLink && prop.Prop == "range" && parentTypes.Contains(((RLink)prop).Resource)))
-        .Where(inv => inv.Props.FirstOrDefault(prop => prop.Prop == "range" && ((RLink)prop).Resource == "sys-obj") != null)
-        .OrderBy(inv => {
-           var val = ((RField)inv.Props.FirstOrDefault(prop => prop.Prop == "priority"))?.Value;
+        .Where(inv => inv.Props.FirstOrDefault(prop => prop.Prop == "range") != null)
+        .OrderBy(inv =>
+        {
+            var val = ((RField)inv.Props.FirstOrDefault(prop => prop.Prop == "priority"))?.Value;
             return val == null ? "zzz" : val;
         });
     //.OrderBy(inv => inv.);
@@ -59,76 +58,62 @@
             RProperty[] domFields = ont.FirstOrDefault(rec => rec.Tp == "Class" && rec.Id == ((RLink)domain).Resource)
                 .Props.Where(prop => prop is RLink && ((RLink)prop).Resource != inv.Id).ToArray();
 
-<table border="1">
-    <tr>
-        <td colspan="@domFields.Length">
-            <span>@(inv.Id)</span>
-            <span>@(((RLink)domain).Resource)</span>
-        </td>
-        <td colspan="2"><a href="javascript:void(0)" @onclick="e => Add(inv.Id, ((RLink)domain).Resource)">доб</a></td>
-    </tr>
 
-    @if (inv.Id == forbidden && ((RLink)domain).Resource == addRecordType)
-    {
-        <tr>
-            <td colspan="@(domFields.Length + 1)">
-                <EditorV2 r="@inv" type="@(((RLink)domain).Resource)" forbidden="@forbidden"
-                          onSave="@((arg) => { Save((RRecord)arg, true); /* t.list = t.list.Append((RRecord)arg).ToArray();*/ })"
-                          onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))" addRecord="true"
-                          origId="@originalRecord.Id"></EditorV2>
-            </td>
-        </tr>
-    }
-    @{ var pTypes = m.inv.Where(propT => propT.Prop == inv.Id); }
-    @if (pTypes.Any())
-    {
-        foreach (var pType in pTypes)
-        {
-            if (pType.lists.Any())
+
+            var pTypes = m.inv.Where(propT => propT.Prop == inv.Id);
+            if (pTypes.Any())
             {
-                foreach (var list in pType.lists)
-                {
-                    if (list.Tp == (((RLink)domain).Resource))
-                    {
-                        if (list.list.Length > 0)
-                        {
-                            <tr>
-                                @foreach (RLink field in domFields)
-                                {
-                                    <td>@field.Resource</td>
-                                }
-                            </tr>
-                        }
-                        foreach (RRecord r in list.list)
-                        {
-                            if (r.Id == eid && eid != null)
-                            {
-                                <tr>
-                                    <td colspan="@(r.Props.Length + 2)">
-                                        <EditorV2 r="@r" forbidden="@forbidden"
-                                                  onSave="@((arg) => Save((RRecord)arg))"
-                                                  onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"
-                                                  origId="@originalRecord.Id"></EditorV2>
-                                    </td>
-                                </tr>
-                            }
-                            else
-                            {
-                                <tr>
-                                    <PropertyViewer onBuildPortrait="@(arg => BuildPortrait((string)arg))" properties="@r.Props" forbidden="@inv.Id"></PropertyViewer>
-                                    <td><a href="javascript:void(0)" @onclick="@(e => Edit(r.Id, inv.Id))">ред</a></td>
-                                    <td><a href="javascript:void(0)" @onclick="@(e => { Delete(r.Id); list.list = list.list.Where(x => x.Id != r.Id).ToArray(); })">уд</a></td>
-                                </tr>
+                <table border="1">
+                    <tr>
+                        <td colspan="@domFields.Length">
+                            <span>@(inv.Id)</span>
+                            <span>@(((RLink)domain).Resource)</span>
+                        </td>
+                    </tr>
 
+                    @foreach (var pType in pTypes)
+                    {
+                        if (pType.lists.Any())
+                        {
+                            foreach (var list in pType.lists)
+                            {
+                                if (list.Tp == (((RLink)domain).Resource))
+                                {
+                                    if (list.list.Length > 0)
+                                    {
+                                        List<string> nonEmptyFields = new List<string>();
+                                        <tr>
+                                            @foreach (RLink field in domFields)
+                                            {
+                                                var nonEmpty = list.list.SelectMany(rec => rec.Props.Where(prop => prop.Prop == field.Resource)
+                                                .Where(p => (p is RField && ((RField)p).Value != null) ||
+                                               (p is RDirect && ((RDirect)p).DRec != null)));
+                                                if (nonEmpty.Count() != 0)
+                                                {
+                                                    nonEmptyFields.Add(field.Resource);
+                                                    <td>@field.Resource</td>
+                                                }
+                                            }
+                                        </tr>
+                                        @foreach (RRecord r in list.list)
+                                        {
+
+                                            <tr>
+                                                <PropertyViewer onBuildPortrait="@(arg => BuildPortrait((string)arg))" properties="@r.Props" forbidden="@inv.Id" nonEmptyFields="@nonEmptyFields"></PropertyViewer>
+                                            </tr>
+
+
+                                        }
+                                    }
+
+                                }
                             }
                         }
                     }
-                }
+                </table>
+                <br />
             }
-        }
-    }
-</table>
-            <br />
+
         }
     }
 
@@ -136,100 +121,34 @@
 
 
 @code {
+    [Parameter]
+    public string entityId { get; set; }
+
     private string searchsample = "";
     Models.P3Model model = null;
     private RRecord originalRecord;
     private string[] parentTypes;
+    private bool lookDb = false;
 
     private RRecord[] ont = Infobase.ront.rontology;
     private void BuildPortrait(string id)
     {
         searchsample = null;
-        eid = null;
         RRecord rec = ((REngine)(Infobase.engine)).BuildPortrait(id);
         originalRecord = rec;
         parentTypes = ROntology.parentsDictionary[rec.Tp];
         model = (new Models.P3Model()).Build(rec);
     }
-}
 
-
-@code{
-    private bool lookDb = false;
-
-    private string eid;
-
-    private string forbidden;
-
-    private bool editFields = false;
-
-    private string addRecordType = null;
-
-    private void Add(string forbidden, string addRecordType)
+    protected override void OnInitialized() // = On Page Load
     {
-        this.addRecordType = addRecordType;
-        eid = null;
-        editFields = false;
-        this.forbidden = forbidden;
-    }
-
-    private void Cancel()
-    {
-        eid = null;
-        addRecordType = null;
-        editFields = false;
-        model = (new Models.P3Model()).Build(originalRecord);
-    }
-
-    private void Edit(string eid, string forbidden)
-    {
-        addRecordType = null;
-        this.eid = eid;
-        this.forbidden = forbidden;
-
-    }
-
-    private void Delete(string id)
-    {
-        ((REngine)(Infobase.engine)).DeleteRecord(id);
-    }
-
-    private void Save(RRecord record)
-    {
-        this.eid = null;
-        if (editFields == true)
+        if (entityId != null)
         {
-            model = (new Models.P3Model()).Build(originalRecord);
-            editFields = false;
-        }
-
-        ((REngine)(Infobase.engine)).Update(record);
-        
-        addRecordType = null;
-
-        forbidden = null;
-
-        //model = (new Models.P3Model()).Build(originalRecord);
-    }
-
-    private void Save(RRecord record, bool addInverse)
-    {
-        Save(record);
-        if (addInverse)
-        {
-            RRecord rec = ((REngine)(Infobase.engine)).BuildPortrait(model.Id);
-            model = (new Models.P3Model()).Build(rec);
+            BuildPortrait(entityId);
         }
     }
-
-    private void EditFields()
-    {
-        editFields = true;
-        forbidden = null;
-        this.eid = null;
-    }
-
 }
+
 
 
 @if (lookDb)

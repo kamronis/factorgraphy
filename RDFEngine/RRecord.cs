@@ -40,13 +40,13 @@ namespace RDFEngine
     {
         public string Value { get; set; }
     }
-    public class RLink : RProperty, IEqualityComparer<RLink>
+    public class RLink : RProperty, IEquatable<RLink>
     {
         public string Resource { get; set; }
 
-        public bool Equals(RLink x, RLink y)
+        public bool Equals(RLink other)
         {
-            return x.Prop == y.Prop && x.Resource == y.Resource;
+            return this.Prop == other.Prop && this.Resource == other.Resource;
         }
 
         public int GetHashCode([DisallowNull] RLink obj)

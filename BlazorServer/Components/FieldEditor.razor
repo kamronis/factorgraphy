@@ -36,6 +36,10 @@
 
 
 }
+else
+{
+    ((RDirect)r.Props.FirstOrDefault(prop => prop.Prop == forbidden)).DRec = ((REngine)(Infobase.engine)).GetRRecord(origId);
+}
 
 <table>
     <tbody>

@@ -1,5 +1,10 @@
 ﻿@using RDFEngine
 
+@if (nonEmptyFields != null)
+{
+    properties = properties.Where(prop => nonEmptyFields.Contains(prop.Prop)).ToArray();
+}
+
 @foreach (var c in properties)
 {
     if (c.Prop == forbidden) { continue; }
@@ -35,7 +40,10 @@
     }
     else
     {
-        <td>Нет данных</td>
+        
+       <td>Нет данных</td>
+        
+
     }
 
 }
@@ -49,6 +57,9 @@
 
     [Parameter]
     public EventCallback onBuildPortrait { get; set; }
+
+    [Parameter]
+    public List<string> nonEmptyFields { get; set; } = null;
 
     protected async Task BuildPortrait(string id)
     {
