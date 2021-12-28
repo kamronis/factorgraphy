@@ -15,7 +15,7 @@
     <NavLink href="@link">Редактировать</NavLink>
     <table border="1">
         <tr>
-            <td colspan="@(m.row.Length+1)">@m.Tp @m.Id</td>
+            <td colspan="@(m.row.Length+1)">@Infobase.GetTerm(m.Tp) @m.Id</td>
         </tr>
         <tr>
             @code{
@@ -27,7 +27,7 @@
                     || ((row is RField) && ((RField)row).Value != null))
                 {
                     nonEmptyFields.Add(row.Prop);
-                    <td>@row.Prop</td>
+                    <td>@Infobase.GetTerm(row.Prop)</td>
                 }
 
             }
@@ -66,8 +66,8 @@
                 <table border="1">
                     <tr>
                         <td colspan="@domFields.Length">
-                            <span>@(inv.Id)</span>
-                            <span>@(((RLink)domain).Resource)</span>
+                            <span>@Infobase.GetTerm(inv.Id)</span>
+                            <span>@Infobase.GetTerm(((RLink)domain).Resource)</span>
                         </td>
                     </tr>
 
@@ -91,7 +91,7 @@
                                                 if (nonEmpty.Count() != 0)
                                                 {
                                                     nonEmptyFields.Add(field.Resource);
-                                                    <td>@field.Resource</td>
+                                                    <td>@Infobase.GetTerm(field.Resource)</td>
                                                 }
                                             }
                                         </tr>

@@ -20,6 +20,8 @@ namespace RDFEngine
         // База данных будет:
         private IDictionary<string, RRecord> rdatabase;
 
+        public static string propName = "http://fogid.net/o/name";
+
         public void Load(IEnumerable<XElement> records)
         {
             // Локальные определения
@@ -117,6 +119,10 @@ namespace RDFEngine
 
         public RRecord GetRRecord(string id)
         {
+            if (id == null)
+            {
+                return null;
+            }
             RRecord rr;
             if (rdatabase.TryGetValue(id, out rr))
             {
@@ -133,7 +139,7 @@ namespace RDFEngine
                 .Select(pair => pair.Value)
                 .Where(rr => 
                 {
-                    return rr.Props.Any(p => p is RField && ((RField)p).Prop == "name" && ((RField)p).Value.ToLower().StartsWith(searchstring)); 
+                    return rr.Props.Any(p => p is RField && ((RField)p).Prop == propName && ((RField)p).Value.ToLower().StartsWith(searchstring)); 
                 });
         }
 
@@ -146,7 +152,7 @@ namespace RDFEngine
                 .Where(rr => rr.Tp == type)
                 .Where(rr =>
                 {
-                    return rr.Props.Any(p => p is RField && ((RField)p).Prop == "name" && ((RField)p).Value.ToLower().StartsWith(searchstring));
+                    return rr.Props.Any(p => p is RField && ((RField)p).Prop == propName && ((RField)p).Value.ToLower().StartsWith(searchstring));
                 });
         }
 
@@ -270,7 +276,7 @@ namespace RDFEngine
             {
                 Id = id,
                 Tp = type,
-                Props = new RProperty[] { new RField { Prop = "name", Value = name } }
+                Props = new RProperty[] { new RField { Prop = propName, Value = name } }
             };
             rdatabase.Add(id, nrecord);
             return id;

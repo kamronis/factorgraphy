@@ -38,7 +38,11 @@
 }
 else
 {
-    ((RDirect)r.Props.FirstOrDefault(prop => prop.Prop == forbidden)).DRec = ((REngine)(Infobase.engine)).GetRRecord(origId);
+    if (forbidden != null)
+    {
+        ((RDirect)r.Props.FirstOrDefault(prop => prop.Prop == forbidden)).DRec = ((REngine)(Infobase.engine)).GetRRecord(origId);
+
+    }
 }
 
 <table>
@@ -54,7 +58,7 @@ else
         @foreach (var c in rec.Props.Where(p => p is RLink && ((RLink)p).Resource != forbidden))
         {
             <tr>
-                <td>@(((RLink)c).Resource)</td>
+                <td>@Infobase.GetTerm(((RLink)c).Resource)</td>
                 <td>
                     @{
                         RProperty bindProperty;

@@ -29,8 +29,8 @@ namespace RDFEngine
         //}
         public string GetName()
         {
-            //return ((RField)this.Props.FirstOrDefault(p => p is RField && p.Prop == "name"))?.Value;
-            throw new Exception("Err: Old variant of GetName()");
+            return ((RField)this.Props.FirstOrDefault(p => p is RField && p.Prop == REngine.propName))?.Value;
+            //throw new Exception("Err: Old variant of GetName()");
         }
     }
     public abstract class RProperty

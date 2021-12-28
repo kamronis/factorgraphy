@@ -15,12 +15,12 @@
     <NavLink href="@link">Смотреть</NavLink>
     <table border="1">
         <tr>
-            <td colspan="@(m.row.Length+1)">@m.Tp @m.Id</td>
+            <td colspan="@(m.row.Length+1)">@Infobase.GetTerm(m.Tp) @m.Id</td>
         </tr>
         <tr>
             @foreach (var c in ont.FirstOrDefault(r => r.Id == m.Tp).Props.Where(p => p is RLink))
             {
-                <td>@(((RLink)c).Resource)</td>
+                <td>@Infobase.GetTerm(((RLink)c).Resource)</td>
             }
 
             <td></td>
@@ -45,7 +45,7 @@
 
     var possibleInvs = ont.Where(rec => rec.Tp == "ObjectProperty" &&
         rec.Props.Any(prop => prop is RLink && prop.Prop == "range" && parentTypes.Contains(((RLink)prop).Resource)))
-        .Where(inv => inv.Props.FirstOrDefault(prop => prop.Prop == "range" && ((RLink)prop).Resource == "sys-obj") != null)
+        .Where(inv => inv.Props.FirstOrDefault(prop => prop.Prop == "range" /*&& ((RLink)prop).Resource == "sys-obj"*/) != null)
         .OrderBy(inv =>
         {
             var val = ((RField)inv.Props.FirstOrDefault(prop => prop.Prop == "priority"))?.Value;
@@ -65,8 +65,8 @@
             <table border="1">
                 <tr>
                     <td colspan="@domFields.Length">
-                        <span>@(inv.Id)</span>
-                        <span>@(((RLink)domain).Resource)</span>
+                        <span>@Infobase.GetTerm(inv.Id)</span>
+                        <span>@Infobase.GetTerm(((RLink)domain).Resource)</span>
                     </td>
                     <td colspan="2"><a href="javascript:void(0)" @onclick="e => Add(inv.Id, ((RLink)domain).Resource)">доб</a></td>
                 </tr>
@@ -98,7 +98,7 @@
                                         <tr>
                                             @foreach (RLink field in domFields)
                                             {
-                                                <td>@field.Resource</td>
+                                                <td>@Infobase.GetTerm(field.Resource)</td>
                                             }
                                         </tr>
                                     }
