@@ -163,5 +163,10 @@ namespace RDFEngine
         {
             throw new NotImplementedException();
         }
+        public RRecord BuildPortrait(string id)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

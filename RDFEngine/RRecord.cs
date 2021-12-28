@@ -13,23 +13,24 @@ namespace RDFEngine
         public string Tp { get; set; }
         public RProperty[] Props { get; set; }
         //public string Label { get; set; } // поле понадобится для хранения метки
-        public override string ToString()
-        {
-            var query = Props.Select(p =>
-            {
-                string prop = p.Prop;
-                if (p is RField)      return "f^{<" + prop + ">, \"" + ((RField)p).Value + "\"}";
-                else if (p is RLink) return "l^{<" + prop + ">, <" + ((RLink)p).Resource + ">}";
-                // Добавленный вариант обратной ссылки
-                else if (p is RInverseLink) return "il^{<" + prop + ">, <" + ((RInverseLink)p).Source + ">}";
-                else if (p is RDirect) return "d^{<" + prop + ">, " + ((RDirect)p).DRec.ToString() + "}";
-                /*else if (p is RDirect)*/ return "i^{<" + prop + ">, " + ((RInverse)p).IRec.ToString() + "}";
-            }).Aggregate((a, s) => a + ", " + s);
-            return "{ <" + Id + ">, <" + Tp + ">, " + "[" +       query      + "]}";
-        }
+        //public override string ToString()
+        //{
+        //    var query = Props.Select(p =>
+        //    {
+        //        string prop = p.Prop;
+        //        if (p is RField)      return "f^{<" + prop + ">, \"" + ((RField)p).Value + "\"}";
+        //        else if (p is RLink) return "l^{<" + prop + ">, <" + ((RLink)p).Resource + ">}";
+        //        // Добавленный вариант обратной ссылки
+        //        else if (p is RInverseLink) return "il^{<" + prop + ">, <" + ((RInverseLink)p).Source + ">}";
+        //        else if (p is RDirect) return "d^{<" + prop + ">, " + ((RDirect)p).DRec.ToString() + "}";
+        //        /*else if (p is RDirect)*/ return "i^{<" + prop + ">, " + ((RInverse)p).IRec.ToString() + "}";
+        //    }).Aggregate((a, s) => a + ", " + s);
+        //    return "{ <" + Id + ">, <" + Tp + ">, " + "[" +       query      + "]}";
+        //}
         public string GetName()
         {
-            return ((RField)this.Props.FirstOrDefault(p => p is RField && p.Prop == "name"))?.Value;
+            //return ((RField)this.Props.FirstOrDefault(p => p is RField && p.Prop == "name"))?.Value;
+            throw new Exception("Err: Old variant of GetName()");
         }
     }
     public abstract class RProperty

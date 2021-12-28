@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace RDFEngine
 {
@@ -35,6 +36,61 @@ namespace RDFEngine
         public static Dictionary<string, string[]> parentsDictionary = null;
 
         public static RRecord[] LoadROntology(string path)
+        {
+            XElement ontology = XElement.Load(path);
+            string rdf = "{http://www.w3.org/1999/02/22-rdf-syntax-ns#}";
+            Func<XElement, string> ename = x => x.Name.NamespaceName + x.Name.LocalName;
+
+            List<RRecord> resultList = new List<RRecord>();
+            parentsDictionary = new Dictionary<string, string[]>();
+
+
+            foreach (var el in ontology.Elements())
+            {
+                // Входными элементами являются: Class, DatatypeProperty, ObjectProperty, EnumerationType
+                
+                // Во всех случаях, в выходной поток направляется RRecord, причем тип записи совпадает с именем элемента,
+                // идентификатор - берется из rdf:about
+                RRecord rec = new RRecord();
+                rec.Tp = ename(el);
+                rec.Id = el.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value;
+
+                // 
+
+                var subcl = el.Element("SubClassOf")?.Attribute(rdf + "resource")?.Value;
+                var myClasses = getSubClasses(el, ontology);
+                parentsDictionary.Add(rec.Id, myClasses);
+
+                var propsList = new List<RProperty>(el.Elements("label").Select(l => new RField() { Prop = "Label", Value = l.Value }));
+                propsList.Add(new RField() { Prop = "priority", Value = el.Attribute("priority")?.Value });
+
+                var sortedProps = ontology.Elements()
+                    .Where(x => (x.Name == "ObjectProperty" || x.Name == "DatatypeProperty")
+                        && myClasses.Contains(x.Element("domain").Attribute(rdf + "resource").Value))
+                    .OrderBy(prop => prop.Attribute("priority")?.Value);
+
+                propsList.AddRange(sortedProps.Select(p => new RLink { Prop = ename(p), Resource = p.Attribute(rdf + "about").Value }));
+
+                if (el.Name == "DatatypeProperty" || el.Name == "ObjectProperty")
+                {
+                    propsList.AddRange(el.Elements("domain").Select(x => new RLink { Prop = "domain", Resource = x.Attribute(rdf + "resource").Value }));
+                }
+                if (el.Name.LocalName == "ObjectProperty")
+                {
+                    propsList.AddRange(el.Elements("range").Select(x => new RLink { Prop = "range", Resource = x.Attribute(rdf + "resource").Value }));
+                }
+
+
+                rec.Props = propsList.ToArray();
+
+                resultList.Add(rec);
+
+            }
+            var arr = resultList.ToArray();
+            return arr;
+        }
+
+        public static RRecord[] LoadROntology0(string path)
         {
             System.Xml.Linq.XElement ontology = System.Xml.Linq.XElement.Load(path);
             List<RRecord> resultList = new List<RRecord>();
@@ -155,7 +211,7 @@ namespace RDFEngine
         {
             var recId = el.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value;
             string rdf = "{http://www.w3.org/1999/02/22-rdf-syntax-ns#}";
-            tempArr = tempArr.Append(recId.Remove(0, 19)).ToArray();
+            tempArr = tempArr.Append(recId).ToArray();
             if (el.Element("SubClassOf") == null)
             {
                 return tempArr;
@@ -176,7 +232,7 @@ namespace RDFEngine
         {
             rontology = statements.ToArray();
             dicOnto = rontology
-               .Select((rr, nom) => new { V = rr.Id.Replace("http://fogid.net/o/", ""), nom })
+               .Select((rr, nom) => new { V = rr.Id, nom })
                .ToDictionary(pair => pair.V, pair => pair.nom);
             dicsProps = new Dictionary<string, int>[rontology.Length];
             for (int i = 0; i < rontology.Length; i++)
@@ -187,7 +243,7 @@ namespace RDFEngine
                         .Where(p => (p.Prop == "DatatypeProperty" || p.Prop == "ObjectProperty"))
                         .Cast<RLink>().ToArray();
                     dicsProps[i] = links
-                        .Select((p, n) => new { V = p.Resource.Replace("http://fogid.net/o/", ""), n })
+                        .Select((p, n) => new { V = p.Resource, n })
                         .ToDictionary(pair => pair.V, pair => pair.n);
                 }
             }

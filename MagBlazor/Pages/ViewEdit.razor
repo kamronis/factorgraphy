@@ -26,7 +26,7 @@
     {
         <div>
             <span>@rec.Tp</span> &nbsp;
-            <a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rec.Id))">@rec.GetName()</a>
+            <a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rec.Id))">@Infobase.GetName(rec)</a>
         </div>
     }
     if (toedit && !string.IsNullOrEmpty(searchtype))
@@ -80,7 +80,7 @@ else if (model != null)
                                     if (rr != null)
                                     {
                                         <td>
-                                            <a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(rr.GetName())</a>
+                                            <a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(Infobase.GetName(rr))</a>
                                             &nbsp;&nbsp;
                                             <a href="javascript:void(0)" @onclick="@(e => DeleteLink(c.Prop))">x</a>
                                         </td>
@@ -101,7 +101,7 @@ else if (model != null)
                                                     {
                                                         <div>
                                                             <span>@rec.Tp</span> &nbsp;
-                                                            <a href="javascript:void(0)" @onclick="@(e =>FixLink(c.Prop, rec.Id, rec.Tp, rec.GetName()))">@rec.GetName()</a>
+                                                            <a href="javascript:void(0)" @onclick="@(e =>FixLink(c.Prop, rec.Id, rec.Tp, Infobase.GetName(rec)))">@Infobase.GetName(rec)</a>
                                                         </div>
                                                     }
                                                 }
@@ -137,7 +137,7 @@ else if (model != null)
                         var rr = ((RDirect)c).DRec;
                         if (rr != null)
                         {
-                            <td><a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
+                            <td><a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(Infobase.GetName(rr))</a></td>
                         }
                         else
                         {
@@ -214,7 +214,7 @@ else if (model != null)
                                                 if (rr != null)
                                                 {
                                                     <td>
-                                                        <a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(rr.GetName())</a>
+                                                        <a href="javascript:void(0)" @onclick="@(e =>BuildPortrait(rr.Id))">@(Infobase.GetName(rr))</a>
                                                         &nbsp;&nbsp;
                                                         <a href="javascript:void(0)" @onclick="@(e => DeleteLink(c.Prop))">x</a>
                                                     </td>
@@ -234,7 +234,7 @@ else if (model != null)
                                                                 {
                                                                     <div>
                                                                         <span>@rec.Tp</span> &nbsp;
-                                                                        <a href="javascript:void(0)" @onclick="@(e =>FixLink(c.Prop, rec.Id, rec.Tp, rec.GetName()))">@rec.GetName()</a>
+                                                                        <a href="javascript:void(0)" @onclick="@(e =>FixLink(c.Prop, rec.Id, rec.Tp, Infobase.GetName(rec)))">@Infobase.GetName(rec)</a>
                                                                     </div>
                                                                 }
                                                             }
@@ -272,7 +272,7 @@ else if (model != null)
                                     if (rr != null)
                                     {
                                         <td>
-                                            <a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">@(rr.GetName())</a>
+                                            <a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">@(Infobase.GetName(rr))</a>
                                         </td>
                                     }
                                     else

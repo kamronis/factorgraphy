@@ -49,7 +49,7 @@ else
                         var rr = ((RDirect)c).DRec;
                         if (rr != null)
                         {
-                            <td><a href="javascript:void(0)" @onclick="@(e =>LinkClick(rr.Id))">@(rr.GetName())</a></td>
+                            <td><a href="javascript:void(0)" @onclick="@(e =>LinkClick(rr.Id))">@(Infobase.GetName(rr))</a></td>
                         }
                         else
                         {
