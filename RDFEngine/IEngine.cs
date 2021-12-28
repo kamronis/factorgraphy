@@ -16,8 +16,8 @@ namespace RDFEngine
         public IEnumerable<RRecord> RSearch(string searchstring, string type);
         public RRecord GetRRecord(string id);
 
-        //public void UpdateRRecord(RRecord record, string forbidden, string modelId);
-        //public RRecord GetRTree(string id, int level, string forbidden);
+        // Не уверен, что нужно...
+        public RRecord BuildPortrait(string id);
 
         public void Update(RRecord record);
         public bool DeleteRecord(string id); // возвращает true если успешно

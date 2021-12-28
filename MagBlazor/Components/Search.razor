@@ -16,7 +16,7 @@
     {
 <div>
     <span>@rec.Tp</span> &nbsp;
-    <a href="javascript:void(0)" @onclick="@(e =>SearchResultClick(rec))">@rec.GetName()</a>
+    <a href="javascript:void(0)" @onclick="@(e =>SearchResultClick(rec))">@Infobase.GetName(rec)</a>
 </div>
     }
     if (!string.IsNullOrEmpty(searchtype)) 
