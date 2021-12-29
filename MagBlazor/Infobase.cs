@@ -47,7 +47,7 @@ namespace MagBlazor
             RDFEngine.IEngine engine2 = new RDFEngine.RXEngine();
 
 
-            engine = engine2;
+            engine = engine1;
 
 
         }

@@ -158,6 +158,10 @@ namespace RDFEngine
 
         private RProperty GetProp(RRecord rec, string prop) { return rec.Props.FirstOrDefault(p => p.Prop == prop); }
 
+
+
+        // ======================= Группа редактирования ======================
+
         /// <summary>
         /// Замена значения записи в базе данных и корректирование списков обратных ссылок
         /// </summary>
@@ -297,6 +301,8 @@ namespace RDFEngine
             srecord.Props = srecord.Props.Append(new RInverseLink { Prop = prop, Source = id }).ToArray();
             return id;
         }
+
+        // ================= конец группы редактирования =====================
 
         // ==== Определения, созданные для Portrait2, Portrait3
 

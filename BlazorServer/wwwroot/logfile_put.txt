@@ -1,0 +1,34 @@
+﻿<person mT="2021-12-29 07:56:12Z" rdf:about="Cassette_20211014_tester_637763849054494762_1001" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogis.net/o">
+  <name xmlns="http://fogid.net/o/">Пупкин</name>
+</person>
+<person rdf:about="Cassette_20211014_tester_637763849054494762_1001" mT="2021-12-29 08:06:17Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o">truetrue<name>Пупкин</name><name xmlns="http://fogid.net/o/">Пупкин</name></person>
+<person mT="2021-12-29 08:10:42Z" rdf:about="Cassette_20211014_tester_637763849054494762_1002" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o">
+  <name xmlns="http://fogid.net/o/">Пупкин</name>
+</person>
+<person rdf:about="Cassette_20211014_tester_637763849054494762_1001" mT="2021-12-29 08:13:39Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o">truetrue</person>
+<person rdf:about="Cassette_20211014_tester_637763849054494762_1001" mT="2021-12-29 08:20:18Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o">truetrue</person>
+<person rdf:about="Cassette_20211014_tester_637763849054494762_1001" mT="2021-12-29 08:24:27Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o">
+  <name>Пупкин</name>
+  <from-date>2021-12-29</from-date>
+</person>
+<person rdf:about="Cassette_20211014_tester_637763849054494762_1001" mT="2021-12-29 08:33:35Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o">
+  <name>Пупкин</name>
+  <from-date>2021-12-29</from-date>
+  <description>Описание!</description>
+  <name xmlns="http://fogid.net/o/">Пупкин</name>
+  <from-date xmlns="http://fogid.net/o/">2021-12-29</from-date>
+</person>
+<person mT="2021-12-29 08:40:28Z" rdf:about="Cassette_20211014_tester_637763849054494762_1003" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Пупкин</name>
+</person>
+<person rdf:about="Cassette_20211014_tester_637763849054494762_1001" mT="2021-12-29 08:42:18Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Пупкин</name>
+  <from-date>2021-12-29</from-date>
+  <description>Описание!</description>
+</person>
+<person rdf:about="Cassette_20211014_tester_637763849054494762_1003" mT="2021-12-29 09:08:52Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Пупкин</name>
+  <from-date>2021-12-29</from-date>
+  <description>Описание!</description>
+</person>
+<delete rdf:about="Cassette_20211014_tester_637763849054494762_1003" mT="2021-12-29 09:11:56Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />

@@ -33,13 +33,13 @@ namespace RDFEngine
                             return null;
                         }).ToArray()
 
-                }).ToArray();
+                });
             return res;
         }
 
         public IEnumerable<RRecord> RSearch(string searchstring, string type)
         {
-            throw new NotImplementedException();
+            return RSearch(searchstring).Where(r => r.Tp == type);
         }
 
         public RRecord BuildPortrait(string id)
@@ -66,11 +66,6 @@ namespace RDFEngine
                 }).Where(p => p != null).ToArray()
             };
             return result_rec;
-        }
-
-        public bool DeleteRecord(string id)
-        {
-            throw new NotImplementedException();
         }
 
         public RRecord GetRRecord(string id)
@@ -120,20 +115,70 @@ namespace RDFEngine
             throw new NotImplementedException();
         }
 
+
+        // ================= Группа редактирования ==================
+
+        private string owner = "tester";
+        public bool DeleteRecord(string id)
+        {
+            var res = OAData.OADB.PutItem(new XElement("delete", 
+                new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about", id),
+                new XAttribute("owner", owner)));
+            return res != null ? true : false;
+        }
+
+        private XName ToXName(string name)
+        {
+            int pos = name.LastIndexOf('/'); //TODO: Наверное, нужны еще другие окончания пространств имен
+            string localName = name.Substring(pos + 1);
+            string namespaceName = pos >= 0 ? name.Substring(0, pos + 1) : "";
+            return XName.Get(localName, namespaceName);
+        }
+
         public string NewRecord(string type, string name)
         {
-            throw new NotImplementedException();
+            var res = OAData.OADB.PutItem(
+                new XElement(ToXName(type), 
+                    new XElement("{http://fogid.net/o/}name", name),
+                    new XAttribute("owner", owner)));
+            return res.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value;
         }
 
         public string NewRelation(string type, string inverseprop, string source)
         {
-            throw new NotImplementedException();
+            var res = OAData.OADB.PutItem(
+                new XElement(ToXName(type),
+                    new XElement(ToXName(inverseprop),
+                        new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource", inverseprop)),
+                    new XAttribute("owner", owner)));
+            return res.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value;
         }
 
 
         public void Update(RRecord record)
         {
-            throw new NotImplementedException();
+            var xres = new XElement(ToXName(record.Tp),
+                    new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about", record.Id),
+                    record.Props.Select(p =>
+                    {
+                        if (p is RField)
+                        {
+                            return new XElement(ToXName(p.Prop), ((RField)p).Value);
+                        }
+                        else if (p is RLink)
+                        {
+                            return new XElement(ToXName(p.Prop),
+                                new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource", ((RLink)p).Resource));
+                        }
+                        else if (p is RDirect)
+                        {
+                            return new XElement(ToXName(p.Prop),
+                                new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource", ((RDirect)p).DRec.Id));
+                        }
+                        return null;
+                    }).Where(x => x != null),
+                    new XAttribute("owner", owner));
+            OAData.OADB.UpdateItem(xres);
         }
     }
 }

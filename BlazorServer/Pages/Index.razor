@@ -147,7 +147,7 @@ else if (model != null)
         private void BuildPortrait(string id)
         {
             searchsample = null;
-            RRecord rec = ((REngine)(Infobase.engine)).BuildPortrait(id);
+            RRecord rec = Infobase.engine.BuildPortrait(id);
             model = (new Models.P3Model()).Build(rec);
         }
         // идентификаторы редактируемой записи и обратного свойства
