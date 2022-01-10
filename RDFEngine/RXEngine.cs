@@ -71,6 +71,7 @@ namespace RDFEngine
         public RRecord GetRRecord(string id)
         {
             var item = OAData.OADB.GetItemByIdBasic(id, true);
+            if (item == null) return null;
             RRecord rec = new RRecord
             {
                 Id = item.Attribute("id").Value,
@@ -149,7 +150,7 @@ namespace RDFEngine
             var res = OAData.OADB.PutItem(
                 new XElement(ToXName(type),
                     new XElement(ToXName(inverseprop),
-                        new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource", inverseprop)),
+                        new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource", source)),
                     new XAttribute("owner", owner)));
             return res.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value;
         }

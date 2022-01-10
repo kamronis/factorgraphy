@@ -4,8 +4,8 @@
     <input @bind="searchsample" />
     <select @bind="searchtype">
         <option value=""></option>
-        <option value="person">Персона</option>
-        <option value="org-sys">Орг. сист.</option>
+        <option value="http://fogid.net/o/person">Персона</option>
+        <option value="http://fogid.net/o/org-sys">Орг. сист.</option>
     </select>
 </div>
 @if (!string.IsNullOrEmpty(searchsample))
@@ -19,7 +19,7 @@
     <a href="javascript:void(0)" @onclick="@(e =>SearchResultClick(rec))">@Infobase.GetName(rec)</a>
 </div>
     }
-    if (!string.IsNullOrEmpty(searchtype)) 
+    if (Infobase.toedit && !string.IsNullOrEmpty(searchtype)) 
     {
         <div><a href="javascript:void(0)" @onclick="@(e =>NewItemClick(searchtype))">нов.</a></div>
     }

@@ -1,0 +1,28 @@
+﻿<person mT="2022-01-10 01:33:19Z" rdf:about="Cassette_test20180311_tester_636565276468061094_1077" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Теркин</name>
+</person>
+<participation mT="2022-01-10 02:29:38Z" rdf:about="Cassette_test20180311_tester_636565276468061094_1078" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="http://fogid.net/o/participant" />
+</participation>
+<participation mT="2022-01-10 02:41:45Z" rdf:about="Cassette_test20180311_tester_636565276468061094_1079" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="http://fogid.net/o/participant" />
+</participation>
+<person mT="2022-01-10 09:04:34Z" rdf:about="Cassette_test20180311_tester_636565276468061094_1080" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Теркин2</name>
+</person>
+<participation mT="2022-01-10 09:23:14Z" rdf:about="Cassette_test20180311_tester_636565276468061094_1081" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-ivanov_a" />
+</participation>
+<delete rdf:about="Cassette_test20180311_tester_636565276468061094_1081" mT="2022-01-10 10:34:51Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+<delete rdf:about="Cassette_test20180311_tester_636565276468061094_1080" mT="2022-01-10 10:35:31Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+<person mT="2022-01-10 10:38:36Z" rdf:about="Cassette_test20180311_tester_636565276468061094_1082" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Теркин3</name>
+</person>
+<person mT="2022-01-10 11:43:35Z" rdf:about="Cassette_test20180311_tester_636565276468061094_1083" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Тестов Новый</name>
+</person>
+<delete rdf:about="Cassette_test20180311_tester_636565276468061094_1083" mT="2022-01-10 11:44:14Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+<titled mT="2022-01-10 11:44:37Z" rdf:about="Cassette_test20180311_tester_636565276468061094_1084" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <has-title rdf:resource="Cassette_test20180311_tester_636565276468061094_1043" />
+</titled>
+<delete rdf:about="Cassette_test20180311_tester_636565276468061094_1084" mT="2022-01-10 11:44:55Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />

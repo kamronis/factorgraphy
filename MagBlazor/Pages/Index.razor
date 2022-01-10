@@ -1,24 +1,43 @@
 ﻿@using RDFEngine
 @page "/"
 
+<div>Редактировать: <input type="checkbox" @bind="toedit" /></div>
 <MagBlazor.Components.Search onSelected="(rid) => UtilizeRecord((string)rid)" searchsample="@searchsample" />
 @if (focusRec != null)
 {
-    <MagBlazor.Components.DrawTable inverseTp="@focusRec.Tp" records="@(new RRecord[] { focusRec })" onGo="(id) => Build((string)id)" />
-    foreach (var propName in Infobase.rontology.GetInversePropsByType(focusRec.Tp))
+    <MagBlazor.Components.DrawTable focusId="@focusRec.Id" inverseTp="@focusRec.Tp" records="@(new RRecord[] { focusRec })" onGo="(id) => Build((string)id)" />
+    var list2 = Infobase.rontology.AncestorsAndSelf(focusRec.Tp).SelectMany(t => Infobase.rontology.GetInversePropsByType(t));
+    foreach (var propName in list2)
     {
         var pr = focusInversePropTypes.FirstOrDefault(ipt => ipt.Prop == propName);
         foreach (var typ in Infobase.rontology.DomainsOfProp(propName))
         {
             var it = pr == null ? null : pr.lists.FirstOrDefault(x => x.Tp == typ);
-            <MagBlazor.Components.DrawTable inverseProp="@propName" inverseTp="@typ" records="@(it==null?null:it.list)" onGo="(id) => Build((string)id)" />
+            if (it == null)
+            {
+                if (Infobase.toedit)
+                {
+                    <span><a href="javascript:void(0)" @onclick="@(e => BuildInverseTable(propName))">@(Infobase.rontology.InvLabelOfOnto(propName))</a> | </span>
+                }
+            }
+            else
+            {
+                <table border="1">
+                    <tr valign="top">
+                        <td>@(Infobase.rontology.InvLabelOfOnto(propName))</td>
+                        <td>
+                            <MagBlazor.Components.DrawTable focusId="@focusRec.Id" inverseProp="@propName" inverseTp="@typ" records="@(it==null?null:it.list)" onGo="(id) => Build((string)id)" />
+                        </td>
+                    </tr>
+                </table>
+            }
         }
     }
 }
 
 @code{
     // Признак редактирования
-    private bool toedit { get { return Infobase.toedit; } }
+    private bool toedit { get { return Infobase.toedit; } set { Infobase.toedit = value; } }
 
     private string searchsample = "И";
     // Запись фокусного элемента и списки обратных свойств для него
@@ -31,10 +50,15 @@
         searchsample = null;
     }
 
-    // Построение фокусного элемента по его идентификатору 
+    // Построение фокусного элемента по его идентификатору
     private void Build(string recId)
     {
         RRecord erec = Infobase.engine.BuildPortrait(recId); // ((REngine)(Infobase.engine)).BuildPortrait(recId);
+        if (erec == null)
+        {
+            focusRec = null;
+            return;
+        }
         var query = erec.Props.Where(p => p is RInverse && ((RInverse)p).IRec != null)
     .Cast<RInverse>()
     .GroupBy(d => d.Prop)
@@ -57,6 +81,12 @@
     }).ToArray();
         focusInversePropTypes = query;
         focusRec = new RRecord { Id = erec.Id, Tp = erec.Tp, Props = Infobase.rontology.ReorderFieldsDirects(erec) };
+    }
+
+    private void BuildInverseTable(string prop)
+    {
+        //Infobase.engine.NewRelation()
+        look = "run BuildInverseTable";
     }
 
     // Переменная для отладки-просмотра

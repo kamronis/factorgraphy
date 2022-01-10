@@ -7,11 +7,98 @@ using System.Xml.Linq;
 
 namespace RDFEngine
 {
+    /// <summary>
+    /// 
+    /// Это пока в разработке (идеи)!!!
+    /// 
+    /// Онтологическое определение имеет формат RRecord. При этом, идентификатор записи Id задает имя онтологического объекта.
+    /// Тип записи может быть Class, DatatypeProperty, ObjectProperty и что-то для определения перечислимого.
+    /// Class соответствует определению класса, свойства, соотвествуют определению соответствующих свойств (стрелок).
+    /// В списке Props могут быть свойства видов: RField - определяет некоторый атрибут для онтологического элемента, RLink - определяет 
+    /// ссылку на другой онтологический объект.
+    /// Атрибуты: 
+    /// имя атрибута Label, значение атрибута строка "человеческого" названия онтологического объекта
+    /// имя атрибута InvLabel, значение атрибута строка "человеческого" названия онтологического объекта - обратной стрелки 
+    /// имя атрибута ... - приоритет
+    /// Ссылки:
+    /// имя свойства DatatypeProperty, значение свойства - имя онтологического объекта (стрелки предиката данных)
+    /// имя свойства ObjectProperty, значение свойства - имя онтологичествого объекта (стрелки предиката ссылки)
+    /// 
+    /// Что можно делать с помощью онтологии в формате ROntology?
+    /// 
+    /// 1. Локализовывать онтологическое описание по номеру в rontology и по словарю dicOnto
+    /// 2. Получать названия онтологических объектов через Label и InvLabel
+    /// 3. Для заданного типа, множество (массив) определений исходящих стрелок RRecord[] PossibleDirects(string tp)
+    /// 4. Для заданного типа, множество (массив) определений входящих стрелок RRecord[] PossibleInverse(string tp)
+    /// 5. Дерево классов, возможно и дерево свойств
+    /// 
+    /// 
+    /// </summary>
+
     // Перечисление может быть более эффективным, чем строки
     // public enum RVid { RClass, DatatypeProperety, ObjectProperty }
 
+    // Класс для построения дерева онтологических классов
+    class RTreeNode
+    {
+        public string Id { get; set; }
+        public RTreeNode Parent { get; set; }
+        public List<RTreeNode> Childs { get; set; }
+    }
+
     public class ROntology
     {
+        // ============================= "Классная кухня" - Конечное построение - предки и потомки ==============
+        internal static XElement xontology; // Сюда загрузчик поместит онтологию 
+        // словарь узлов классов
+        Dictionary<string, RTreeNode> RTNdic; 
+        // Создание словаря из XML-онтологии. Загружается когда есть xontology
+        public void BuldRTree()
+        {
+            string rdf = "{http://www.w3.org/1999/02/22-rdf-syntax-ns#}";
+            // Создадим узлы, поместим их в дерево
+            RTNdic = xontology.Elements("Class").Select(x => new RTreeNode
+            {
+                Id = x.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value,
+                Childs = new List<RTreeNode>()
+            }).ToDictionary(t => t.Id);
+            // Снова сканируем элементы, заполняем родителя и детей
+            foreach (XElement x in xontology.Elements("Class"))
+            {
+                string parentId = x.Element("SubClassOf")?.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource")?.Value;
+                if (parentId == null) continue;
+                RTreeNode node = RTNdic[x.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value];
+                RTreeNode parentNode = RTNdic[parentId];
+                node.Parent = parentNode;
+                parentNode.Childs.Add(node);
+            }
+        }
+
+        private IEnumerable<RTreeNode> AAS(RTreeNode node)
+        {
+            if (node.Parent == null) return new RTreeNode[] { node };
+            var res = AAS(node.Parent).Append(node);
+            return res;
+        }
+        // 
+        public IEnumerable<string> AncestorsAndSelf(string id)
+        {
+            RTreeNode node = RTNdic[id];
+            var res = AAS(node).Select(n => n.Id);
+            return res;
+        }
+        private IEnumerable<RTreeNode> DAS(RTreeNode node)
+        {
+            return (new RTreeNode[] { node }).Concat(node.Childs.SelectMany(c => DAS(c)));
+        }
+        public IEnumerable<string> DescendantsAndSeld(string id)
+        {
+            RTreeNode node = RTNdic[id];
+            return DAS(node).Select(n => n.Id);
+        }
+        // ======================== конец "кухни" =========================
+
+
         // Массив определений
         public RRecord[] rontology = null;
         // Словарь онтологических объектов имя -> номер в массивах
@@ -37,7 +124,7 @@ namespace RDFEngine
 
         public static RRecord[] LoadROntology(string path)
         {
-            XElement ontology = XElement.Load(path);
+            xontology = XElement.Load(path);
             string rdf = "{http://www.w3.org/1999/02/22-rdf-syntax-ns#}";
             Func<XElement, string> ename = x => x.Name.NamespaceName + x.Name.LocalName;
 
@@ -45,7 +132,7 @@ namespace RDFEngine
             parentsDictionary = new Dictionary<string, string[]>();
 
 
-            foreach (var el in ontology.Elements())
+            foreach (var el in xontology.Elements())
             {
                 // Входными элементами являются: Class, DatatypeProperty, ObjectProperty, EnumerationType
                 
@@ -58,13 +145,19 @@ namespace RDFEngine
                 // 
 
                 var subcl = el.Element("SubClassOf")?.Attribute(rdf + "resource")?.Value;
-                var myClasses = getSubClasses(el, ontology);
+                var myClasses = getSubClasses(el, xontology);
                 parentsDictionary.Add(rec.Id, myClasses);
 
-                var propsList = new List<RProperty>(el.Elements("label").Select(l => new RField() { Prop = "Label", Value = l.Value }));
+                List<RProperty> propsList = new List<RProperty>();
+                // el.Elements("label").Select(l => new RField() { Prop = "Label", Value = l.Value })
+                var lls = el.Elements("label").ToArray();
+                string label = el.Elements("label").FirstOrDefault(e => e.Attribute("{http://www.w3.org/XML/1998/namespace}lang").Value == "ru")?.Value;
+                if (label != null) propsList.Add(new RField() { Prop = "Label", Value = label });
+                string invlabel = el.Elements("inverse-label").FirstOrDefault(e => e.Attribute("{http://www.w3.org/XML/1998/namespace}lang").Value == "ru")?.Value;
+                if (invlabel != null) propsList.Add(new RField() { Prop = "InvLabel", Value = label });
                 propsList.Add(new RField() { Prop = "priority", Value = el.Attribute("priority")?.Value });
 
-                var sortedProps = ontology.Elements()
+                var sortedProps = xontology.Elements()
                     .Where(x => (x.Name == "ObjectProperty" || x.Name == "DatatypeProperty")
                         && myClasses.Contains(x.Element("domain").Attribute(rdf + "resource").Value))
                     .OrderBy(prop => prop.Attribute("priority")?.Value);
@@ -90,123 +183,6 @@ namespace RDFEngine
             return arr;
         }
 
-        public static RRecord[] LoadROntology0(string path)
-        {
-            System.Xml.Linq.XElement ontology = System.Xml.Linq.XElement.Load(path);
-            List<RRecord> resultList = new List<RRecord>();
-            string rdf = "{http://www.w3.org/1999/02/22-rdf-syntax-ns#}";
-            parentsDictionary = new Dictionary<string, string[]>();
-
-
-            foreach (var el in ontology.Elements())
-            {
-                RRecord rec = new RRecord();
-
-                rec.Tp = el.Name.LocalName;
-                rec.Id = el.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value.Remove(0, 19);
-
-                var subcl = el.Element("SubClassOf")?.Attribute(rdf + "resource")?.Value;
-                var myClasses = getSubClasses(el, ontology);
-                parentsDictionary.Add(rec.Id, myClasses);
-
-                var propsList = new List<RProperty>(el.Elements("label").Select(l => new RField() { Prop = "Label", Value = l.Value }));
-                propsList.Add(new RField() { Prop = "priority", Value = el.Attribute("priority")?.Value });
-                //var objectProps = ontology.Elements("ObjectProperty").Where(x => myClasses.Contains(x.Element("domain").Attribute(rdf + "resource").Value.Remove(0, 19)));
-                //var dataTypeProps = ontology.Elements("DatatypeProperty").Where(x => myClasses.Contains(x.Element("domain").Attribute(rdf + "resource").Value.Remove(0, 19)));
-                var sortedProps = ontology.Elements()
-                    .Where(x => (x.Name.LocalName == "ObjectProperty" || x.Name.LocalName == "DatatypeProperty")
-                        && myClasses.Contains(x.Element("domain").Attribute(rdf + "resource").Value.Remove(0, 19)))
-                    .OrderBy(prop => prop.Attribute("priority")?.Value);
-
-                //propsList.AddRange(dataTypeProps.Select(p => new RLink { Prop = "DatatypeProperty", Resource = p.Attribute(rdf + "about").Value.Remove(0, 19) }));
-                //propsList.AddRange(objectProps.Select(p => new RLink { Prop = "ObjectProperty", Resource = p.Attribute(rdf + "about").Value.Remove(0, 19) }));
-                propsList.AddRange(sortedProps.Select(p => new RLink { Prop = p.Name.LocalName, Resource = p.Attribute(rdf + "about").Value.Remove(0, 19) }));
-
-                if (el.Name.LocalName == "DatatypeProperty" || el.Name.LocalName == "ObjectProperty")
-                {
-                    propsList.AddRange(el.Elements("domain").Select(x => new RLink { Prop = "domain", Resource = x.Attribute(rdf + "resource").Value.Remove(0, 19) }));
-                }
-                if (el.Name.LocalName == "ObjectProperty")
-                {
-                    propsList.AddRange(el.Elements("range").Select(x => new RLink { Prop = "range", Resource = x.Attribute(rdf + "resource").Value.Remove(0, 19) }));
-                }
-
-
-                rec.Props = propsList.ToArray();
-
-                resultList.Add(rec);
-
-            }
-            return resultList.ToArray();
-            //    if (el.HasElements)
-            //    {
-
-            //        foreach (var subel in el.Elements())
-            //        {
-
-            //            if (subel.Attribute("{http://www.w3.org/XML/1998/namespace}lang") == null || subel.Attribute("{http://www.w3.org/XML/1998/namespace}lang").Value == "ru")
-            //            {
-            //                switch (subel.Name.LocalName)
-            //                {
-            //                    case "range":
-            //                    case "domain":
-            //                        RLink link = new RLink();
-            //                        link.Prop = subel.Name.LocalName;
-            //                        link.Resource = subel.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource").Value;
-            //                        propsList.Add(link);
-            //                        break;
-            //                    case "label":
-            //                    case "inverse-label":
-            //                    default:
-            //                        RField field = new RField();
-            //                        field.Prop = subel.Name.LocalName;
-            //                        field.Value = subel.Value;
-            //                        propsList.Add(field);
-            //                        break;
-            //                }
-            //            }
-
-            //        }
-            //        var objectProps = ontology.Elements("ObjectProperty").Where(x => x.Element("domain").Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource").Value == rec.Id);
-            //        var dataTypeProps = ontology.Elements("DatatypeProperty").Where(x => x.Element("domain").Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource").Value == rec.Id);
-            //        foreach(var prop in objectProps)
-            //        {
-            //            if (prop.Attribute("{http://www.w3.org/XML/1998/namespace}lang") == null || prop.Attribute("{http://www.w3.org/XML/1998/namespace}lang").Value == "ru")
-            //            {
-            //                RLink link = new RLink();
-            //                link.Prop = prop.Name.LocalName;
-            //                link.Resource = prop.Element("range").Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource").Value;
-            //                propsList.Add(link);
-            //            }
-            //        }
-            //        foreach (var prop in dataTypeProps)
-            //        {
-            //            if (prop.Attribute("{xml}lang") == null || prop.Attribute("{xml}lang").Value == "ru")
-            //            {
-            //                if (prop.Element("range").Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource").Value == "http://fogid.net/o/text")
-            //                {
-            //                    RField field = new RField();
-            //                    field.Prop = prop.Name.LocalName;
-            //                    field.Value = prop.Value;
-            //                    propsList.Add(field);
-            //                }
-            //                else
-            //                {
-            //                    RLink link = new RLink();
-            //                    link.Prop = prop.Name.LocalName;
-            //                    link.Resource = prop.Element("range").Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource").Value;
-            //                    propsList.Add(link);
-            //                }
-            //            }
-            //        }
-            //        rec.Props = propsList.Distinct().ToArray();
-            //    }
-
-            //    resultList.Add(rec);
-            //}
-            //loadedsampleront = resultList.ToArray();
-        }
-
         private static string[] getSubClasses(System.Xml.Linq.XElement el, System.Xml.Linq.XElement ontology, string[] tempArr)
         {
             var recId = el.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value;
@@ -230,10 +206,15 @@ namespace RDFEngine
         }
         public ROntology(IEnumerable<RRecord> statements)
         {
+            // Это массив оннтологических описаний
             rontology = statements.ToArray();
+
+            // Это словарь онтологических описани: по идентификатору онто объекта дается номер в таблице описаний
             dicOnto = rontology
                .Select((rr, nom) => new { V = rr.Id, nom })
                .ToDictionary(pair => pair.V, pair => pair.nom);
+
+
             dicsProps = new Dictionary<string, int>[rontology.Length];
             for (int i = 0; i < rontology.Length; i++)
             {
@@ -254,8 +235,17 @@ namespace RDFEngine
                     .Select(p => new { pr = rr.Id, tp = ((RLink)p).Resource }))
                 .GroupBy(pair => pair.tp)
                 .ToDictionary(keypair => keypair.Key, keypair => keypair.Select(x => x.pr).ToArray());
+            var qu = rontology.Where(rr => rr.Tp == "ObjectProperty")
+                .SelectMany(rr => rr.Props
+                    .Where(p => p is RLink && p.Prop == "range")
+                    .Select(p => new { pr = rr.Id, tp = ((RLink)p).Resource }))
+                .ToArray();
         }
-        public ROntology(string path):this(LoadROntology(path)){        }
+        public ROntology(string path):this(LoadROntology(path))
+        {
+            // Действие для "Классной кухни"
+            this.BuldRTree();
+        }
         // Использование константно заданной онтологии sampleontology
         public ROntology() : this(samplerontology) { }
 
@@ -334,6 +324,22 @@ namespace RDFEngine
                 .Cast<RLink>()
                 .Where(rl => rl.Prop == "domain")
                 .Select(rl => rl.Resource);
+        }
+        public string LabelOfOnto(string id)
+        {
+            int nom = dicOnto[id];
+            return rontology[nom].Props
+                .Where(p => p is RField)
+                .Cast<RField>()
+                .FirstOrDefault(rl => rl.Prop == "Label")?.Value;
+        }
+        public string InvLabelOfOnto(string id)
+        {
+            int nom = dicOnto[id];
+            return rontology[nom].Props
+                .Where(p => p is RField)
+                .Cast<RField>()
+                .FirstOrDefault(rl => rl.Prop == "InvLabel")?.Value;
         }
 
         /// <summary>
