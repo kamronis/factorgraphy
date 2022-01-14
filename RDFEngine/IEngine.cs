@@ -15,6 +15,7 @@ namespace RDFEngine
 
         public IEnumerable<RRecord> RSearch(string searchstring, string type);
         public RRecord GetRRecord(string id);
+        public RRecord GetRRecord(string id, bool addinverse);
 
         // Не уверен, что нужно...
         public RRecord BuildPortrait(string id);

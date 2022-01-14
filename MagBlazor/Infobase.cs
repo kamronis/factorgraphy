@@ -29,7 +29,7 @@ namespace MagBlazor
 
             Infobase.engine = new RDFEngine.RXEngine(); // Это новый движок!!!
 
-            Infobase.rontology = new RDFEngine.ROntology(path + "ontology_iis-v12-doc_ruen.xml");
+            Infobase.rontology = new RDFEngine.ROntology(path + "ontology_iis-v13.xml");
         }
 
         public static void Init0(string pth)

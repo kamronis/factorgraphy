@@ -67,10 +67,13 @@ namespace RDFEngine
             };
             return result_rec;
         }
-
         public RRecord GetRRecord(string id)
         {
-            var item = OAData.OADB.GetItemByIdBasic(id, true);
+            return GetRRecord(id, true);
+        }
+        public RRecord GetRRecord(string id, bool addinverse)
+        {
+            var item = OAData.OADB.GetItemByIdBasic(id, addinverse);
             if (item == null) return null;
             RRecord rec = new RRecord
             {
@@ -173,6 +176,7 @@ namespace RDFEngine
                         }
                         else if (p is RDirect)
                         {
+                            if (((RDirect)p).DRec == null) return null;
                             return new XElement(ToXName(p.Prop),
                                 new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource", ((RDirect)p).DRec.Id));
                         }

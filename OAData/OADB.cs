@@ -291,7 +291,7 @@ namespace OAData
                 {
                     string prop = el.Attribute("prop").Value;
                     int pos = prop.LastIndexOf('/');
-                    XName subel_name = XName.Get(prop.Substring(pos + 1), prop.Substring(0, pos));
+                    XName subel_name = XName.Get(prop.Substring(pos + 1), prop.Substring(0, pos + 1));
                     if (props.Contains(prop.Substring(pos + 1))) return null;
                     XElement subel = new XElement(subel_name);
                     if (el.Name == "field") subel.Add(el.Value);

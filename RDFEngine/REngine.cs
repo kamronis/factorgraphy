@@ -130,6 +130,10 @@ namespace RDFEngine
             }
             return null;
         }
+        public RRecord GetRRecord(string id, bool addinverse)
+        {
+            return GetRRecord(id);
+        }
 
 
         public IEnumerable<RRecord> RSearch(string searchstring)

@@ -143,6 +143,10 @@ namespace RDFEngine
         {
             throw new NotImplementedException();
         }
+        public RRecord GetRRecord(string id, bool addinverse)
+        {
+            throw new NotImplementedException();
+        }
 
 
         public void Update(RRecord rec)
