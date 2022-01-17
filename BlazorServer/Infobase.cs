@@ -25,7 +25,7 @@ namespace BlazorServer
 
 
 
-            bool useconfig = true; // Два варианта: использовать config и OAData или через прямую загрузку
+            bool useconfig = false; // Два варианта: использовать config и OAData или через прямую загрузку
 
             if (useconfig) 
             {
@@ -56,7 +56,7 @@ namespace BlazorServer
             else
             {
                 Infobase.cassPath = "C:\\Users\\Kamroni\\Desktop\\SypCassete";
-                Infobase.cassPath = @"D:\Home\FactographProjects\syp_cassettes\SypCassete"; // Это на машине mag
+                //Infobase.cassPath = @"D:\Home\FactographProjects\syp_cassettes\SypCassete"; // Это на машине mag
                 XElement graphModelXml = XElement.Load(Infobase.cassPath + "\\meta\\SypCassete_current_20110112.fog");
                 var flow = graphModelXml.Elements()
                     .Select(el =>
@@ -66,7 +66,7 @@ namespace BlazorServer
                             el.Elements().Select(subel => new XElement("{http://fogid.net/o/}" + subel.Name.LocalName, subel.Attributes(), subel.Value)));
                         if (el.Name.LocalName == "photo-doc")
                         {
-                            XElement iisStore = el.Element("iisstore");
+                            XElement iisStore = el.Element("{http://fogid.net/o/}" + "iisstore");
                             if (iisStore != null)
                             {
                                 var kk = new XElement(el.Name,

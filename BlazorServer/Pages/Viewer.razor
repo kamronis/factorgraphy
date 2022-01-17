@@ -15,7 +15,7 @@
     <NavLink href="@link">Редактировать</NavLink>
     <table border="1">
         <tr>
-            <td colspan="@(m.row.Length+1)">@Infobase.GetTerm(m.Tp) @m.Id</td>
+            <th colspan="@(m.row.Length+1)">@Infobase.GetTerm(m.Tp) @m.Id</th>
         </tr>
         <tr>
             @code{
@@ -27,7 +27,7 @@
                     || ((row is RField) && ((RField)row).Value != null))
                 {
                     nonEmptyFields.Add(row.Prop);
-                    <td>@Infobase.GetTerm(row.Prop)</td>
+                    <th class="secondary">@Infobase.GetTerm(row.Prop)</th>
                 }
 
             }
@@ -65,10 +65,10 @@
             {
                 <table border="1">
                     <tr>
-                        <td colspan="@domFields.Length">
+                        <th colspan="@domFields.Length">
                             <span>@Infobase.GetTerm(inv.Id)</span>
                             <span>@Infobase.GetTerm(((RLink)domain).Resource)</span>
-                        </td>
+                        </th>
                     </tr>
 
                     @foreach (var pType in pTypes)
@@ -91,7 +91,7 @@
                                                 if (nonEmpty.Count() != 0)
                                                 {
                                                     nonEmptyFields.Add(field.Resource);
-                                                    <td>@Infobase.GetTerm(field.Resource)</td>
+                                                    <th class="secondary">@Infobase.GetTerm(field.Resource)</th>
                                                 }
                                             }
                                         </tr>
@@ -134,7 +134,7 @@
     private void BuildPortrait(string id)
     {
         searchsample = null;
-        RRecord rec = ((REngine)(Infobase.engine)).BuildPortrait(id);
+        RRecord rec = (Infobase.engine).BuildPortrait(id);
         originalRecord = rec;
         parentTypes = ROntology.parentsDictionary[rec.Tp];
         model = (new Models.P3Model()).Build(rec);
@@ -150,57 +150,3 @@
 }
 
 
-
-@if (lookDb)
-{
-    <hr />
-    <!-- Таблица из 4-х столбцов. Запись начинается объединенным столбцом с типом и идентификатором -->
-    <table>
-        @foreach (var rec in ((REngine)Infobase.engine).Records())
-        {
-            <tr><td colspan="4" style="background-color:aquamarine;">@(rec.Tp) &nbsp; @(rec.Id)</td></tr>
-            @foreach (var p in rec.Props)
-            {
-                if (p is RField)
-                {
-                    var f = (RField)p;
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td>@(f.Prop)</td>
-                        <td>@(f.Value)</td>
-                    </tr>
-                }
-                else if (p is RLink)
-                {
-                    var d = (RLink)p;
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td>@(d.Prop)</td>
-                        <td>@(d.Resource)</td>
-                    </tr>
-                }
-                else if (p is RInverseLink)
-                {
-                    var il = (RInverseLink)p;
-                    <tr>
-                        <td>@(il.Source)</td>
-                        <td>@(il.Prop)</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                }
-                else
-                {
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>Error in data!</td>
-                    </tr>
-                }
-            }
-        }
-    </table>
-}
