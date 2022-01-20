@@ -2,8 +2,13 @@
 <config>
   <database dbname="photoarchive" connectionstring="xml:" />
 
+  <!-- Troshkov machine-->
+  <!--<LoadCassette>С:\Users\Kamroni\Desktop\SypCassete</LoadCassette>
+
+  <LoadCassette write="yes">C:\Users\Kamroni\Desktop\DoingFactography\Resources\Cassette_20211014</LoadCassette>-->
+
+  <!-- MAG machine -->
   <LoadCassette>D:\Home\FactographProjects\syp_cassettes\SypCassete</LoadCassette>
 
   <LoadCassette write="yes">D:\Home\dev2021\DoingFactography\Resources\Cassette_20211014</LoadCassette>
-
 </config>

@@ -1,4 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" dbid="Cassette_20211014_tester_637763849054494762" owner="tester" prefix="Cassette_20211014_tester_637763849054494762_" counter="1004">
-  
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" dbid="Cassette_20211014_tester_637763849054494762" owner="tester" prefix="Cassette_20211014_tester_637763849054494762_" counter="1006">
+  <document rdf:about="Cassette_20211014_0001_0010" mT="2022-01-10 11:53:11Z" xmlns="http://fogid.net/o/">
+    <name>Cassette_20211014_tester_637763849054494762</name>
+    <comment>D:\Home\FactographProjects\Cassette_20211014\Cassette_20211014_tester_637763849054494762.fog</comment>
+    <uri>iiss://Cassette_20211014@iis.nsk.su/0001/0001/0010</uri>
+    <docmetainfo>originalname:D:\Home\FactographProjects\Cassette_20211014\Cassette_20211014_tester_637763849054494762.fog;size:245;documenttype:application/fog;documentcreation:2021-12-29T07:28:25;documentfirstuploaded:2021-12-29T14:28:25;documentmodification:2021-12-29T07:28:25;checksum:qwerty;owner:tester;</docmetainfo>
+    <documenttype>ТИП 1</documenttype>
+    <from-date></from-date>
+    <description></description>
+    <to-date></to-date>
+    <doc-content></doc-content>
+  </document>
+  <collection-member mT="2022-01-10 12:04:45Z" rdf:about="Cassette_20211014_tester_637763849054494762_1005" xmlns="http://fogid.net/o/">
+    <collection-item rdf:resource="Cassette_20211014_0001_0010" />
+  </collection-member>
+  <delete rdf:about="Cassette_20211014_tester_637763849054494762_1004" mT="2022-01-10 12:05:36Z" />
 </rdf:RDF>

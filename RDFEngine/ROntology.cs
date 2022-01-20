@@ -183,7 +183,7 @@ namespace RDFEngine
             return arr;
         }
 
-        private static string[] getSubClasses(System.Xml.Linq.XElement el, System.Xml.Linq.XElement ontology, string[] tempArr)
+        private static string[] getSubClasses(XElement el, XElement ontology, string[] tempArr)
         {
             var recId = el.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value;
             string rdf = "{http://www.w3.org/1999/02/22-rdf-syntax-ns#}";
@@ -200,7 +200,7 @@ namespace RDFEngine
                     ontology, tempArr);
             }
         }
-        private static string[] getSubClasses(System.Xml.Linq.XElement el, System.Xml.Linq.XElement ontology)
+        private static string[] getSubClasses(XElement el, XElement ontology)
         {
             return getSubClasses(el, ontology, new string[] { });
         }

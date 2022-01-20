@@ -8,7 +8,7 @@
     var defrowProps = defrow.Props.Where(prop => prop is RLink).ToArray();
     recToAdd.Props = new RProperty[defrowProps.Length];
     recToAdd.Tp = new String(defrow.Id);
-    recToAdd.Id = ((REngine)(Infobase.engine)).NewRelation(recToAdd.Tp, forbidden, origId);
+    recToAdd.Id = Infobase.engine.NewRelation(recToAdd.Tp, forbidden, origId);
     for (int i = 0; i < defrowProps.Length; i++)
     {
         RLink c = (RLink)defrowProps[i];
@@ -24,7 +24,7 @@
             recToAdd.Props[i].Prop = c.Resource;
             if (c.Resource == forbidden)
             {
-                ((RDirect)recToAdd.Props[i]).DRec = ((REngine)(Infobase.engine)).GetRRecord(origId);
+                ((RDirect)recToAdd.Props[i]).DRec = Infobase.engine.GetRRecord(origId);
             }
             else
             {
@@ -38,14 +38,14 @@
 }
 else
 {
-    if (forbidden != null)
+    if (forbidden != null && !addRecord)
     {
-        ((RDirect)r.Props.FirstOrDefault(prop => prop.Prop == forbidden)).DRec = ((REngine)(Infobase.engine)).GetRRecord(origId);
+        ((RDirect)r.Props.FirstOrDefault(prop => prop.Prop == forbidden)).DRec = Infobase.engine.GetRRecord(origId);
 
     }
 }
 
-<table>
+<table class="propery-editor">
     <tbody>
         @{ 
             var rec = ont.FirstOrDefault(rec => rec.Id == r.Tp);
@@ -57,7 +57,8 @@ else
         
         @foreach (var c in rec.Props.Where(p => p is RLink && ((RLink)p).Resource != forbidden))
         {
-            <tr>
+            var editClass = (c.Prop == "ObjectProperty" && ((RLink)c).Resource == editProp) ? "edited" : "";
+            <tr class="@editClass">
                 <td>@Infobase.GetTerm(((RLink)c).Resource)</td>
                 <td>
                     @{
@@ -102,6 +103,16 @@ else
                         {
                             if (rr != null)
                             {
+                                
+
+                                if (rr.Props.FirstOrDefault(p => p.Prop == "documenttype") != null && rr.Props.FirstOrDefault(p => p.Prop == "uri") != null)
+                                {
+                                    <a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">
+                                        <img src="@("docs/GetImage?u=" + ((RField)rr.Props.FirstOrDefault(p => p.Prop == "uri")).Value +"&s=small")" />
+                                    </a>
+
+                                }
+
                                 <a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">@rr.GetName()</a>
                             }
                             else
@@ -119,9 +130,16 @@ else
                             //}
                             if (rr != null)
                             {
+                                if (rr.Props.FirstOrDefault(p => p.Prop == "documenttype") != null && rr.Props.FirstOrDefault(p => p.Prop == "uri") != null)
+                                {
+                                    <a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">
+                                        <img src="@("docs/GetImage?u=" + ((RField)rr.Props.FirstOrDefault(p => p.Prop == "uri")).Value +"&s=small")" />
+                                    </a>
+
+                                }
                             <span>@rr.GetName()</span>
                             }
-                            <Search onSearchResultClick="@(arg => { editProp = null; ((RDirect)bindProperty).DRec = (RRecord)arg; })"></Search>
+                            <br /><span>Поиск:</span> <Search onSearchResultClick="@(arg => { editProp = null; ((RDirect)bindProperty).DRec = (RRecord)arg; })"></Search>
                         }
                     }
                     else
