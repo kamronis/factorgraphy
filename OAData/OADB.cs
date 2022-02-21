@@ -13,8 +13,8 @@ namespace OAData
 {
     public class OADB
     {
-        private static CassInfo[] cassettes = null;
-        private static FogInfo[] fogs = null;
+        public static CassInfo[] cassettes = null;
+        public static FogInfo[] fogs = null;
         public static DAdapter adapter = null;
 
         public static string look = "";
@@ -147,7 +147,7 @@ namespace OAData
                     var attts = ReadFogAttributes(fi.FullName);
 
                     // запишем владельца, уточним признак записи
-                    cass.owner = attts.owner;
+                    //cass.owner = attts.owner;
                     fogs_list.Add(new FogInfo()
                     {
                         //cassette = cass,
@@ -301,6 +301,10 @@ namespace OAData
                 return PutItem(nitem);
             }
         }
+        public static bool HasWritabeFogForUser(string user)
+        {
+            return fogs.Any(f => f.owner == user && f.writable);
+        }
         public static XElement PutItem(XElement item)
         {
             //XElement result = null;
@@ -375,8 +379,8 @@ namespace OAData
         private static (string owner, string prefix, string counter)  ReadFogAttributes(string pth)
         {
             // Нужно для чтиния в кодировке windows-1251. Нужен также Nuget System.Text.Encoding.CodePages
-            var v = System.Text.CodePagesEncodingProvider.Instance;
-            System.Text.Encoding.RegisterProvider(v);
+            //var v = System.Text.CodePagesEncodingProvider.Instance;
+            //System.Text.Encoding.RegisterProvider(v);
 
             string owner = null;
             string prefix = null;

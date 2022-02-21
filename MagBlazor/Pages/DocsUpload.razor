@@ -1,10 +1,14 @@
-﻿@page "/file-upload-1"
+﻿@page "/docsupload"
 @using System
+@using System.Diagnostics
+@using System.Drawing
 @using System.IO
 @using Microsoft.AspNetCore.Hosting
 @using Microsoft.Extensions.Logging
+
 @using RDFEngine
-@inject ILogger<FileUpload1> Logger
+
+@*@inject ILogger<FileUpload1> Logger*@
 @inject IWebHostEnvironment Environment
 
 
@@ -59,9 +63,33 @@ else
     private int maxAllowedFiles = 100;
     private bool isLoading;
 
+    //private WebImage image = null;
+
+    private void LdFiles(InputFileChangeEventArgs e)
+    {
+        isLoading = true;
+
+
+        foreach (var file in e.GetMultipleFiles(maxAllowedFiles))
+        {
+            var rr = file.RequestImageFileAsync("jpeg", 150, 150);
+            string path = Path.Combine(Environment.ContentRootPath, Environment.WebRootPath, "unsave_uploads");
+            Task.WaitAll();
+
+            var image = rr.Result;
+
+
+            //var image = System.Drawing.Image.FromStream(file.OpenReadStream(maxFileSize));
+            //image.Save(path + "/" + file.Name);
+            //Vintasoft.Imaging.VintasoftImage image = new Vintasoft.Imaging.VintasoftImage(file.OpenReadStream(maxFileSize));
+            //image.Save(path + "/" + file.Name);
+        }
+
+        isLoading = false;
+    }
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
-        // Порядок следующий: сначала чистим список файлов и объявляем режим загрузки, потом сформированный список посылаем на обработку. 
+        // Порядок следующий: сначала чистим список файлов и объявляем режим загрузки, потом сформированный список посылаем на обработку.
         isLoading = true;
         // loadedFiles.Clear(); // Пусть накапливаются
 
@@ -69,6 +97,7 @@ else
         {
             //System.Web.Helpers.WebImage image = new WebImage(file.OpenReadStream());
             //var photo = WebImage.GetImageFromRequest(file.Name)
+
             try
             {
                 loadedFiles.Add(file);
@@ -83,8 +112,8 @@ else
             }
             catch (Exception ex)
             {
-                Logger.LogError("File: {Filename} Error: {Error}",
-                    file.Name, ex.Message);
+                //Logger.LogError("File: {Filename} Error: {Error}",
+                //    file.Name, ex.Message);
             }
         }
 
@@ -101,7 +130,8 @@ else
         var activecassette = OAData.OADB.cassettes.FirstOrDefault(c =>
         {
             var q = c;
-            return (c.owner == user && c.writable); }
+            return (c.owner == user && c.writable);
+        }
         );
 
         // Если нет такой, выходим
@@ -114,7 +144,7 @@ else
         string activecassetteId = activecassette.name + "_cassetteId";
 
         // Вычисляем uri последнего документа и его parts
-        string uri_first = "http://" + activecassette.name + "@iis.nsk.su/0001/";
+        string uri_first = "iiss://" + activecassette.name + "@iis.nsk.su/0001/";
         DirectoryInfo di = new DirectoryInfo(activecassette.path + "/originals/");
         DirectoryInfo xxxx = di.GetDirectories().OrderByDescending(d => d.Name).FirstOrDefault();
         string second = xxxx?.Name;
@@ -125,6 +155,12 @@ else
         int third_int = Int32.Parse(fname.Substring(0, pos));
 
         // Организовываем цикл обработки принятых файлов
+        Random rnd = new Random();
+        string batfilename = "CalculatePreviews"+rnd.Next(1000000)+".bat";
+        Stream bat = File.OpenWrite(Path.Combine(Environment.ContentRootPath,
+                        Environment.WebRootPath, batfilename));
+        TextWriter bat_lines = new StreamWriter(bat); // Накопление командного файла
+
         foreach (var fl in loadedFiles)
         {
             // Настраиваем части и вычисляем новый uri
@@ -138,6 +174,9 @@ else
             ext = fname.Substring(pos);
             string source_path = Environment.ContentRootPath + "/wwwroot/unsafe_uploads/" + fname;
 
+            // Базовая дата
+            string fromdate = fl.LastModified.DateTime.ToString("s");
+
             // Новое имя - third и (возможно другое, это потом) расширение
             string target_path = activecassette.path + "/originals/" + second + third + ext;
 
@@ -146,24 +185,54 @@ else
 
             // Делаем превьюшки
 
+            string tp = "http://fogid.net/o/document";
+            if (fl.ContentType.StartsWith("image/"))
+            {
+                //TODO: Кажется, здесть работает только вариант image/jpeg
+                try
+                {
+                    ExifLib.ExifReader ereader = new ExifLib.ExifReader(target_path);
+                    object value;
+                    ereader.GetTagValue(ExifLib.ExifTags.DateTime, out value);
+                    string fd = (string)value;
+                    fromdate = fd.Substring(0, 10).Replace(':', '-') + "T" + fd.Substring(11);
+                }
+                catch (Exception) { }
 
+                var image = Bitmap.FromFile(target_path);
+                var size = image.Size;
+                int maxlen = Math.Max(size.Width, size.Height);
+                int destlen = 150;
+                double factor = ((double)destlen) / ((double)maxlen);
+                bat_lines.WriteLine(@"D:\Home\bin\vips-dev-8.12\bin\vips.exe resize " + target_path + " " +
+                    activecassette.path + "/documents/small/" + second + third + ".jpg" + " " + factor);
+                bat_lines.WriteLine(@"D:\Home\bin\vips-dev-8.12\bin\vips.exe resize " + target_path + " " +
+                    activecassette.path + "/documents/normal/" + second + third + ".jpg" + " " + ((double)800.0) / ((double)maxlen));
+                tp = "http://fogid.net/o/photo-doc";
+            }
+            if (fl.ContentType.StartsWith("video/"))
+            {
+                bat_lines.WriteLine("D:/Home/bin/ffmpeg -i {0} -y -vcodec libx264 -b 2020K {1}.mp4", target_path,
+                    activecassette.path + "/documents/normal/" + second + third);
+                tp = "http://fogid.net/o/video-doc";
+            }
 
             // Порождаем движок
             RDFEngine.IEngine engine = new RDFEngine.RXEngine() { User = user };
 
             // Конструируем документ и добавляем его в базу данных
-            string tp = "http://fogid.net/o/document";
             string doc_id = engine.NewRecord(tp, "noname");
             engine.Update(new RRecord
             {
                 Id = doc_id,
                 Tp = tp,
                 Props = new RProperty[]
-            {
+                {
                     new RField { Prop = "http://fogid.net/o/name", Value = fname},
                     new RField { Prop = "http://fogid.net/o/uri", Value = uri},
-                    new RField { Prop = "http://fogid.net/o/docmetainfo", Value = fl.ContentType}
-            }
+                    new RField { Prop = "http://fogid.net/o/docmetainfo", Value = fl.ContentType},
+                    new RField { Prop = "http://fogid.net/o/from-date", Value = fromdate }
+                }
             });
 
             // Связываем документ с объектом кассеты
@@ -174,13 +243,31 @@ else
                 {
                     new RLink { Prop = "http://fogid.net/o/in-collection", Resource = activecassetteId },
                     new RLink { Prop = "http://fogid.net/o/collection-item", Resource = doc_id }
-                }
+                    }
             });
         }
 
+        bat_lines.Close();
+
+        // Запуск bat-файла
+        using (Process myProcess = new Process())
+        {
+            myProcess.StartInfo.UseShellExecute = false;
+            // You can start any process, HelloWorld is a do-nothing example.
+            myProcess.StartInfo.FileName = Path.Combine(Environment.ContentRootPath,
+                        Environment.WebRootPath, batfilename);
+            myProcess.StartInfo.CreateNoWindow = true;
+            myProcess.Start();
+            // This code assumes the process you are starting will terminate itself.
+            // Given that it is started without a window so you cannot terminate it
+            // on the desktop, it must terminate itself or you can do it programmatically
+            // from this application using the Kill method.
+        }
+
+
         // Чистим список файлов
         loadedFiles.Clear();
-
+        look = "ok";
     }
 
     private string look = null;

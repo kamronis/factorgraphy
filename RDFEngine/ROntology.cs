@@ -124,7 +124,6 @@ namespace RDFEngine
 
         public static RRecord[] LoadROntology(string path)
         {
-            xontology = XElement.Load(path);
             string rdf = "{http://www.w3.org/1999/02/22-rdf-syntax-ns#}";
             Func<XElement, string> ename = x => x.Name.NamespaceName + x.Name.LocalName;
 
@@ -204,11 +203,49 @@ namespace RDFEngine
         {
             return getSubClasses(el, ontology, new string[] { });
         }
-        public ROntology(IEnumerable<RRecord> statements)
-        {
-            // Это массив оннтологических описаний
-            rontology = statements.ToArray();
+        //public ROntology(IEnumerable<RRecord> statements)
+        //{
+        //    // Это массив оннтологических описаний
+        //    rontology = statements.ToArray();
 
+        //    // Это словарь онтологических описани: по идентификатору онто объекта дается номер в таблице описаний
+        //    dicOnto = rontology
+        //       .Select((rr, nom) => new { V = rr.Id, nom })
+        //       .ToDictionary(pair => pair.V, pair => pair.nom);
+
+
+        //    dicsProps = new Dictionary<string, int>[rontology.Length];
+        //    for (int i = 0; i < rontology.Length; i++)
+        //    {
+        //        if (rontology[i].Props != null)
+        //        {
+        //            RLink[] links = rontology[i].Props
+        //                .Where(p => (p.Prop == "DatatypeProperty" || p.Prop == "ObjectProperty"))
+        //                .Cast<RLink>().ToArray();
+        //            dicsProps[i] = links
+        //                .Select((p, n) => new { V = p.Resource, n })
+        //                .ToDictionary(pair => pair.V, pair => pair.n);
+        //        }
+        //    }
+        //    // Вычисляем обратные свойства для типов
+        //    dicsInversePropsForType = rontology.Where(rr => rr.Tp == "ObjectProperty")
+        //        .SelectMany(rr => rr.Props
+        //            .Where(p => p is RLink && p.Prop == "range")
+        //            .Select(p => new { pr = rr.Id, tp = ((RLink)p).Resource }))
+        //        .GroupBy(pair => pair.tp)
+        //        .ToDictionary(keypair => keypair.Key, keypair => keypair.Select(x => x.pr).ToArray());
+        //    var qu = rontology.Where(rr => rr.Tp == "ObjectProperty")
+        //        .SelectMany(rr => rr.Props
+        //            .Where(p => p is RLink && p.Prop == "range")
+        //            .Select(p => new { pr = rr.Id, tp = ((RLink)p).Resource }))
+        //        .ToArray();
+        //}
+        public ROntology(string path)
+        {
+            // Действие для "Классной кухни"
+            xontology = XElement.Load(path);
+            this.BuldRTree();
+            rontology = LoadROntology(path);
             // Это словарь онтологических описани: по идентификатору онто объекта дается номер в таблице описаний
             dicOnto = rontology
                .Select((rr, nom) => new { V = rr.Id, nom })
@@ -229,25 +266,24 @@ namespace RDFEngine
                 }
             }
             // Вычисляем обратные свойства для типов
-            dicsInversePropsForType = rontology.Where(rr => rr.Tp == "ObjectProperty")
+            //dicsInversePropsForType = rontology.Where(rr => rr.Tp == "ObjectProperty")
+            //    .SelectMany(rr => rr.Props
+            //        .Where(p => p is RLink && p.Prop == "range")
+            //        .Select(p => new { pr = rr.Id, tp = ((RLink)p).Resource }))
+            //    .GroupBy(pair => pair.tp)
+            //    .ToDictionary(keypair => keypair.Key, keypair => keypair.Select(x => x.pr).ToArray());
+            dicsInversePropsForType = //null;
+                rontology.Where(rr => rr.Tp == "ObjectProperty")
                 .SelectMany(rr => rr.Props
                     .Where(p => p is RLink && p.Prop == "range")
                     .Select(p => new { pr = rr.Id, tp = ((RLink)p).Resource }))
-                .GroupBy(pair => pair.tp)
-                .ToDictionary(keypair => keypair.Key, keypair => keypair.Select(x => x.pr).ToArray());
-            var qu = rontology.Where(rr => rr.Tp == "ObjectProperty")
-                .SelectMany(rr => rr.Props
-                    .Where(p => p is RLink && p.Prop == "range")
-                    .Select(p => new { pr = rr.Id, tp = ((RLink)p).Resource }))
-                .ToArray();
-        }
-        public ROntology(string path):this(LoadROntology(path))
-        {
-            // Действие для "Классной кухни"
-            this.BuldRTree();
+                .SelectMany(pa => DescendantsAndSeld(pa.tp).Select(t => new { ty = t, pr_id = pa.pr }))
+                .GroupBy(typr => typr.ty)
+                .ToDictionary(keypair => keypair.Key, keypair => keypair.Select(x => x.pr_id).Distinct().ToArray());
+
         }
         // Использование константно заданной онтологии sampleontology
-        public ROntology() : this(samplerontology) { }
+        //public ROntology() : this(samplerontology) { }
 
         /// <summary>
         /// Формирует из записи набор "столбцов" в виде вариантов RProperty, опираясь на данную онтологию.

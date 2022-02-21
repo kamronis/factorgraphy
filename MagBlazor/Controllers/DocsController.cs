@@ -26,12 +26,41 @@ namespace MagBlazor.Controllers
             return PhysicalFile(path, "image/jpg");
         }
 
-        //public static string CassDirPath(string uri)
-        //{
-        //    if (!uri.StartsWith("iiss://")) throw new Exception("Err: 22233");
-        //    int pos = uri.IndexOf('@', 7);
-        //    if (pos < 8) throw new Exception("Err: 22234");
-        //    return OAData.OADB.cass
-        //}
+        [HttpGet("docs/GetVideo")]
+        public IActionResult GetVideo(string u)
+        {
+            if (u == null) return NotFound();
+            u = System.Web.HttpUtility.UrlDecode(u);
+            var cass_dir = OAData.OADB.CassDirPath(u);
+            if (cass_dir == null) return NotFound();
+            string last10 = u.Substring(u.Length - 10);
+            string dirpath = cass_dir + "/documents/normal/" + last10.Substring(0, 6);
+            System.IO.DirectoryInfo dinfo = new System.IO.DirectoryInfo(dirpath);
+            //Console.WriteLine("GetVideo dinfo = " + dinfo);
+            var finfo = dinfo.GetFiles(last10.Substring(6) + ".*").LastOrDefault();
+            if (finfo == null) return NotFound();
+            string path = finfo.FullName;
+            //Console.WriteLine("GetVideo path = " + path);
+            int lastpoint = path.LastIndexOf('.');
+            //string uniquename = u.Split(':', '/').Aggregate((acc, s) => acc + s);
+            return PhysicalFile(path, "video/" + path.Substring(lastpoint + 1));
+        }
+        [HttpGet("docs/GetPdf")]
+        public IActionResult GetPdf(string u)
+        {
+            if (u == null) return NotFound();
+
+            u = System.Web.HttpUtility.UrlDecode(u);
+            var cass_dir = OAData.OADB.CassDirPath(u);
+            if (cass_dir == null) return NotFound();
+            string last10 = u.Substring(u.Length - 10);
+            string dirpath = cass_dir + "/originals/" + last10.Substring(0, 6);
+            System.IO.DirectoryInfo dinfo = new System.IO.DirectoryInfo(dirpath);
+            var finfo = dinfo.GetFiles(last10.Substring(6) + ".*").LastOrDefault();
+            if (finfo == null) return NotFound();
+            string path = finfo.FullName;
+            return PhysicalFile(path, "application/pdf");
+        }
+
     }
 }

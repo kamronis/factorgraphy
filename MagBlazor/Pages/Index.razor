@@ -1,7 +1,10 @@
 ﻿@using RDFEngine
 @page "/{entityId?}"
 
-<div>Редактировать: <input type="checkbox" @bind="toedit" /></div>
+<div style="text-align:right;">
+    User: <input type="text" @bind="_user" />
+    <MagBlazor.Components.Upload user="@user" onFinish="(str) => Build(entityId)" />
+</div>
 <MagBlazor.Components.Search onSelected="(rid) => UtilizeRecord((string)rid)" searchsample="@searchsample" typs="@tps" />
 @if (focusRec != null)
 {
@@ -11,8 +14,27 @@
         <img src="@sr" />
 
     }
-    <MagBlazor.Components.DrawTable focusId="@focusRec.Id" inverseTp="@focusRec.Tp" records="@(new RRecord[] { focusRec })" onGo="(id) => Build((string)id)" />
-    var list2 = Infobase.rontology.AncestorsAndSelf(focusRec.Tp).SelectMany(t => Infobase.rontology.GetInversePropsByType(t));
+    if (focusRec.Tp == "http://fogid.net/o/video-doc")
+    {
+        string sr = "docs/GetVideo?u=" + ((RField)focusRec.Props.FirstOrDefault(p => p.Prop == "http://fogid.net/o/uri")).Value + "&s=normal";
+        <video controls>
+            <source type="video/webm" src='@(sr + "&ext=webm")' />
+            <source type="video/mp4" src='@(sr + "&ext=mp4")' />
+            Your browser does not support the video tag.
+        </video>
+
+    }
+    @*else if (documenttype == "application/pdf")
+    {
+        string src = url == null ? Url.Content("~/Docs/GetPdf?u=" + uri_coded) : url;
+        <embed src="@src" width="1024" height="800" />
+    }*@
+    try
+    {
+
+    <MagBlazor.Components.DrawTable focusId="@focusRec.Id" inverseTp="@focusRec.Tp" records="@(new RRecord[] { focusRec })" onGo="(id) => Build((string)id)" user="@user" />
+    var list2 = Infobase.rontology.AncestorsAndSelf(focusRec.Tp).SelectMany(t => Infobase.rontology.GetInversePropsByType(t)).Distinct();
+    //look =  "" + list2.Count() + " " + list2.Aggregate((a, s) => a + " | " + s);
     foreach (var propName in list2)
     {
         var pr = focusInversePropTypes.FirstOrDefault(ipt => ipt.Prop == propName);
@@ -21,7 +43,7 @@
             var it = pr == null ? null : pr.lists.FirstOrDefault(x => x.Tp == typ);
             if (it == null)
             {
-                if (Infobase.toedit)
+                if (toedit)
                 {
                     <span>@(Infobase.rontology.InvLabelOfOnto(propName)) &nbsp;</span>
                     <span>
@@ -35,21 +57,33 @@
                     <tr valign="top">
                         <td>@(Infobase.rontology.InvLabelOfOnto(propName))</td>
                         <td>
-                            <MagBlazor.Components.DrawTable focusId="@focusRec.Id" inverseProp="@propName" inverseTp="@typ" records="@(it==null?null:it.list)" onGo="(id) => Build((string)id)" />
+                            <MagBlazor.Components.DrawTable focusId="@focusRec.Id" inverseProp="@propName" inverseTp="@typ" records="@(it==null?null:it.list)" onGo="(id) => Build((string)id)" user="@user" />
                         </td>
                     </tr>
                 </table>
+                }
             }
         }
-    }
+    } catch (Exception ex) { look = ex.Message; }
 }
 
 @code{
     [Parameter]
     public string entityId { get; set; }
 
+    // Пользователь
+    private string _user
+    {
+        get { return user; }
+        set { if (!string.IsNullOrEmpty(value) && OAData.OADB.HasWritabeFogForUser(value)) user = value; else user = null; }
+    }
+    private string user;
+
     // Признак редактирования
-    private bool toedit { get { return Infobase.toedit; } set { Infobase.toedit = value; } }
+    private bool toedit { get { return !string.IsNullOrEmpty(user); } }
+
+    // Движок
+    RDFEngine.IEngine engine = new RDFEngine.RXEngine();
 
     private string[] tps = //new string[] { "http://fogid.net/o/person", "http://fogid.net/o/org-sys" };
         Infobase.rontology.DescendantsAndSeld("http://fogid.net/o/sys-obj").ToArray();
@@ -68,7 +102,7 @@
     // Построение фокусного элемента по его идентификатору
     private void Build(string recId)
     {
-        RRecord erec = Infobase.engine.BuildPortrait(recId); // ((REngine)(Infobase.engine)).BuildPortrait(recId);
+        RRecord erec = engine.BuildPortrait(recId); // ((REngine)(Infobase.engine)).BuildPortrait(recId);
         if (erec == null)
         {
             focusRec = null;
@@ -101,7 +135,7 @@
 
     private void BuildInverseTable(string prop, string typ)
     {
-        Infobase.engine.NewRelation(typ, prop, focusRec.Id);
+        engine.NewRelation(typ, prop, focusRec.Id);
         Build(focusRec.Id);
         //look = $"run BuildInverseTable {prop} {typ}";
     }
@@ -120,3 +154,4 @@
 
 <hr />
 <div>@look</div>
+<div>@user</div>

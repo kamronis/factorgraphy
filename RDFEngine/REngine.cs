@@ -232,7 +232,7 @@ namespace RDFEngine
 
             // Теперь выполним основное действие - вычислим новое списка свойств записи dbrec.
             // Для этого перепишем обратные ссылки и добавим все остальное, не забыв отфильтровать несущественные значения
-            RProperty[] result = rec.Props.Where(p => p is not RInverse).Select(p =>
+            RProperty[] result = rec.Props.Where(p => !(p is RInverse)).Select(p =>
                 (p is RDirect) ?
                 (((RDirect)p).DRec == null ? (RProperty)null : new RLink { Prop = p.Prop, Resource = ((RDirect)p).DRec.Id }) :
                 ((p is RInverse) ? 

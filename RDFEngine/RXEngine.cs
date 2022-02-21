@@ -9,6 +9,7 @@ namespace RDFEngine
 {
     public class RXEngine : IEngine
     {
+        public string User { get; set; }
         public void Build()
         {
             throw new NotImplementedException();
@@ -122,12 +123,12 @@ namespace RDFEngine
 
         // ================= Группа редактирования ==================
 
-        private string owner = "tester";
         public bool DeleteRecord(string id)
         {
             var res = OAData.OADB.PutItem(new XElement("delete", 
                 new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about", id),
-                new XAttribute("owner", owner)));
+                new XAttribute("owner", User)));
+            if (res.Name == "error") throw new Exception(res.Value);
             return res != null ? true : false;
         }
 
@@ -144,17 +145,24 @@ namespace RDFEngine
             var res = OAData.OADB.PutItem(
                 new XElement(ToXName(type), 
                     new XElement("{http://fogid.net/o/}name", name),
-                    new XAttribute("owner", owner)));
+                    new XAttribute("owner", User)));
+            if (res.Name == "error") throw new Exception(res.Value);
             return res.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value;
         }
 
         public string NewRelation(string type, string inverseprop, string source)
         {
-            var res = OAData.OADB.PutItem(
-                new XElement(ToXName(type),
-                    new XElement(ToXName(inverseprop),
-                        new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource", source)),
-                    new XAttribute("owner", owner)));
+            var x1 = ToXName(type);
+            var x2 = ToXName(inverseprop);
+            //var res = OAData.OADB.PutItem(
+            //    new XElement(ToXName(type),
+            //        new XElement(ToXName(inverseprop),
+            //            new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource", source)),
+            //        new XAttribute("owner", User)));
+            var res = OAData.OADB.PutItem(new XElement(x1, new XElement(x2, new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource", source)),
+                new XAttribute("owner", User)));
+
+            if (res.Name == "error") throw new Exception(res.Value);
             return res.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value;
         }
 
@@ -162,7 +170,7 @@ namespace RDFEngine
         public void Update(RRecord record)
         {
             var xres = new XElement(ToXName(record.Tp),
-                    new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about", record.Id),
+                    (record.Id==null?null : new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about", record.Id)),
                     record.Props.Select(p =>
                     {
                         if (p is RField)
@@ -182,8 +190,9 @@ namespace RDFEngine
                         }
                         return null;
                     }).Where(x => x != null),
-                    new XAttribute("owner", owner));
-            OAData.OADB.UpdateItem(xres);
+                    new XAttribute("owner", User));
+            var res = OAData.OADB.UpdateItem(xres);
+            if (res.Name == "error") throw new Exception(res.Value);
         }
     }
 }

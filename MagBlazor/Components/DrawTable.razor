@@ -7,7 +7,7 @@
 else
 {
     RRecord defrow = records[0];
-    int rowlength = defrow.Props.Length + (Infobase.toedit ? 1 : 0);
+    int rowlength = defrow.Props.Length + (toedit ? 1 : 0);
     <table border="1">
         <tr>
             <td colspan="@(rowlength)">
@@ -72,7 +72,7 @@ else
                                             .Distinct();
                                         <td style="background-color: antiquewhite;">
                                             <MagBlazor.Components.Search onSelected="(rid) => LinkRecord((string)rid)"
-                                                typs="@(typps.ToArray())" />
+                                                typs="@(typps.ToArray())" user="@user" />
                                         </td>
                                     }
                                     else
@@ -113,7 +113,7 @@ else
                                     <a href="javascript:void(0)" @onclick="@(e =>LinkClick(rr.Id))">
                                         @if (rr.Tp == "http://fogid.net/o/photo-doc")
                                         {
-                                            string sr = "docs/GetImage?u=" + ((RField)rr.Props.FirstOrDefault(p => p.Prop == "http://fogid.net/o/uri")).Value + "&s=small";
+                                            string sr = "docs/GetImage?u=" + ((RField)rr.Props.FirstOrDefault(p => p.Prop == "http://fogid.net/o/uri"))?.Value + "&s=small";
                                             <img src="@sr" />
                                         }
                                         else
@@ -160,8 +160,9 @@ else
     [Parameter]
     public EventCallback onGo { get; set; }
 
-
-    public bool toedit { get { return Infobase.toedit; } }
+    [Parameter]
+    public string user { get; set; }
+    private bool toedit { get { return !string.IsNullOrEmpty(user); } }
 
     private async Task LinkClick(string id)
     {
@@ -171,13 +172,13 @@ else
     private async Task NewRelItem(string prop, string tp)
     {
         if (erecord != null) return;
-        string nid = Infobase.engine.NewRelation(tp, prop, focusId);
+        string nid = (new RDFEngine.RXEngine() { User = user }).NewRelation(tp, prop, focusId);
         await onGo.InvokeAsync(focusId);
     }
     private async Task DelClick(string id)
     {
         if (erecord != null) return;
-        Infobase.engine.DeleteRecord(id);
+        (new RDFEngine.RXEngine() { User = user }).DeleteRecord(id);
         await onGo.InvokeAsync(focusId);
     }
 
@@ -211,7 +212,7 @@ else
     private void SearchLink(string prop) { searchlinkprop = prop; }
     private void LinkRecord(string rid)
     {
-        RRecord extRec = Infobase.engine.GetRRecord(rid, false);
+        RRecord extRec = (new RDFEngine.RXEngine() { User = user }).GetRRecord(rid, false);
         var erec = new RRecord
         {
             Id = erecord.Id,
@@ -252,7 +253,7 @@ else
             RDirect dpro = (RDirect)erecord.Props.First(p => p.Prop == inverseProp);
             dpro.DRec = new RRecord { Id = focusId, Tp = inverseTp }; // Tp - неправильное, но оно не используется
         }
-        Infobase.engine.Update(erecord);
+        (new RDFEngine.RXEngine() { User = user }).Update(erecord);
 
         // Замещение записи на новую
         for (int i = 0; i < records.Length; i++)
