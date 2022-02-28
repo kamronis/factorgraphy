@@ -12,7 +12,10 @@
 {
     var m = model;
     var link = "/editor/" + originalRecord.Id;
-    <NavLink href="@link">Редактировать</NavLink>
+    <AuthorizeView Roles="Editor">
+        <NavLink href="@link">Редактировать</NavLink>
+    </AuthorizeView>
+    
     <table border="1">
         <tr>
             <th colspan="@(m.row.Length+1)">@Infobase.GetTerm(m.Tp) @m.Id</th>
@@ -141,6 +144,14 @@
     }
 
     protected override void OnInitialized() // = On Page Load
+    {
+        if (entityId != null)
+        {
+            BuildPortrait(entityId);
+        }
+    }
+
+    protected override void OnParametersSet() // = On Page Load
     {
         if (entityId != null)
         {

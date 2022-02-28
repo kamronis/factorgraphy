@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -25,7 +26,7 @@ namespace BlazorServer
 
 
 
-            bool useconfig = false; // Два варианта: использовать config и OAData или через прямую загрузку
+            bool useconfig = true; // Два варианта: использовать config и OAData или через прямую загрузку
 
             if (useconfig) 
             {
@@ -36,6 +37,7 @@ namespace BlazorServer
                 //OAData.OADB.Load();
 
                 Infobase.engine = new RDFEngine.RXEngine(); // Это новый движок!!!
+                ((RDFEngine.RXEngine)Infobase.engine).User = "mag_1";
 
                 //Infobase.engine.NewRecord("http://fogid.net/o/person", "Пупкин"); // Опробовал 1
                 string idd = OAData.OADB.SearchByName("пупкин").FirstOrDefault()?.Attribute("id")?.Value;
@@ -55,9 +57,10 @@ namespace BlazorServer
             }
             else
             {
-                Infobase.cassPath = "C:\\Users\\Kamroni\\Desktop\\SypCassete";
+                Infobase.cassPath =  "../../SypCassete";
+                string[] loadPath = { Infobase.cassPath, "meta", "SypCassete_current_20110112.fog" };
                 //Infobase.cassPath = @"D:\Home\FactographProjects\syp_cassettes\SypCassete"; // Это на машине mag
-                XElement graphModelXml = XElement.Load(Infobase.cassPath + "\\meta\\SypCassete_current_20110112.fog");
+                XElement graphModelXml = XElement.Load(Path.Combine(loadPath));
                 var flow = graphModelXml.Elements()
                     .Select(el =>
                     {

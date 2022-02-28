@@ -1,6 +1,7 @@
 ﻿@page "/editor/{entityId?}"
 @using RDFEngine
 @using BlazorServer.Components
+@attribute [Authorize(Roles = "Editor")]
 
 
 @*<div><input type="checkbox" @bind="lookDb" /></div>*@
@@ -30,8 +31,8 @@
             {
                 <td colspan="@(m.row.Length+1)">
                     <PropertyEditor r="@originalRecord" forbidden="@forbidden"
-                                 onSave="@((arg) => { Save((RRecord)arg); })"
-                                 onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"></PropertyEditor>
+                                    onSave="@((arg) => { Save((RRecord)arg); })"
+                                    onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"></PropertyEditor>
                 </td>
             }
             else
@@ -55,17 +56,17 @@
     {
         selectedInvId = possibleInvs.FirstOrDefault().Id;
     }
-    
+
     <div class="add-link-block">
-        <select value="@selectedInvId" @onchange="@((ChangeEventArgs e) => { 
+        <select value="@selectedInvId" @onchange="@((ChangeEventArgs e) => {
                                                         selectedInvId = e.Value.ToString();
                                                         selectedDomainResource = null;
                                                         Cancel();
                                                     })">
-        @foreach (RRecord inv in possibleInvs)
-        {
-            <option value="@inv.Id">@Infobase.GetTerm(inv.Id)</option>
-        }
+            @foreach (RRecord inv in possibleInvs)
+            {
+                <option value="@inv.Id">@Infobase.GetTerm(inv.Id)</option>
+            }
         </select>
         @if (selectedInvId != null)
         {
@@ -79,7 +80,11 @@
             <select @bind="selectedDomainResource">
                 @foreach (RProperty domain in possibleDomains)
                 {
-                    <option value="@(((RLink)domain).Resource)">@Infobase.GetTerm(((RLink)domain).Resource)</option>
+                    var decendants = Infobase.ront.DescendantsAndSelf(((RLink)domain).Resource);
+                    foreach (var dec in decendants)
+                    {
+                        <option value="@(dec)">@Infobase.GetTerm(dec)</option>
+                    }
                 }
             </select>
         }
@@ -89,14 +94,15 @@
             var currType = selectedDomainResource;
             var currForbidden = selectedInvId;
             <PropertyEditor r="@possibleInvs.FirstOrDefault(inv => inv.Id == selectedInvId)" type="@currType" forbidden="@currForbidden"
-                onSave="@((arg) => { Save((RRecord)arg, true); /* t.list = t.list.Append((RRecord)arg).ToArray();*/ })"
-                onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))" addRecord="true"
-                origId="@originalRecord.Id"></PropertyEditor>          }
+                            onSave="@((arg) => { Save((RRecord)arg, true); /* t.list = t.list.Append((RRecord)arg).ToArray();*/ })"
+                            onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))" addRecord="true"
+                            origId="@originalRecord.Id"></PropertyEditor> }
         else
         {
             <a href="javascript:void(0)" @onclick="@ToggleAddLink">доб.</a>
         }
     </div>
+    <br />
     //.OrderBy(inv => inv.);
 
     foreach (var inv in possibleInvs)
@@ -108,13 +114,11 @@
             RProperty[] domFields = ont.FirstOrDefault(rec => rec.Tp == "Class" && rec.Id == ((RLink)domain).Resource)
                 .Props.Where(prop => prop is RLink && ((RLink)prop).Resource != inv.Id).ToArray();
 
-            <table border="1">
+            var pTypes = m.inv.Where(propT => propT.Prop == inv.Id);
 
-
-
-                @{ var pTypes = m.inv.Where(propT => propT.Prop == inv.Id); }
-                @if (pTypes.Any())
-                {
+            @if (pTypes.Any())
+            {
+                <table border="1">
                     <tr>
                         <th colspan="@domFields.Length">
                             <span>@Infobase.GetTerm(inv.Id)</span>
@@ -127,13 +131,13 @@
                         <tr>
                             <td colspan="@(domFields.Length + 1)">
                                 <PropertyEditor r="@inv" type="@(((RLink)domain).Resource)" forbidden="@forbidden"
-                                             onSave="@((arg) => { Save((RRecord)arg, true); /* t.list = t.list.Append((RRecord)arg).ToArray();*/ })"
-                                             onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))" addRecord="true"
-                                             origId="@originalRecord.Id"></PropertyEditor>
+                                                onSave="@((arg) => { Save((RRecord)arg, true); /* t.list = t.list.Append((RRecord)arg).ToArray();*/ })"
+                                                onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))" addRecord="true"
+                                                origId="@originalRecord.Id"></PropertyEditor>
                             </td>
                         </tr>
                     }
-                    foreach (var pType in pTypes)
+                    @foreach (var pType in pTypes)
                     {
                         if (pType.lists.Any())
                         {
@@ -157,9 +161,9 @@
                                             <tr>
                                                 <td colspan="@(r.Props.Length + 2)">
                                                     <PropertyEditor r="@r" forbidden="@forbidden"
-                                                                 onSave="@((arg) => Save((RRecord)arg))"
-                                                                 onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"
-                                                                 origId="@originalRecord.Id"></PropertyEditor>
+                                                                    onSave="@((arg) => Save((RRecord)arg))"
+                                                                    onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"
+                                                                    origId="@originalRecord.Id"></PropertyEditor>
                                                 </td>
                                             </tr>
                                         }
@@ -177,9 +181,10 @@
                             }
                         }
                     }
-                }
-            </table>
-            <br />
+                </table>
+                <br />
+            }
+
         }
     }
 
@@ -208,6 +213,14 @@
 
 
     protected override void OnInitialized() // = On Page Load
+    {
+        if (entityId != null)
+        {
+            BuildPortrait(entityId);
+        }
+    }
+
+    protected override void OnParametersSet() // = On Page Load
     {
         if (entityId != null)
         {

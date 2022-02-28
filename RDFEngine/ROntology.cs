@@ -91,7 +91,7 @@ namespace RDFEngine
         {
             return (new RTreeNode[] { node }).Concat(node.Childs.SelectMany(c => DAS(c)));
         }
-        public IEnumerable<string> DescendantsAndSeld(string id)
+        public IEnumerable<string> DescendantsAndSelf(string id)
         {
             RTreeNode node = RTNdic[id];
             return DAS(node).Select(n => n.Id);
@@ -277,7 +277,7 @@ namespace RDFEngine
                 .SelectMany(rr => rr.Props
                     .Where(p => p is RLink && p.Prop == "range")
                     .Select(p => new { pr = rr.Id, tp = ((RLink)p).Resource }))
-                .SelectMany(pa => DescendantsAndSeld(pa.tp).Select(t => new { ty = t, pr_id = pa.pr }))
+                .SelectMany(pa => DescendantsAndSelf(pa.tp).Select(t => new { ty = t, pr_id = pa.pr }))
                 .GroupBy(typr => typr.ty)
                 .ToDictionary(keypair => keypair.Key, keypair => keypair.Select(x => x.pr_id).Distinct().ToArray());
 

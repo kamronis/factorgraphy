@@ -10,7 +10,7 @@
     if (c.Prop == forbidden) { continue; }
     if (c is RField)
     {
-        if (c.Prop == "uri")
+        if (c.Prop == "http://fogid.net/o/uri")
         {
             <img src="@("docs/GetImage?u=" + ((RField)c).Value +"&s=small")" />
         }
@@ -24,17 +24,17 @@
     {
         var rr = ((RDirect)c).DRec;
 
-        if (rr.Props.FirstOrDefault(p => p.Prop == "documenttype") != null && rr.Props.FirstOrDefault(p => p.Prop == "uri") != null)
+        if (rr.Props.FirstOrDefault(p => p.Prop == "http://fogid.net/o/docmetainfo") != null && rr.Props.FirstOrDefault(p => p.Prop == "http://fogid.net/o/uri") != null)
         {
             <td>
-                <a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">
-                    <img src="@("docs/GetImage?u=" + ((RField)rr.Props.FirstOrDefault(p => p.Prop == "uri")).Value +"&s=small")" />
+                <a href="@("/viewer/" + rr.Id)">
+                    <img src="@("docs/GetImage?u=" + ((RField)rr.Props.FirstOrDefault(p => p.Prop == "http://fogid.net/o/uri")).Value +"&s=small")" />
                 </a>
             </td>
         }
         else
         {
-            <td><a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">@(rr.GetName())</a></td>
+            <td><a href="@("/viewer/" + rr.Id)">@(rr.GetName())</a></td>
         }
 
     }

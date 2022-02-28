@@ -50,3 +50,16 @@
   <collection-item rdf:resource="Cassette_20211014_0001_0010" />
 </collection-member>
 <delete rdf:about="Cassette_20211014_tester_637763849054494762_1004" mT="2022-01-10 12:05:36Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+<archive-member mT="2022-02-28 10:31:46Z" rdf:about="SypCassete_2000" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <archive-item rdf:resource="syp2001-p-marchuk_a" />
+</archive-member>
+<titled mT="2022-02-28 11:11:46Z" rdf:about="SypCassete_2001" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <has-title rdf:resource="syp2001-p-marchuk_a" />
+</titled>
+<titled rdf:about="SypCassete_2001" mT="2022-02-28 11:12:08Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <has-title rdf:resource="syp2001-p-marchuk_a" />
+  <degree>степень</degree>
+  <from-date>123</from-date>
+  <to-date>213</to-date>
+  <comment></comment>
+</titled>

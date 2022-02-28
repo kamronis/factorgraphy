@@ -2,17 +2,36 @@
 
 <div>
     <input @bind="searchsample" />
+    <select @bind="@selectedType">
+        @{
+            allowedTypes = Infobase.ront.DescendantsAndSelf(rangeType);
+            if (allowedTypes.Count() > 1)
+            {
+                <option value="all">Все типы</option>
+            }
+            foreach (var name in allowedTypes)
+            {
+                if (name == "http://fogid.net/o/sys-obj")
+                {
+                    continue;
+                }
+                <option value="@name">@(Infobase.GetTerm(name))</option>
+            }
+        }
+
+
+    </select>
 </div>
 @if (!string.IsNullOrEmpty(searchsample) && resShown)
 {
     IEnumerable<RRecord> query = null;
-    if (!string.IsNullOrEmpty(type))
+    if (!string.IsNullOrEmpty(selectedType) && selectedType != "all")
     {
-        query = Infobase.engine.RSearch(searchsample, type);
+        query = Infobase.engine.RSearch(searchsample).Where(rec => rec.Tp == selectedType);
     }
     else
     {
-        query = Infobase.engine.RSearch(searchsample);
+        query = Infobase.engine.RSearch(searchsample).Where(rec => allowedTypes.Contains(rec.Tp));
     }
     foreach (RRecord rec in query)
     {
@@ -33,9 +52,14 @@
     public bool hideResults { get; set; } = false;
 
     [Parameter]
-    public string type { get; set; } = null;
+    public string selectedType { get; set; } = null;
+
+    [Parameter]
+    public string rangeType { get; set; } = "http://fogid.net/o/sys-obj";
 
     private bool resShown = true;
+
+    private IEnumerable<string> allowedTypes;
 
     protected async Task SearchResultClick(RRecord rec)
     {

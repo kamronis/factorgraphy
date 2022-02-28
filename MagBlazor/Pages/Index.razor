@@ -86,7 +86,7 @@
     RDFEngine.IEngine engine = new RDFEngine.RXEngine();
 
     private string[] tps = //new string[] { "http://fogid.net/o/person", "http://fogid.net/o/org-sys" };
-        Infobase.rontology.DescendantsAndSeld("http://fogid.net/o/sys-obj").ToArray();
+        Infobase.rontology.DescendantsAndSelf("http://fogid.net/o/sys-obj").ToArray();
 
     private string searchsample = "";
     // Запись фокусного элемента и списки обратных свойств для него

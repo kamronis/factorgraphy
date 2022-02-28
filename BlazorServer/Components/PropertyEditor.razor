@@ -103,7 +103,7 @@ else
                         {
                             if (rr != null)
                             {
-                                
+
 
                                 if (rr.Props.FirstOrDefault(p => p.Prop == "documenttype") != null && rr.Props.FirstOrDefault(p => p.Prop == "uri") != null)
                                 {
@@ -130,16 +130,22 @@ else
                             //}
                             if (rr != null)
                             {
-                                if (rr.Props.FirstOrDefault(p => p.Prop == "documenttype") != null && rr.Props.FirstOrDefault(p => p.Prop == "uri") != null)
+                                if (rr.Props.FirstOrDefault(p => p.Prop == "http://fogid.net/o/docmetainfo") != null && rr.Props.FirstOrDefault(p => p.Prop == "http://fogid.net/o/uri") != null)
                                 {
                                     <a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">
-                                        <img src="@("docs/GetImage?u=" + ((RField)rr.Props.FirstOrDefault(p => p.Prop == "uri")).Value +"&s=small")" />
+                                        <img src="@("docs/GetImage?u=" + ((RField)rr.Props.FirstOrDefault(p => p.Prop == "http://fogid.net/o/uri")).Value +"&s=small")" />
                                     </a>
 
                                 }
-                            <span>@rr.GetName()</span>
+                                <span>@rr.GetName()</span>
                             }
-                            <br /><span>Поиск:</span> <Search onSearchResultClick="@(arg => { editProp = null; ((RDirect)bindProperty).DRec = (RRecord)arg; })"></Search>
+                            <br /><span>Поиск:</span>
+                            string range = null;
+                            @if (bindProperty.Prop != null)
+                            {
+                                range = ((RLink)Infobase.ront.rontology.FirstOrDefault(rec => rec.Id == bindProperty.Prop).Props.FirstOrDefault(prop => prop.Prop == "range")).Resource;
+                            }
+                            <Search onSearchResultClick="@(arg => { editProp = null; ((RDirect)bindProperty).DRec = (RRecord)arg; })" rangeType="@range" />
                         }
                     }
                     else
@@ -169,6 +175,7 @@ else
 
     [Parameter]
     public string type { get; set; }
+
     [Parameter]
     public string origId { get; set; }
 

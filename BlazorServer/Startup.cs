@@ -1,23 +1,31 @@
+using BlazorServer.Areas.Identity;
 using BlazorServer.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace BlazorServer
 {
     public class Startup
     {
+        private static string contentRoot;
         public Startup(IConfiguration configuration)
         {
+            contentRoot = configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
+
             Configuration = configuration;
         }
 
@@ -27,9 +35,18 @@ namespace BlazorServer
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(
+                    Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
+            services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddSingleton<WeatherForecastService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,6 +69,9 @@ namespace BlazorServer
             Infobase.Init(env.ContentRootPath + "/wwwroot/");
 
             app.UseRouting();
+			
+			app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
@@ -61,6 +81,15 @@ namespace BlazorServer
                    name: "default",
                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            Process.Start(new ProcessStartInfo("https://localhost:5001") { UseShellExecute = true });
+            Console.WriteLine("ВНИМАНИЕ!");
+            Console.WriteLine("Не закрывайте это окно для корректной работы приложения BLAZOR!");
+            Console.WriteLine();
+        }
+
+        public static string getContentRoot()
+        {
+            return contentRoot;
         }
     }
 }
