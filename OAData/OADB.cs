@@ -62,29 +62,21 @@ namespace OAData
                 string pre = connectionstring.Substring(0, connectionstring.IndexOf(':'));
                 if (pre == "trs")
                 {
-                    //adapter = new TripleRecordStoreAdapter();
+                    adapter = new TripleRecordStoreAdapter();
                 }
                 else if (pre == "xml")
                 {
                     adapter = new XmlDbAdapter();
                 }
+                else if (pre == "om")
+                {
+                    adapter = new OmAdapter();
+                }
                 adapter.Init(connectionstring);
                 
-                //bool toload = false;
-                //if (toload)
-                //{
-                //    adapter.StartFillDb(null);
-                //    //adapter.LoadFromCassettesExpress(fogs.Select(fo => fo.pth),
-                //    //    null, null);
-                //    adapter.FillDb(fogs, null);
-                //    adapter.FinishFillDb(null);
-                //}
-                //else
-                //{
-
-                //}
-                
+                if (pre == "trs") Load();
                 if (pre == "xml") Load();
+                if (pre == "om") Load();
 
                 // Логфайл элементов Put()
                 //putlogfilename = connectionstring.Substring(connectionstring.IndexOf(':') + 1) + "logfile_put.txt";

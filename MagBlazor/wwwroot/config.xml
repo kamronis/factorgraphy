@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <config>
-  <database dbname="photoarchive" connectionstring="xml:" />
+  <!--<database dbname="photoarchive" connectionstring="trs:D:\Home\data\ttt\" />-->
+  <database dbname="db" connectionstring="om:D:\Home\data\om\" />
 
   <!--<LoadCassette>D:\Home\FactographProjects\syp_cassettes\SypCassete</LoadCassette>
 
