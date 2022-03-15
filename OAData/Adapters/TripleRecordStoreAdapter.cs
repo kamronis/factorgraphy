@@ -81,9 +81,17 @@ namespace OAData.Adapters
                 string id = record.Attribute(ONames.rdfabout).Value;
                 // Корректируем идентификатор
                 if (orig_ids.TryGetValue(id, out string idd)) id = idd;
-                int rec_type = store.CodeEntity(ONames.fog + record.Name.LocalName);
-                int id_ent = store.CodeEntity(id);
-                object[] orecord = new object[] {
+                object[] orecord = TransformToObject(orig_ids, record, id);
+                return orecord;
+            });
+            store.Load(flow);
+        }
+
+        private object[] TransformToObject(Dictionary<string, string> orig_ids, XElement record, string id)
+        {
+            int rec_type = store.CodeEntity(ONames.fog + record.Name.LocalName);
+            int id_ent = store.CodeEntity(id);
+            object[] orecord = new object[] {
                         id_ent,
                         (new object[] { new object[] { store.cod_rdftype, rec_type } }).Concat(
                         record.Elements().Where(el => el.Attribute(ONames.rdfresource) != null)
@@ -91,7 +99,7 @@ namespace OAData.Adapters
                             {
                                 int prop = store.CodeEntity(subel.Name.NamespaceName + subel.Name.LocalName);
                                 string resource = subel.Attribute(ONames.rdfresource).Value;
-                                if (orig_ids.TryGetValue(resource, out string res)) if (res != null) resource = res;
+                                if (orig_ids != null && orig_ids.TryGetValue(resource, out string res)) if (res != null) resource = res;
                                 return new object[] { prop, store.CodeEntity(resource) };
                             })).ToArray()
                         ,
@@ -105,9 +113,7 @@ namespace OAData.Adapters
                             })
                             .ToArray()
                         };
-                return orecord;
-            });
-            store.Load(flow);
+            return orecord;
         }
 
         public override void FinishFillDb(Action<string> turlog)
@@ -638,16 +644,19 @@ namespace OAData.Adapters
         private object CodeRecord(XElement rec)
         {
             string id = rec.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value;
-            string tp = "http://fogid.net/o/" + rec.Name.LocalName;
-            int cid = store.CodeEntity(id);
-            return new object[] { cid,
-                Enumerable.Repeat<object[]>(new object[] { store.cod_rdftype, store.CodeEntity(tp)}, 1)
-                    .Concat(rec.Elements().Where(el => el.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource") != null)
-                        .Select(el => new object[] { store.CodeEntity("http://fogid.net/o/" + el.Name.LocalName),
-                                store.CodeEntity(el.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource").Value) })).ToArray(),
-                rec.Elements().Where(el => el.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource") == null)
-                        .Select(el => new object[] { store.CodeEntity("http://fogid.net/o/" + el.Name.LocalName), el.Value }).ToArray()
-            };
+            object[] orecord = TransformToObject(null, rec, id);
+            return orecord;
+
+            //string tp = "http://fogid.net/o/" + rec.Name.LocalName;
+            //int cid = store.CodeEntity(id);
+            //return new object[] { cid,
+            //    Enumerable.Repeat<object[]>(new object[] { store.cod_rdftype, store.CodeEntity(tp)}, 1)
+            //        .Concat(rec.Elements().Where(el => el.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource") != null)
+            //            .Select(el => new object[] { store.CodeEntity("http://fogid.net/o/" + el.Name.LocalName),
+            //                    store.CodeEntity(el.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource").Value) })).ToArray(),
+            //    rec.Elements().Where(el => el.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource") == null)
+            //            .Select(el => new object[] { store.CodeEntity("http://fogid.net/o/" + el.Name.LocalName), el.Value }).ToArray()
+            //};
         }
         public override XElement PutItem(XElement record)
         {

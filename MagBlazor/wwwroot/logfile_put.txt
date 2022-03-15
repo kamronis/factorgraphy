@@ -1331,3 +1331,19 @@
   <doc-content />
   <comment />
 </photo-doc>
+<person rdf:about="syp2001-p-ivanov_a" mT="2022-03-15 01:53:26Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Иванов Андрей</name>
+  <from-date></from-date>
+  <description></description>
+  <to-date></to-date>
+  <sex></sex>
+  <comment>комментарий 2 3 4 5</comment>
+</person>
+<reflection rdf:about="ref2067" mT="2022-03-15 01:54:04Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <reflected rdf:resource="syp2001-p-ivanov_a" />
+  <in-doc rdf:resource="syp2001_col_portraits_pd_023" />
+  <ground></ground>
+  <from-date>2001</from-date>
+  <to-date></to-date>
+  <comment>Фотография Иванова</comment>
+</reflection>
