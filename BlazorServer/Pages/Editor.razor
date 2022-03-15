@@ -1,201 +1,200 @@
 ﻿@page "/editor/{entityId?}"
 @using RDFEngine
 @using BlazorServer.Components
-@attribute [Authorize(Roles = "Editor")]
-
+@attribute [Authorize(Roles = "Admin,Editor")]
+@inject NavigationManager NavManager
 
 @*<div><input type="checkbox" @bind="lookDb" /></div>*@
-<h3>Editor</h3>
+<h3>Редактор</h3>
 
 
-<Search onSearchResultClick="@(arg => BuildPortrait(((RRecord)arg).Id))" hideResults="true"></Search>
-@if (model != null)
-{
-    var m = model;
-    var link = "/viewer/" + originalRecord.Id;
-    <NavLink href="@link">Смотреть</NavLink>
-    <table border="1">
-        <tr>
-            <th colspan="@(m.row.Length+1)">@Infobase.GetTerm(m.Tp) @m.Id</th>
-        </tr>
-        <tr>
-            @foreach (var c in ont.FirstOrDefault(r => r.Id == m.Tp).Props.Where(p => p is RLink))
-            {
-                <th class="secondary">@Infobase.GetTerm(((RLink)c).Resource)</th>
-            }
-
-            <td></td>
-        </tr>
-        <tr>
-            @if (editFields)
-            {
-                <td colspan="@(m.row.Length+1)">
-                    <PropertyEditor r="@originalRecord" forbidden="@forbidden"
-                                    onSave="@((arg) => { Save((RRecord)arg); })"
-                                    onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"></PropertyEditor>
-                </td>
-            }
-            else
-            {
-                <PropertyViewer properties="m.row" onBuildPortrait="@(arg => BuildPortrait((string)arg))"></PropertyViewer>
-                <td><a href="javascript:void(0)" @onclick="@EditFields">ред</a></td>
-            }
-        </tr>
-    </table>
-    <br />
-
-    var possibleInvs = ont.Where(rec => rec.Tp == "ObjectProperty" &&
-        rec.Props.Any(prop => prop is RLink && prop.Prop == "range" && parentTypes.Contains(((RLink)prop).Resource)))
-        .Where(inv => inv.Props.FirstOrDefault(prop => prop.Prop == "range" /*&& ((RLink)prop).Resource == "sys-obj"*/) != null)
-        .OrderBy(inv =>
-        {
-            var val = ((RField)inv.Props.FirstOrDefault(prop => prop.Prop == "priority"))?.Value;
-            return val == null ? "zzz" : val;
-        });
-    if (selectedInvId == null && possibleInvs.FirstOrDefault() != null)
+<Search onSearchResultClick="@(arg => NavManager.NavigateTo("editor/"+((RRecord)arg).Id))" hideResults="false" blockTitle="Поиск"></Search>
+<div class="page-container">
+    @if (model != null)
     {
-        selectedInvId = possibleInvs.FirstOrDefault().Id;
-    }
+        var m = model;
 
-    <div class="add-link-block">
-        <select value="@selectedInvId" @onchange="@((ChangeEventArgs e) => {
+        <table border="1">
+            <tr>
+                <th colspan="@(m.row.Length+1)">@Infobase.GetTerm(m.Tp) @m.Id <NavLink href="@("/viewer/" + originalRecord.Id)">Просмотр</NavLink></th>
+            </tr>
+            <tr>
+                @foreach (var c in ont.FirstOrDefault(r => r.Id == m.Tp).Props.Where(p => p is RLink))
+                {
+                    <th class="secondary">@Infobase.GetTerm(((RLink)c).Resource)</th>
+                }
+
+                <td></td>
+            </tr>
+            <tr>
+                @if (editFields)
+                {
+                    <td colspan="@(m.row.Length+1)">
+                        <PropertyEditor r="@originalRecord" forbidden="@forbidden"
+                                        onSave="@((arg) => { Save((RRecord)arg); })"
+                                        onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"></PropertyEditor>
+                    </td>
+                }
+                else
+                {
+                    <PropertyViewer properties="m.row" onBuildPortrait="@(arg => BuildPortrait((string)arg))"></PropertyViewer>
+                    <td><a href="javascript:void(0)" @onclick="@EditFields">ред</a></td>
+                }
+            </tr>
+        </table>
+        <br />
+
+        var possibleInvs = ont.Where(rec => rec.Tp == "ObjectProperty" &&
+            rec.Props.Any(prop => prop is RLink && prop.Prop == "range" && parentTypes.Contains(((RLink)prop).Resource)))
+            .Where(inv => inv.Props.FirstOrDefault(prop => prop.Prop == "range" /*&& ((RLink)prop).Resource == "sys-obj"*/) != null)
+            .OrderBy(inv =>
+            {
+                var val = ((RField)inv.Props.FirstOrDefault(prop => prop.Prop == "priority"))?.Value;
+                return val == null ? "zzz" : val;
+            });
+        if (selectedInvId == null && possibleInvs.FirstOrDefault() != null)
+        {
+            selectedInvId = possibleInvs.FirstOrDefault().Id;
+        }
+
+        <div class="add-link-block">
+            <select value="@selectedInvId" @onchange="@((ChangeEventArgs e) => {
                                                         selectedInvId = e.Value.ToString();
                                                         selectedDomainResource = null;
                                                         Cancel();
                                                     })">
-            @foreach (RRecord inv in possibleInvs)
-            {
-                <option value="@inv.Id">@Infobase.GetTerm(inv.Id)</option>
-            }
-        </select>
-        @if (selectedInvId != null)
-        {
-            var currentInv = possibleInvs.FirstOrDefault(inv => inv.Id == selectedInvId);
-            var possibleDomains = currentInv
-                .Props.Where(prop => prop.Prop == "domain").ToArray();
-            if (selectedDomainResource == null && possibleDomains.FirstOrDefault() != null)
-            {
-                selectedDomainResource = ((RLink)possibleDomains.FirstOrDefault()).Resource;
-            }
-            <select @bind="selectedDomainResource">
-                @foreach (RProperty domain in possibleDomains)
+                @foreach (RRecord inv in possibleInvs)
                 {
-                    var decendants = Infobase.ront.DescendantsAndSelf(((RLink)domain).Resource);
-                    foreach (var dec in decendants)
-                    {
-                        <option value="@(dec)">@Infobase.GetTerm(dec)</option>
-                    }
+                    <option value="@inv.Id">@Infobase.GetTerm(inv.Id)</option>
                 }
             </select>
-        }
-        @if (addLink)
-        {
-            var currInv = possibleInvs.FirstOrDefault(inv => inv.Id == selectedInvId);
-            var currType = selectedDomainResource;
-            var currForbidden = selectedInvId;
-            <PropertyEditor r="@possibleInvs.FirstOrDefault(inv => inv.Id == selectedInvId)" type="@currType" forbidden="@currForbidden"
-                            onSave="@((arg) => { Save((RRecord)arg, true); /* t.list = t.list.Append((RRecord)arg).ToArray();*/ })"
-                            onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))" addRecord="true"
-                            origId="@originalRecord.Id"></PropertyEditor> }
-        else
-        {
-            <a href="javascript:void(0)" @onclick="@ToggleAddLink">доб.</a>
-        }
-    </div>
-    <br />
-    //.OrderBy(inv => inv.);
-
-    foreach (var inv in possibleInvs)
-    {
-
-        RProperty[] domains = inv.Props.Where(prop => prop.Prop == "domain").ToArray();
-        foreach (var domain in domains)
-        {
-            RProperty[] domFields = ont.FirstOrDefault(rec => rec.Tp == "Class" && rec.Id == ((RLink)domain).Resource)
-                .Props.Where(prop => prop is RLink && ((RLink)prop).Resource != inv.Id).ToArray();
-
-            var pTypes = m.inv.Where(propT => propT.Prop == inv.Id);
-
-            @if (pTypes.Any())
+            @if (selectedInvId != null)
             {
-                <table border="1">
-                    <tr>
-                        <th colspan="@domFields.Length">
-                            <span>@Infobase.GetTerm(inv.Id)</span>
-                            <span>@Infobase.GetTerm(((RLink)domain).Resource)</span>
-                        </th>
-                        <td colspan="2"><a href="javascript:void(0)" @onclick="e => Add(inv.Id, ((RLink)domain).Resource)">доб</a></td>
-                    </tr>
-                    @if (inv.Id == forbidden && ((RLink)domain).Resource == addRecordType)
-                    {//add new record to exsisting prop
-                        <tr>
-                            <td colspan="@(domFields.Length + 1)">
-                                <PropertyEditor r="@inv" type="@(((RLink)domain).Resource)" forbidden="@forbidden"
-                                                onSave="@((arg) => { Save((RRecord)arg, true); /* t.list = t.list.Append((RRecord)arg).ToArray();*/ })"
-                                                onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))" addRecord="true"
-                                                origId="@originalRecord.Id"></PropertyEditor>
-                            </td>
-                        </tr>
-                    }
-                    @foreach (var pType in pTypes)
+                var currentInv = possibleInvs.FirstOrDefault(inv => inv.Id == selectedInvId);
+                var possibleDomains = currentInv
+                    .Props.Where(prop => prop.Prop == "domain").ToArray();
+                if (selectedDomainResource == null && possibleDomains.FirstOrDefault() != null)
+                {
+                    selectedDomainResource = ((RLink)possibleDomains.FirstOrDefault()).Resource;
+                }
+                <select @bind="selectedDomainResource">
+                    @foreach (RProperty domain in possibleDomains)
                     {
-                        if (pType.lists.Any())
+                        var decendants = Infobase.ront.DescendantsAndSelf(((RLink)domain).Resource);
+                        foreach (var dec in decendants)
                         {
-                            foreach (var list in pType.lists)
+                            <option value="@(dec)">@Infobase.GetTerm(dec)</option>
+                        }
+                    }
+                </select>
+            }
+            @if (addLink)
+            {
+                var currInv = possibleInvs.FirstOrDefault(inv => inv.Id == selectedInvId);
+                var currType = selectedDomainResource;
+                var currForbidden = selectedInvId;
+                <PropertyEditor r="@possibleInvs.FirstOrDefault(inv => inv.Id == selectedInvId)" type="@currType" forbidden="@currForbidden"
+                                onSave="@((arg) => { Save((RRecord)arg, true); /* t.list = t.list.Append((RRecord)arg).ToArray();*/ })"
+                                onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))" addRecord="true"
+                                origId="@originalRecord.Id"></PropertyEditor> }
+            else
+            {
+                <a href="javascript:void(0)" @onclick="@ToggleAddLink">доб.</a>
+            }
+        </div>
+        <br />
+        //.OrderBy(inv => inv.);
+
+        foreach (var inv in possibleInvs)
+        {
+
+            RProperty[] domains = inv.Props.Where(prop => prop.Prop == "domain").ToArray();
+            foreach (var domain in domains)
+            {
+                RProperty[] domFields = ont.FirstOrDefault(rec => rec.Tp == "Class" && rec.Id == ((RLink)domain).Resource)
+                    .Props.Where(prop => prop is RLink && ((RLink)prop).Resource != inv.Id).ToArray();
+
+                var pTypes = m.inv.Where(propT => propT.Prop == inv.Id);
+
+                @if (pTypes.Any())
+                {
+                    <table border="1">
+                        <tr>
+                            <th colspan="@domFields.Length">
+                                <span>@Infobase.GetTerm(inv.Id)</span>
+                                <span>@Infobase.GetTerm(((RLink)domain).Resource)</span>
+                            </th>
+                            <td colspan="2"><a href="javascript:void(0)" @onclick="e => Add(inv.Id, ((RLink)domain).Resource)">доб</a></td>
+                        </tr>
+                        @if (inv.Id == forbidden && ((RLink)domain).Resource == addRecordType)
+                        {//add new record to exsisting prop
+                            <tr>
+                                <td colspan="@(domFields.Length + 1)">
+                                    <PropertyEditor r="@inv" type="@(((RLink)domain).Resource)" forbidden="@forbidden"
+                                                    onSave="@((arg) => { Save((RRecord)arg, true); /* t.list = t.list.Append((RRecord)arg).ToArray();*/ })"
+                                                    onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))" addRecord="true"
+                                                    origId="@originalRecord.Id"></PropertyEditor>
+                                </td>
+                            </tr>
+                        }
+                        @foreach (var pType in pTypes)
+                        {
+                            if (pType.lists.Any())
                             {
-                                if (list.Tp == (((RLink)domain).Resource))
+                                foreach (var list in pType.lists)
                                 {
-                                    if (list.list.Length > 0)
+                                    if (list.Tp == (((RLink)domain).Resource))
                                     {
-                                        <tr>
-                                            @foreach (RLink field in domFields) //header properties of table
-                                            {
-                                                <th class="secondary">@Infobase.GetTerm(field.Resource)</th>
-                                            }
-                                        </tr>
-                                    }
-                                    foreach (RRecord r in list.list)
-                                    {
-                                        if (r.Id == eid && eid != null)
-                                        {//properties editor
+                                        if (list.list.Length > 0)
+                                        {
                                             <tr>
-                                                <td colspan="@(r.Props.Length + 2)">
-                                                    <PropertyEditor r="@r" forbidden="@forbidden"
-                                                                    onSave="@((arg) => Save((RRecord)arg))"
-                                                                    onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"
-                                                                    origId="@originalRecord.Id"></PropertyEditor>
-                                                </td>
+                                                @foreach (RLink field in domFields) //header properties of table
+                                                {
+                                                    <th class="secondary">@Infobase.GetTerm(field.Resource)</th>
+                                                }
                                             </tr>
                                         }
-                                        else
-                                        {//properties viewer
-                                            <tr>
-                                                <PropertyViewer onBuildPortrait="@(arg => BuildPortrait((string)arg))" properties="@r.Props" forbidden="@inv.Id"></PropertyViewer>
-                                                <td><a href="javascript:void(0)" @onclick="@(e => { Cancel(); Edit(r.Id, inv.Id); })">ред</a></td>
-                                                <td><a href="javascript:void(0)" @onclick="@(e => { Delete(r.Id); list.list = list.list.Where(x => x.Id != r.Id).ToArray(); })">уд</a></td>
-                                            </tr>
+                                        foreach (RRecord r in list.list)
+                                        {
+                                            if (r.Id == eid && eid != null)
+                                            {//properties editor
+                                                <tr>
+                                                    <td colspan="@(r.Props.Length + 2)">
+                                                        <PropertyEditor r="@r" forbidden="@forbidden"
+                                                                        onSave="@((arg) => Save((RRecord)arg))"
+                                                                        onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"
+                                                                        origId="@originalRecord.Id"></PropertyEditor>
+                                                    </td>
+                                                </tr>
+                                            }
+                                            else
+                                            {//properties viewer
+                                                <tr>
+                                                    <PropertyViewer onBuildPortrait="@(arg => BuildPortrait((string)arg))" properties="@r.Props" forbidden="@inv.Id"></PropertyViewer>
+                                                    <td><a href="javascript:void(0)" @onclick="@(e => { Cancel(); Edit(r.Id, inv.Id); })">ред</a></td>
+                                                    <td><a href="javascript:void(0)" @onclick="@(e => { Delete(r.Id); list.list = list.list.Where(x => x.Id != r.Id).ToArray(); })">уд</a></td>
+                                                </tr>
 
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
-                    }
-                </table>
-                <br />
+                    </table>
+                    <br />
+                }
+
             }
-
         }
+
     }
-
-}
-
+</div>
 
 @code {
     [Parameter]
     public string entityId { get; set; }
 
-    private string searchsample = "";
     Models.P3Model model = null;
     private RRecord originalRecord;
     private string[] parentTypes;
@@ -203,7 +202,6 @@
     private RRecord[] ont = Infobase.ront.rontology;
     private void BuildPortrait(string id)
     {
-        searchsample = null;
         eid = null;
         RRecord rec = (Infobase.engine).BuildPortrait(id);
         originalRecord = rec;
@@ -231,8 +229,6 @@
 
 
 @code{
-    private bool lookDb = false;
-
     private string eid;
 
     private string forbidden;

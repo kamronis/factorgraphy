@@ -1,41 +1,7 @@
 ﻿@page "/search"
 @using RDFEngine
+@using BlazorServer.Components
+@inject NavigationManager NavManager
 <h1>Поиск</h1>
-<div>
-    <input @bind="searchsample" />
-    <select @bind="@selectedType">
-        <option value="all">Все типы</option>
-        @foreach (var name in Infobase.ront.DescendantsAndSelf("http://fogid.net/o/sys-obj"))
-        {
-            if (name == "http://fogid.net/o/sys-obj")
-            {
-                continue;
-            }
-            <option value="@name">@(Infobase.GetTerm(name))</option>
-        }
-    </select>
-</div>
-@if (!string.IsNullOrEmpty(searchsample))
-{
-    IEnumerable<RRecord> query = null;
-    if (!string.IsNullOrEmpty(selectedType) && selectedType != "all")
-    {
-        query = Infobase.engine.RSearch(searchsample, selectedType);
-    }
-    else
-    {
-        query = Infobase.engine.RSearch(searchsample);
-    }
-    foreach (RRecord rec in query)
-    {
-        <div>
-            <span>@rec.Tp</span> &nbsp;
-            <a href="@("viewer/" + rec.Id)">@rec.GetName()</a>
-        </div>
-    }
-}
 
-@code{
-    private string searchsample = "";
-    private string selectedType;
-}
+<Search onSearchResultClick="@(arg => NavManager.NavigateTo("viewer/"+((RRecord)arg).Id))" hideResults="false"></Search>

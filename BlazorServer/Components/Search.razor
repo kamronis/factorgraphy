@@ -1,47 +1,53 @@
 ﻿@using RDFEngine
 
-<div>
-    <input @bind="searchsample" />
-    <select @bind="@selectedType">
-        @{
-            allowedTypes = Infobase.ront.DescendantsAndSelf(rangeType);
-            if (allowedTypes.Count() > 1)
-            {
-                <option value="all">Все типы</option>
-            }
-            foreach (var name in allowedTypes)
-            {
-                if (name == "http://fogid.net/o/sys-obj")
+<div class="search-container">
+    @if (blockTitle.Length != 0)
+    {
+        <h4>@blockTitle</h4>
+    }
+    <div>
+
+        <input @bind="searchsample" />
+        <select @bind="@selectedType">
+            @{
+                allowedTypes = Infobase.ront.DescendantsAndSelf(rangeType);
+                if (allowedTypes.Count() > 1)
                 {
-                    continue;
+                    <option value="all">Все типы</option>
                 }
-                <option value="@name">@(Infobase.GetTerm(name))</option>
+                foreach (var name in allowedTypes)
+                {
+                    if (name == "http://fogid.net/o/sys-obj")
+                    {
+                        continue;
+                    }
+                    <option value="@name">@(Infobase.GetTerm(name))</option>
+                }
             }
+
+        </select>
+        <button type="submit">Поиск</button>
+    </div>
+    @if (!string.IsNullOrEmpty(searchsample) && resShown)
+    {
+        IEnumerable<RRecord> query = null;
+        if (!string.IsNullOrEmpty(selectedType) && selectedType != "all")
+        {
+            query = Infobase.engine.RSearch(searchsample).Where(rec => rec.Tp == selectedType);
         }
-
-
-    </select>
+        else
+        {
+            query = Infobase.engine.RSearch(searchsample).Where(rec => allowedTypes.Contains(rec.Tp));
+        }
+        foreach (RRecord rec in query)
+        {
+            <div>
+                <span>@Infobase.GetTerm(rec.Tp)</span> &nbsp;
+                <a href="javasrcipt:void(0);" @onclick="@(e =>SearchResultClick(rec))">@rec.GetName()</a>
+            </div>
+        }
+    }
 </div>
-@if (!string.IsNullOrEmpty(searchsample) && resShown)
-{
-    IEnumerable<RRecord> query = null;
-    if (!string.IsNullOrEmpty(selectedType) && selectedType != "all")
-    {
-        query = Infobase.engine.RSearch(searchsample).Where(rec => rec.Tp == selectedType);
-    }
-    else
-    {
-        query = Infobase.engine.RSearch(searchsample).Where(rec => allowedTypes.Contains(rec.Tp));
-    }
-    foreach (RRecord rec in query)
-    {
-        <div>
-            <span>@rec.Tp</span> &nbsp;
-            <a href="javascript:void(0)" @onclick="@(e =>SearchResultClick(rec))">@rec.GetName()</a>
-        </div>
-    }
-}
-
 @code{
     private string searchsample = "";
 
@@ -56,6 +62,9 @@
 
     [Parameter]
     public string rangeType { get; set; } = "http://fogid.net/o/sys-obj";
+
+    [Parameter]
+    public string blockTitle { get; set; } = "";
 
     private bool resShown = true;
 

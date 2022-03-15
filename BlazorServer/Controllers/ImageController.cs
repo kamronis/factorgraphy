@@ -30,7 +30,6 @@ namespace BlazorServer.Controllers
             string[] pathToCombine = { root, cass_dir, "documents", method };
             pathToCombine = pathToCombine.Concat(last10).ToArray();
             string path = System.IO.Path.Combine(pathToCombine);
-            Startup.getContentRoot();
 
             return PhysicalFile(path, "image/jpg");
         }

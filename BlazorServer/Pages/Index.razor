@@ -2,8 +2,9 @@
 @using RDFEngine
 
 <h3>Index</h3>
+<GlobalSearch></GlobalSearch>
 
-<div>
+@*<div>
     <input @bind="searchsample" />
 </div>
 @if (!string.IsNullOrEmpty(searchsample))
@@ -186,7 +187,7 @@ else if (model != null)
         string look = null;
     }
 
-<div>@look</div>
+<div>@look</div>*@
 
 
 @code{

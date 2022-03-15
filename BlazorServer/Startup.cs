@@ -36,7 +36,7 @@ namespace BlazorServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
+                options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
@@ -45,7 +45,6 @@ namespace BlazorServer
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddSingleton<WeatherForecastService>();
 
         }
 
@@ -81,7 +80,7 @@ namespace BlazorServer
                    name: "default",
                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-            Process.Start(new ProcessStartInfo("https://localhost:5001") { UseShellExecute = true });
+            //Process.Start(new ProcessStartInfo("https://localhost:5001") { UseShellExecute = true });
             Console.WriteLine("ВНИМАНИЕ!");
             Console.WriteLine("Не закрывайте это окно для корректной работы приложения BLAZOR!");
             Console.WriteLine();

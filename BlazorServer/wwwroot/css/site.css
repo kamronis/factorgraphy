@@ -70,3 +70,13 @@ th.secondary {
 .propery-editor tr.edited {
     background-color: lightblue;
 }
+
+.search-container {
+    max-width: 700px;
+    border: dashed;
+    padding: 20px;
+}
+
+.page-container {
+    margin-top: 20px;
+}

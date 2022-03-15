@@ -108,7 +108,7 @@ else
                                 if (rr.Props.FirstOrDefault(p => p.Prop == "documenttype") != null && rr.Props.FirstOrDefault(p => p.Prop == "uri") != null)
                                 {
                                     <a href="javascript:void(0)" @onclick="@(e => BuildPortrait(rr.Id))">
-                                        <img src="@("docs/GetImage?u=" + ((RField)rr.Props.FirstOrDefault(p => p.Prop == "uri")).Value +"&s=small")" />
+                                        <img src="@("docs/GetImage?u=" + ((RField)rr.Props.FirstOrDefault(p => p.Prop == "uri")).Value +"&s=medium")" />
                                     </a>
 
                                 }

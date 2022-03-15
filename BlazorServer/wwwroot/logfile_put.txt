@@ -63,3 +63,39 @@
   <to-date>213</to-date>
   <comment></comment>
 </titled>
+<participation rdf:about="syp2001-uch-43" mT="2022-03-07 05:28:05Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-makarov" />
+  <in-org rdf:resource="syp2001-mast-3d" />
+  <role>иефыв</role>
+  <role-classification />
+  <from-date>папва</from-date>
+  <to-date>241</to-date>
+  <comment>5325</comment>
+</participation>
+<delete rdf:about="syp2001-uchs-43" mT="2022-03-07 05:28:08Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+<business-activity mT="2022-03-07 05:28:33Z" rdf:about="SypCassete_2002" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <has-activity rdf:resource="syp2001-p-makarov" />
+</business-activity>
+<business-activity rdf:about="SypCassete_2002" mT="2022-03-07 05:28:36Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <has-activity rdf:resource="syp2001-p-makarov" />
+  <business>неке</business>
+  <from-date>ен</from-date>
+  <to-date>екн</to-date>
+  <comment>кеен</comment>
+</business-activity>
+<reflection mT="2022-03-07 07:32:17Z" rdf:about="SypCassete_2003" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <reflected rdf:resource="syp2001-p-marchuk_a" />
+</reflection>
+<location mT="2022-03-07 07:32:38Z" rdf:about="SypCassete_2004" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <something rdf:resource="syp2001-p-marchuk_a" />
+</location>
+<location rdf:about="SypCassete_2004" mT="2022-03-07 07:32:58Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <something rdf:resource="syp2001-p-marchuk_a" />
+  <location-place rdf:resource="irkutsk" />
+  <location-category></location-category>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment></comment>
+</location>
+<delete rdf:about="SypCassete_2004" mT="2022-03-07 07:33:02Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+<delete rdf:about="SypCassete_2003" mT="2022-03-07 07:33:24Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
