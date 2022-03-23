@@ -83,7 +83,7 @@
     private bool toedit { get { return !string.IsNullOrEmpty(user); } }
 
     // Движок
-    RDFEngine.IEngine engine = new RDFEngine.RXEngine();
+    //RDFEngine.IEngine engine = new RDFEngine.RXEngine();
 
     private string[] tps = //new string[] { "http://fogid.net/o/person", "http://fogid.net/o/org-sys" };
         Infobase.rontology.DescendantsAndSelf("http://fogid.net/o/sys-obj").ToArray();
@@ -102,7 +102,7 @@
     // Построение фокусного элемента по его идентификатору
     private void Build(string recId)
     {
-        RRecord erec = engine.BuildPortrait(recId); // ((REngine)(Infobase.engine)).BuildPortrait(recId);
+        RRecord erec = (new RDFEngine.RXEngine() { User = user }).BuildPortrait(recId); // ((REngine)(Infobase.engine)).BuildPortrait(recId);
         if (erec == null)
         {
             focusRec = null;
@@ -135,7 +135,7 @@
 
     private void BuildInverseTable(string prop, string typ)
     {
-        engine.NewRelation(typ, prop, focusRec.Id);
+        (new RDFEngine.RXEngine() { User = user }).NewRelation(typ, prop, focusRec.Id);
         Build(focusRec.Id);
         //look = $"run BuildInverseTable {prop} {typ}";
     }

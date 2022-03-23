@@ -356,3 +356,5 @@ MigrationBackup/
 /RDF_Database/SypCasseteFamily
 /RDF_Database/wwwroot/img
 /GenerateRDF/output.rdf
+/MagBlazor/wwwroot/config.xml
+/MagBlazor/wwwroot/logfile_put.txt

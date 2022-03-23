@@ -154,13 +154,10 @@ namespace RDFEngine
         {
             var x1 = ToXName(type);
             var x2 = ToXName(inverseprop);
-            //var res = OAData.OADB.PutItem(
-            //    new XElement(ToXName(type),
-            //        new XElement(ToXName(inverseprop),
-            //            new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource", source)),
-            //        new XAttribute("owner", User)));
-            var res = OAData.OADB.PutItem(new XElement(x1, new XElement(x2, new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource", source)),
-                new XAttribute("owner", User)));
+
+            var item = new XElement(x1, new XElement(x2, new XAttribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource", source)),
+                new XAttribute("owner", User));
+            var res = OAData.OADB.PutItem(item);
 
             if (res.Name == "error") throw new Exception(res.Value);
             return res.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value;

@@ -11,11 +11,13 @@ namespace OAData.Adapters
 {
     public class OmAdapter : DAdapter
     {
-        // Адаптер состоит из последовательности записей и пары индексов
-        private UniversalSequence records;
-        private SVectorIndex names;
+        // Адаптер состоит из последовательности записей, дополнительного индекса и последовательности триплетов объектных свойств 
         private PType tp_prop;
         private PType tp_rec;
+        private PType tp_triple;
+        private UniversalSequence records;
+        private SVectorIndex names;
+        private UniversalSequence obj_props;
 
         // Констуктор инициализирует то, что можно и не изменяется
         public OmAdapter()
@@ -28,12 +30,19 @@ namespace OAData.Adapters
                     new NamedType("lang", new PType(PTypeEnumeration.sstring)))),
                 new NamedType("objprop", new PTypeRecord(
                     new NamedType("prop", new PType(PTypeEnumeration.sstring)),
-                    new NamedType("link", new PType(PTypeEnumeration.sstring))))
+                    new NamedType("link", new PType(PTypeEnumeration.sstring)))),
+                new NamedType("invlink", new PTypeRecord(
+                    new NamedType("prop", new PType(PTypeEnumeration.sstring)),
+                    new NamedType("sourcelink", new PType(PTypeEnumeration.sstring))))
                 );
             tp_rec = new PTypeRecord(
                 new NamedType("id", new PType(PTypeEnumeration.sstring)),
                 new NamedType("tp", new PType(PTypeEnumeration.sstring)),
                 new NamedType("props", new PTypeSequence(tp_prop)));
+            tp_triple = new PTypeRecord(
+                new NamedType("subj", new PType(PTypeEnumeration.sstring)),
+                new NamedType("pred", new PType(PTypeEnumeration.sstring)),
+                new NamedType("obj", new PType(PTypeEnumeration.sstring)));
         }
 
         // Главный инициализатор. Используем connectionstring 
@@ -90,9 +99,34 @@ namespace OAData.Adapters
             records.Build();
         }
 
-        // Загузка потока x-элементов
+        // Загрузка потока x-элементов
+        internal class OTriple { public string subj, pred, resource; }
+        internal class InverseLink { public string pred, source; }
         public override void LoadXFlow(IEnumerable<XElement> xflow, Dictionary<string, string> orig_ids)
         {
+            // Соберем граф через 2 сканирования
+            // Проход 1: вычисление обратных объектных свойств
+            Dictionary<string, InverseLink[]> inverseProps = xflow.SelectMany(record =>
+            {
+                string id = record.Attribute(ONames.rdfabout).Value;
+                // Корректируем идентификатор
+                if (orig_ids.TryGetValue(id, out string idd)) id = idd;
+                var directProps = record.Elements().Where(el => el.Attribute(ONames.rdfresource) != null)
+                    .Select(el =>
+                    {
+                        string subj = id;
+                        string pred = el.Name.NamespaceName + el.Name.LocalName;
+                        string resource = el.Attribute(ONames.rdfresource).Value;
+                        if (orig_ids.TryGetValue(resource, out string res)) if (res != null) resource = res;
+                        return new OTriple { subj = subj, pred = pred, resource = resource };
+                    });
+                return directProps;
+            }).GroupBy(triple => triple.resource, triple => new InverseLink { pred = triple.pred, source = triple.subj })
+            .Select(g => new { key = g.Key, ilinks = g.Select(lnk => lnk) })
+            .ToDictionary(pair => pair.key, pair => pair.ilinks.ToArray());
+            //Dictionary<string, InverseLink[]> inverseProps = new Dictionary<string, InverseLink[]>();
+
+            // Проход 2: вычисление графа 
             IEnumerable<object> flow = xflow.Select(record =>
             {
                 string id = record.Attribute(ONames.rdfabout).Value;
@@ -120,11 +154,15 @@ namespace OAData.Adapters
                                     return new object[] { 1, new object[] { prop, el.Value, lang } };
                                 }
                             })
+                            .Concat(inverseProps.ContainsKey(id) ? 
+                                inverseProps[id].Select(ip => new object[] { 3, new object[] { ip.pred, ip.source } }) :
+                                Enumerable.Empty<InverseLink[]>())
                             .ToArray()
                         };
                 return orecord;
             });
             records.Load(flow);
+            GC.Collect();
         }
 
         public override IEnumerable<XElement> GetAll()
@@ -141,11 +179,11 @@ namespace OAData.Adapters
         {
             var rec = records.GetByKey(new object[] { id, null, null });
             if (rec == null) return null;
-            XElement xres = ORecToXRec((object[])rec);
+            XElement xres = ORecToXRec((object[])rec, addinverse);
             // if (addinverse) throw new Exception("Err in GetItemByIdBasic: no implementation of addinverse");
             return xres;
         }
-        private XElement ORecToXRec(object[] ob)
+        private XElement ORecToXRec(object[] ob, bool addinverse)
         {
             return new XElement("record",
                 new XAttribute("id", ob[0]), new XAttribute("type", ob[1]),
@@ -161,7 +199,14 @@ namespace OAData.Adapters
                     else if ((int)uni[0] == 2)
                     {
                         object[] p = (object[])uni[1];
-                        return new XElement("direct", new XAttribute("prop", p[0]));
+                        return new XElement("direct", new XAttribute("prop", p[0]),
+                            new XElement("record", new XAttribute("id", p[1])));
+                    }
+                    else if ((int)uni[0] == 3)
+                    {
+                        object[] p = (object[])uni[1];
+                        return new XElement("inverse", new XAttribute("prop", p[0]),
+                            new XElement("record", new XAttribute("id", p[1])));
                     }
                     return null;
                 }));
