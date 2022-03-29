@@ -34,7 +34,7 @@ namespace RDFEngine
                             return null;
                         }).ToArray()
 
-                });
+                }).ToArray();
             return res;
         }
 
