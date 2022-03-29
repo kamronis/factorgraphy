@@ -49,7 +49,7 @@
     }
     private async Task NewItemClick(string tp)
     {
-        string nid = Infobase.engine.NewRecord(searchtype, searchsample);
+        string nid = (new RDFEngine.RXEngine() { User = user }).NewRecord(searchtype, searchsample);
         searchsample = null;
         await onSelected.InvokeAsync(nid);
     }

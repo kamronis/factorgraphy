@@ -27,7 +27,7 @@ namespace MagBlazor
             var xels = OAData.OADB.SearchByName("марчук").ToArray();
             if (xel != null) Console.WriteLine(xel.ToString());
 
-            //Infobase.engine = new RDFEngine.RXEngine(); // Это новый движок!!!
+            Infobase.engine = new RDFEngine.RXEngine(); // Это новый движок!!!
 
             Infobase.rontology = new RDFEngine.ROntology(path + "ontology_iis-v13.xml");
         }
