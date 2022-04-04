@@ -5,7 +5,7 @@
     User: <input type="text" @bind="_user" />
     <MagBlazor.Components.Upload user="@user" onFinish="(str) => Build(entityId)" />
 </div>
-<MagBlazor.Components.Search onSelected="(rid) => UtilizeRecord((string)rid)" searchsample="@searchsample" typs="@tps" user="@user" />
+<MagBlazor.Components.Search onSelected="(rid) => UtilizeRecord((string)rid)" searchsample="@searchsample" typs="@tps" />
 @if (focusRec != null)
 {
     if (focusRec.Tp == "http://fogid.net/o/photo-doc")
