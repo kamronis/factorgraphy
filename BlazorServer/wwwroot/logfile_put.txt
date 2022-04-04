@@ -106,11 +106,3 @@
   <to-date></to-date>
   <comment>комм2</comment>
 </archive-member>
-<person rdf:about="syp2001-p-marchuk_e" mT="2022-04-04 07:22:40Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
-  <name>Марчук Елена Александровна</name>
-  <from-date></from-date>
-  <description></description>
-  <to-date></to-date>
-  <sex></sex>
-  <comment></comment>
-</person>
