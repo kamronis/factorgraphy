@@ -7,17 +7,17 @@
 
   <ItemGroup>
     <Compile Remove="wwwroot\cassetes\**" />
+    <Compile Remove="wwwroot\unsafe_uploads\**" />
     <Content Remove="wwwroot\cassetes\**" />
+    <Content Remove="wwwroot\unsafe_uploads\**" />
     <EmbeddedResource Remove="wwwroot\cassetes\**" />
+    <EmbeddedResource Remove="wwwroot\unsafe_uploads\**" />
     <None Remove="wwwroot\cassetes\**" />
+    <None Remove="wwwroot\unsafe_uploads\**" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\RDFEngine\RDFEngine.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\unsafe_uploads\" />
   </ItemGroup>
 
   <ItemGroup>

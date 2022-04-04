@@ -3,6 +3,8 @@
 @using BlazorServer.Components
 @attribute [Authorize(Roles = "Admin,Editor")]
 @inject NavigationManager NavManager
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
+
 
 @*<div><input type="checkbox" @bind="lookDb" /></div>*@
 <h3>Редактор</h3>
@@ -32,7 +34,8 @@
                     <td colspan="@(m.row.Length+1)">
                         <PropertyEditor r="@originalRecord" forbidden="@forbidden"
                                         onSave="@((arg) => { Save((RRecord)arg); })"
-                                        onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"></PropertyEditor>
+                                        onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"
+                                        userName="@userName"></PropertyEditor>
                     </td>
                 }
                 else
@@ -96,7 +99,8 @@
                 <PropertyEditor r="@possibleInvs.FirstOrDefault(inv => inv.Id == selectedInvId)" type="@currType" forbidden="@currForbidden"
                                 onSave="@((arg) => { Save((RRecord)arg, true); /* t.list = t.list.Append((RRecord)arg).ToArray();*/ })"
                                 onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))" addRecord="true"
-                                origId="@originalRecord.Id"></PropertyEditor> }
+                                origId="@originalRecord.Id"
+                                userName="@userName"></PropertyEditor> }
             else
             {
                 <a href="javascript:void(0)" @onclick="@ToggleAddLink">доб.</a>
@@ -133,7 +137,8 @@
                                     <PropertyEditor r="@inv" type="@(((RLink)domain).Resource)" forbidden="@forbidden"
                                                     onSave="@((arg) => { Save((RRecord)arg, true); /* t.list = t.list.Append((RRecord)arg).ToArray();*/ })"
                                                     onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))" addRecord="true"
-                                                    origId="@originalRecord.Id"></PropertyEditor>
+                                                    origId="@originalRecord.Id"
+                                                    userName="@userName"></PropertyEditor>
                                 </td>
                             </tr>
                         }
@@ -163,7 +168,8 @@
                                                         <PropertyEditor r="@r" forbidden="@forbidden"
                                                                         onSave="@((arg) => Save((RRecord)arg))"
                                                                         onCancel="@Cancel" onBuildPortrait="@(arg => BuildPortrait((string)arg))"
-                                                                        origId="@originalRecord.Id"></PropertyEditor>
+                                                                        origId="@originalRecord.Id"
+                                                                        userName="@userName"></PropertyEditor>
                                                     </td>
                                                 </tr>
                                             }
@@ -198,6 +204,7 @@
     Models.P3Model model = null;
     private RRecord originalRecord;
     private string[] parentTypes;
+    private string userName;
 
     private RRecord[] ont = Infobase.ront.rontology;
     private void BuildPortrait(string id)
@@ -210,12 +217,15 @@
     }
 
 
-    protected override void OnInitialized() // = On Page Load
+    protected async override void OnInitialized() // = On Page Load
     {
         if (entityId != null)
         {
             BuildPortrait(entityId);
         }
+        var authstate = await GetAuthenticationStateAsync.GetAuthenticationStateAsync();
+        var user = authstate.User;
+        userName = user.Identity.Name;
     }
 
     protected override void OnParametersSet() // = On Page Load
@@ -276,7 +286,7 @@
 
     private void Delete(string id)
     {
-        Infobase.engine.DeleteRecord(id);
+       ((RXEngine)Infobase.engine).DeleteRecord(id, userName);
     }
 
     private void Save(RRecord record)
@@ -289,7 +299,7 @@
             editFields = false;
         }
 
-        Infobase.engine.Update(record);
+        ((RXEngine)Infobase.engine).Update(record, userName);
 
         addRecordType = null;
 

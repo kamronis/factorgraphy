@@ -99,3 +99,10 @@
 </location>
 <delete rdf:about="SypCassete_2004" mT="2022-03-07 07:33:02Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
 <delete rdf:about="SypCassete_2003" mT="2022-03-07 07:33:24Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" />
+<archive-member rdf:about="SypCassete_2000" mT="2022-03-28 10:22:49Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <concernment></concernment>
+  <archive-item rdf:resource="syp2001-p-marchuk_a" />
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment>комм2</comment>
+</archive-member>

@@ -1,5 +1,7 @@
 ﻿@using RDFEngine
 
+@inject AuthenticationStateProvider GetAuthenticationStateAsync
+
 
 @if (addRecord && recToAdd.Id == null)
 {
@@ -8,7 +10,7 @@
     var defrowProps = defrow.Props.Where(prop => prop is RLink).ToArray();
     recToAdd.Props = new RProperty[defrowProps.Length];
     recToAdd.Tp = new String(defrow.Id);
-    recToAdd.Id = Infobase.engine.NewRelation(recToAdd.Tp, forbidden, origId);
+    recToAdd.Id = ((RXEngine) Infobase.engine).NewRelation(recToAdd.Tp, forbidden, origId, userName);
     for (int i = 0; i < defrowProps.Length; i++)
     {
         RLink c = (RLink)defrowProps[i];
@@ -178,6 +180,9 @@ else
 
     [Parameter]
     public string origId { get; set; }
+
+    [Parameter]
+    public string userName { get; set; }
 
     [Parameter]
     public EventCallback onSave { get; set; }
