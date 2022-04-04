@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OAData\OAData.csproj" />
+    <ProjectReference Include="..\..\PolarArchiving\src\OAData\OAData.csproj" />
   </ItemGroup>
 
 </Project>
