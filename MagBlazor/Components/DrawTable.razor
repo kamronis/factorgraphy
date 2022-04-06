@@ -47,9 +47,26 @@ else
                             @if (c is RField)
                             {
                                 RField f = (RField)c;
-                                <td>
-                                    <input @bind="f.Value" />
-                                </td>
+                                // ~~~~~~~~~~~~ выделяем вариант перечислимого и создаем под него элемент ~~~~~~
+                                if (Infobase.rontology.IsEnumeration(c.Prop))
+                                {
+                                    var states = Infobase.rontology.EnumPairs(c.Prop, "ru");
+                                    <td>
+                                        <select @bind="f.Value">
+                                            <option value=""></option>
+                                            @foreach (var state in states)
+                                            {
+                                                <option value="@(state.Key)">@state.Value</option>
+                                            }
+                                        </select>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <input @bind="f.Value" />
+                                    </td>
+                                }
 
                             }
                             else if (c is RDirect)
@@ -72,7 +89,7 @@ else
                                             .Distinct();
                                         <td style="background-color: antiquewhite;">
                                             <MagBlazor.Components.Search onSelected="(rid) => LinkRecord((string)rid)"
-                                                typs="@(typps.ToArray())" user="@user" />
+                                                                         typs="@(typps.ToArray())" user="@user" />
                                         </td>
                                     }
                                     else
@@ -101,7 +118,13 @@ else
                     {
                         if (c is RField)
                         {
-                        <td>@(((RField)c).Value)</td>
+                            string val = ((RField)c).Value; 
+                            <!-- ~~~~~~~~~~~ Вариант перечислимого  ~~~~~~~~~~~-->
+                            if (!string.IsNullOrEmpty(val)  && Infobase.rontology.IsEnumeration(c.Prop)) 
+                            { 
+                                val = Infobase.rontology.EnumValue(c.Prop, val, "ru"); 
+                            }
+                            <td>@(val)</td>
                         }
                         else if (c is RDirect)
                         {
@@ -189,8 +212,8 @@ else
     private void EdClick(string id)
     {
         if (erecord != null) return; // Не реагировать на гиперссылку если не закончено редактирование какой-то записи
-        // Попробуем перерисовать
-        // Сначала найдем запись, которая будет редактироваться
+                                     // Попробуем перерисовать
+                                     // Сначала найдем запись, которая будет редактироваться
         RRecord re = records.FirstOrDefault(r => r.Id == id);
         if (re == null) return;
         // Сделаем клона
@@ -253,6 +276,10 @@ else
             RDirect dpro = (RDirect)erecord.Props.First(p => p.Prop == inverseProp);
             dpro.DRec = new RRecord { Id = focusId, Tp = inverseTp }; // Tp - неправильное, но оно не используется
         }
+        //// Делаем клона
+        //RRecord erec = new RRecord() { Id = erecord.Id, Tp = erecord.Tp, Props = erecord.Props.Select(p => p).ToArray() };
+        //erecord = erec;
+
         (new RDFEngine.RXEngine() { User = user }).Update(erecord);
 
         // Замещение записи на новую

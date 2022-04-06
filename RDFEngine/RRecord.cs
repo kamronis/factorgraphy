@@ -72,6 +72,15 @@ namespace RDFEngine
         public RRecord IRec { get; set; }
     }
 
+    // Специальное расширение для описателей перечислимых  
+    public class RState : RProperty
+    {
+        public string Key { get; set; }
+        public string Value { get; set; }
+        public string lang { get; set; }
+    }
+
+
 
 
 }

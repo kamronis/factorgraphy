@@ -203,50 +203,74 @@ namespace RDFEngine
         {
             return getSubClasses(el, ontology, new string[] { });
         }
-        //public ROntology(IEnumerable<RRecord> statements)
-        //{
-        //    // Это массив оннтологических описаний
-        //    rontology = statements.ToArray();
 
-        //    // Это словарь онтологических описани: по идентификатору онто объекта дается номер в таблице описаний
-        //    dicOnto = rontology
-        //       .Select((rr, nom) => new { V = rr.Id, nom })
-        //       .ToDictionary(pair => pair.V, pair => pair.nom);
+        // Таблица перечислимых DatatypeProperty id -> XElement EnumerationType
+        public Dictionary<string, XElement> enufildspecs;
+        public bool IsEnumeration(string prop) => enufildspecs.ContainsKey(prop);
+        public string EnumValue(string prop, string val, string lang) // Корректно работает только с проверенными на IsEnumeration
+        {
+            if (!enufildspecs.ContainsKey(prop)) return null;
+            XElement spec = enufildspecs[prop];
+            var state = spec.Elements("state")
+                .Where(s => s.Attribute("value").Value == val)
+                .Aggregate((acc, s) =>
+                {
+                    if (acc == null) return s;
+                    string lan = acc.Attribute("{http://www.w3.org/XML/1998/namespace}lang")?.Value;
+                    if (lan == null) return s;
+                    if (lan == lang) return acc;
+                    string lan1 = s.Attribute("{http://www.w3.org/XML/1998/namespace}lang")?.Value;
+                    if (lan1 == null) return acc;
+                    if (lan1 == lang || lan1 == "en") return s;
+                    return acc;
+                });
+            if (state == null) return null;
+            return state.Value;
+        }
+        public KeyValuePair<string, string>[] EnumPairs(string prop, string lang)
+        {
+            if (!enufildspecs.ContainsKey(prop)) return null;
+            XElement spec = enufildspecs[prop];
+            var states = spec.Elements("state")
+                .Where(s => s.Attribute("{http://www.w3.org/XML/1998/namespace}lang").Value == lang)
+                .Select(s => KeyValuePair.Create(s.Attribute("value").Value, s.Value))
+                .ToArray();
+                
+            return states;
+        }
 
 
-        //    dicsProps = new Dictionary<string, int>[rontology.Length];
-        //    for (int i = 0; i < rontology.Length; i++)
-        //    {
-        //        if (rontology[i].Props != null)
-        //        {
-        //            RLink[] links = rontology[i].Props
-        //                .Where(p => (p.Prop == "DatatypeProperty" || p.Prop == "ObjectProperty"))
-        //                .Cast<RLink>().ToArray();
-        //            dicsProps[i] = links
-        //                .Select((p, n) => new { V = p.Resource, n })
-        //                .ToDictionary(pair => pair.V, pair => pair.n);
-        //        }
-        //    }
-        //    // Вычисляем обратные свойства для типов
-        //    dicsInversePropsForType = rontology.Where(rr => rr.Tp == "ObjectProperty")
-        //        .SelectMany(rr => rr.Props
-        //            .Where(p => p is RLink && p.Prop == "range")
-        //            .Select(p => new { pr = rr.Id, tp = ((RLink)p).Resource }))
-        //        .GroupBy(pair => pair.tp)
-        //        .ToDictionary(keypair => keypair.Key, keypair => keypair.Select(x => x.pr).ToArray());
-        //    var qu = rontology.Where(rr => rr.Tp == "ObjectProperty")
-        //        .SelectMany(rr => rr.Props
-        //            .Where(p => p is RLink && p.Prop == "range")
-        //            .Select(p => new { pr = rr.Id, tp = ((RLink)p).Resource }))
-        //        .ToArray();
-        //}
         public ROntology(string path)
         {
             // Действие для "Классной кухни"
             xontology = XElement.Load(path);
             this.BuldRTree();
-            rontology = LoadROntology(path);
-            // Это словарь онтологических описани: по идентификатору онто объекта дается номер в таблице описаний
+
+            // ============== Вычисление таблицы перечислимых DatatypeProperty id -> XElement EnumerationType
+            
+            // Сначала построим вспомогательную таблицу спецификаций пеерчислимых типов
+            Dictionary<string, XElement> enumerationTypes = xontology.Elements("EnumerationType")
+                .ToDictionary(x => x.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value);
+
+            // Теперь берем определениz я всех DatatypeProperty, оставляем те, range которых входит в предыдущую таблицу 
+            // и строим то, что нужно
+            enufildspecs = xontology.Elements("DatatypeProperty")
+                .Where(dp =>
+                {
+                    string resource = dp.Element("range")?.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource")?.Value;
+                    if (resource == null) return false;
+                    if (!enumerationTypes.ContainsKey(resource)) return false;
+                    return true;
+                })
+                .ToDictionary(
+                    dp => dp.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}about").Value, 
+                    dp => enumerationTypes[dp.Element("range")?.Attribute("{http://www.w3.org/1999/02/22-rdf-syntax-ns#}resource")?.Value]);
+
+
+                 // ============== конец
+
+                rontology = LoadROntology(path);
+            // Это словарь онтологических описаний: по идентификатору онто объекта дается номер в таблице описаний
             dicOnto = rontology
                .Select((rr, nom) => new { V = rr.Id, nom })
                .ToDictionary(pair => pair.V, pair => pair.nom);
