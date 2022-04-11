@@ -16,7 +16,15 @@
         }
         else
         {
-            <td>@(((RField)c).Value)</td>
+            if (Infobase.ront.IsEnumeration(c.Prop) && ((RField)c).Value != null && ((RField)c).Value != "")
+            {
+                <td>@(Infobase.ront.EnumValue(c.Prop, ((RField)c).Value, "ru"))</td>
+            }
+            else
+            {
+               <td>@(((RField)c).Value)</td> 
+            }
+            
         }
 
     }

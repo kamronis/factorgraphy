@@ -106,3 +106,341 @@
   <to-date></to-date>
   <comment>комм2</comment>
 </archive-member>
+<archive-member rdf:about="SypCassete_2000" mT="2022-04-04 12:10:12Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <concernment></concernment>
+  <archive-item rdf:resource="syp2001-p-marchuk_a" />
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment>324234</comment>
+</archive-member>
+<reflection rdf:about="ref1485" mT="2022-04-04 12:10:19Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <reflected rdf:resource="syp2001-p-marchuk_a" />
+  <in-doc rdf:resource="syp2007_col_otdyh2007_pd_110" />
+  <ground>1243</ground>
+  <from-date />
+  <to-date />
+  <comment />
+</reflection>
+<participation rdf:about="ac50b55-096a-4cbd-897c-4fa3a985d6c3" mT="2022-04-10 13:48:54Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="flash_2010" />
+  <role></role>
+  <role-classification>guest</role-classification>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment></comment>
+  <details>участвует</details>
+</participation>
+<participation rdf:about="ac50b55-096a-4cbd-897c-4fa3a985d6c3" mT="2022-04-10 13:49:05Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="flash_2010" />
+  <role></role>
+  <role-classification>sponsor</role-classification>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment></comment>
+  <details>участвует</details>
+</participation>
+<person rdf:about="syp2001-p-marchuk_a" mT="2022-04-10 13:49:32Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Марчук Александр Гурьевич</name>
+  <from-date>1951-12-30</from-date>
+  <birth>1951-12-30</birth>
+  <description></description>
+  <to-date></to-date>
+  <sex></sex>
+  <comment></comment>
+</person>
+<person rdf:about="syp2001-p-marchuk_a" mT="2022-04-10 13:49:37Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Марчук Александр Гурьевич</name>
+  <from-date>1951-12-30</from-date>
+  <birth>1951-12-30</birth>
+  <description></description>
+  <to-date></to-date>
+  <sex></sex>
+  <comment></comment>
+</person>
+<person rdf:about="syp2001-p-marchuk_a" mT="2022-04-10 13:49:42Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Марчук Александр Гурьевич</name>
+  <from-date>1951-12-30</from-date>
+  <birth>1951-12-30</birth>
+  <description></description>
+  <to-date></to-date>
+  <sex>m</sex>
+  <comment></comment>
+</person>
+<person rdf:about="syp2001-p-marchuk_a" mT="2022-04-10 13:49:46Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Марчук Александр Гурьевич</name>
+  <from-date>1951-12-30</from-date>
+  <birth>1951-12-30</birth>
+  <description></description>
+  <to-date></to-date>
+  <sex>f</sex>
+  <comment></comment>
+</person>
+<person rdf:about="syp2001-p-marchuk_a" mT="2022-04-10 13:49:49Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Марчук Александр Гурьевич</name>
+  <from-date>1951-12-30</from-date>
+  <birth>1951-12-30</birth>
+  <description></description>
+  <to-date></to-date>
+  <sex>f</sex>
+  <comment></comment>
+</person>
+<person rdf:about="syp2001-p-marchuk_a" mT="2022-04-10 14:17:16Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Марчук Александр Гурьевич</name>
+  <from-date>1951-12-30</from-date>
+  <birth>1951-12-30</birth>
+  <description></description>
+  <to-date></to-date>
+  <sex>f</sex>
+  <comment></comment>
+</person>
+<person rdf:about="syp2001-p-marchuk_a" mT="2022-04-10 14:17:20Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Марчук Александр Гурьевич</name>
+  <from-date>1951-12-30</from-date>
+  <birth>1951-12-30</birth>
+  <description></description>
+  <to-date></to-date>
+  <sex>m</sex>
+  <comment></comment>
+</person>
+<person rdf:about="syp2001-p-marchuk_a" mT="2022-04-10 14:17:28Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Марчук Александр Гурьевич</name>
+  <from-date>1951-12-30</from-date>
+  <birth>1951-12-30</birth>
+  <description></description>
+  <to-date></to-date>
+  <sex>f</sex>
+  <comment></comment>
+</person>
+<person rdf:about="syp2001-p-marchuk_a" mT="2022-04-10 14:33:51Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <name>Марчук Александр Гурьевич</name>
+  <from-date>1951-12-30</from-date>
+  <birth>1951-12-30</birth>
+  <description></description>
+  <to-date></to-date>
+  <sex>m</sex>
+  <comment></comment>
+</person>
+<reflection rdf:about="ref1485" mT="2022-04-10 14:34:06Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <reflected rdf:resource="syp2001-p-marchuk_a" />
+  <in-doc rdf:resource="syp2007_col_otdyh2007_pd_110" />
+  <ground>casual</ground>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment></comment>
+</reflection>
+<reflection rdf:about="ref1485" mT="2022-04-10 14:34:27Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <reflected rdf:resource="syp2001-p-marchuk_a" />
+  <in-doc rdf:resource="syp2007_col_otdyh2007_pd_110" />
+  <ground>foreground</ground>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment></comment>
+</reflection>
+<reflection rdf:about="syp2009_ref244" mT="2022-04-10 14:34:30Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <reflected rdf:resource="syp2001-p-marchuk_a" />
+  <in-doc rdf:resource="syp2009_photodoc_portret2009_DSC03611.JPG" />
+  <ground></ground>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment>комм</comment>
+</reflection>
+<reflection rdf:about="syp2009_ref244" mT="2022-04-10 14:34:41Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <reflected rdf:resource="syp2001-p-marchuk_a" />
+  <in-doc rdf:resource="syp2009_photodoc_portret2009_DSC03611.JPG" />
+  <ground>foreground</ground>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment>комм</comment>
+</reflection>
+<reflection rdf:about="syp2009_ref244" mT="2022-04-10 14:34:48Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <reflected rdf:resource="syp2001-p-marchuk_a" />
+  <in-doc rdf:resource="syp2009_photodoc_portret2009_DSC03611.JPG" />
+  <ground>place</ground>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment>комм</comment>
+</reflection>
+<participation rdf:about="syp2001-uch-45" mT="2022-04-10 14:35:34Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="syp2001-mast-web" />
+  <role />
+  <role-classification>guest</role-classification>
+  <from-date />
+  <to-date />
+  <comment />
+</participation>
+<participation rdf:about="uch1" mT="2022-04-10 14:35:41Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="mast8" />
+  <role />
+  <role-classification>client</role-classification>
+  <from-date />
+  <to-date />
+  <comment />
+</participation>
+<participation rdf:about="ac50b55-096a-4cbd-897c-4fa3a985d6c3" mT="2022-04-10 14:35:47Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="flash_2010" />
+  <role></role>
+  <role-classification>basic</role-classification>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment></comment>
+  <details>участвует</details>
+</participation>
+<participation rdf:about="uch08-1055" mT="2022-04-10 14:36:11Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="socialnetwork08" />
+  <role />
+  <role-classification>organizer</role-classification>
+  <from-date />
+  <to-date />
+  <comment />
+</participation>
+<participation rdf:about="syp2009_uchsyp65" mT="2022-04-10 14:36:14Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="syp2009school" />
+  <role />
+  <role-classification>basic</role-classification>
+  <from-date />
+  <to-date />
+  <comment />
+</participation>
+<participation rdf:about="uch1" mT="2022-04-10 14:36:26Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="mast8" />
+  <role></role>
+  <role-classification>organizer</role-classification>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment></comment>
+</participation>
+<participation rdf:about="uch1" mT="2022-04-10 14:39:20Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="mast8" />
+  <role></role>
+  <role-classification>basic</role-classification>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment></comment>
+</participation>
+<participation rdf:about="uch1" mT="2022-04-10 14:40:14Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="mast8" />
+  <role></role>
+  <role-classification>basic</role-classification>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment></comment>
+</participation>
+<participation rdf:about="uch08-1054" mT="2022-04-10 14:40:50Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="syp2008" />
+  <role />
+  <role-classification>basic</role-classification>
+  <from-date />
+  <to-date />
+  <comment />
+</participation>
+<participation rdf:about="syp2001-uchs-45" mT="2022-04-10 14:40:59Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="syp2001school" />
+  <role />
+  <role-classification>organizer</role-classification>
+  <from-date />
+  <to-date />
+  <comment />
+</participation>
+<participation rdf:about="syp2002-uch-40" mT="2022-04-10 14:43:39Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="syp2002-mast-10" />
+  <role />
+  <role-classification />
+  <from-date />
+  <to-date />
+  <comment />
+</participation>
+<participation rdf:about="syp2002-uch-40" mT="2022-04-10 14:45:32Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="syp2002-mast-10" />
+  <role></role>
+  <role-classification></role-classification>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment></comment>
+</participation>
+<participation rdf:about="syp2002-uchs-40" mT="2022-04-10 14:45:51Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="syp2002school" />
+  <role />
+  <role-classification />
+  <from-date />
+  <to-date />
+  <comment />
+</participation>
+<participation rdf:about="syp2001-uch-45" mT="2022-04-10 14:46:12Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="syp2001-mast-web" />
+  <role></role>
+  <role-classification>director</role-classification>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment></comment>
+</participation>
+<participation rdf:about="ac50b55-096a-4cbd-897c-4fa3a985d6c3" mT="2022-04-10 14:46:30Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="flash_2010" />
+  <role></role>
+  <role-classification>sponsor</role-classification>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment></comment>
+  <details>участвует</details>
+</participation>
+<participation rdf:about="syp2009_r_65" mT="2022-04-10 14:46:45Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="sozdateli-2009" />
+  <role />
+  <role-classification>basic</role-classification>
+  <from-date />
+  <to-date />
+  <comment />
+</participation>
+<participation rdf:about="syp2004-uch-83" mT="2022-04-10 14:48:10Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="syp2004school" />
+  <role />
+  <role-classification>guest</role-classification>
+  <from-date />
+  <to-date />
+  <comment />
+</participation>
+<participation rdf:about="ef402-003e-4628-8c70-db6eba16e24d" mT="2022-04-10 14:59:43Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="sonya_2010" />
+  <role />
+  <role-classification>basic</role-classification>
+  <from-date />
+  <to-date />
+  <comment />
+  <details>участвует</details>
+</participation>
+<participation rdf:about="uch08-1055" mT="2022-04-10 14:59:58Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <participant rdf:resource="syp2001-p-marchuk_a" />
+  <in-org rdf:resource="socialnetwork08" />
+  <role></role>
+  <role-classification>client</role-classification>
+  <from-date></from-date>
+  <to-date></to-date>
+  <comment></comment>
+</participation>
+<reflection rdf:about="r6" mT="2022-04-11 11:02:39Z" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://fogid.net/o/">
+  <reflected rdf:resource="syp2001-p-marchuk_a" />
+  <in-doc rdf:resource="pic1" />
+  <ground>background</ground>
+  <from-date />
+  <to-date />
+  <comment />
+</reflection>

@@ -358,3 +358,5 @@ MigrationBackup/
 /GenerateRDF/output.rdf
 /MagBlazor/wwwroot/config.xml
 /MagBlazor/wwwroot/logfile_put.txt
+/BlazorServer/wwwroot/credentials.db-shm
+/BlazorServer/wwwroot/credentials.db-wal

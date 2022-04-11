@@ -159,7 +159,7 @@
                                                 }
                                             </tr>
                                         }
-                                        foreach (RRecord r in list.list)
+                                        foreach (RRecord r in list.list.OrderBy(rec => rec.Id))
                                         {
                                             if (r.Id == eid && eid != null)
                                             {//properties editor
@@ -286,7 +286,7 @@
 
     private void Delete(string id)
     {
-       ((RXEngine)Infobase.engine).DeleteRecord(id, userName);
+        ((RXEngine)Infobase.engine).DeleteRecord(id, userName);
     }
 
     private void Save(RRecord record)
@@ -295,7 +295,6 @@
         addLink = false;
         if (editFields == true)
         {
-            model = (new Models.P3Model()).Build(originalRecord);
             editFields = false;
         }
 
@@ -305,6 +304,8 @@
 
         forbidden = null;
 
+        BuildPortrait(entityId);
+
         //model = (new Models.P3Model()).Build(originalRecord);
     }
 
@@ -313,8 +314,7 @@
         Save(record);
         if (addInverse)
         {
-            RRecord rec = Infobase.engine.BuildPortrait(model.Id);
-            model = (new Models.P3Model()).Build(rec);
+            BuildPortrait(entityId);
         }
     }
 

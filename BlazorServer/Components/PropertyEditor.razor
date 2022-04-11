@@ -96,7 +96,27 @@ else
                     }
                     @if (bindProperty is RField)
                     {
-                        <span><input type="text" @bind-value="@(((RField)bindProperty).Value)" /></span>
+                        if (Infobase.ront.IsEnumeration(bindProperty.Prop))
+                        {
+                            var enuminfo = Infobase.ront.EnumPairs(bindProperty.Prop, "ru");
+                            <select @onchange="@(e => SelectChangeHandler(e.Value, bindProperty))">
+                                @foreach(var item in enuminfo)
+                                {
+                                    if (((RField)bindProperty).Value == item.Key) {
+                                        <option selected="selected" value="@item.Key">@item.Value</option> 
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Key">@item.Value</option>
+                                    }
+                                }
+
+                            </select>
+                        } 
+                        else
+                        {
+                            <span><input type="text" @bind-value="@(((RField)bindProperty).Value)" /></span>
+                        }
                     }
                     else if (bindProperty is RDirect)
                     {
@@ -220,5 +240,10 @@ else
     protected async Task BuildPortrait(string id)
     {
         await onBuildPortrait.InvokeAsync(id);
+    }
+
+    private void SelectChangeHandler(object e, RProperty bindProperty)
+    {
+        ((RField)bindProperty).Value = e.ToString();
     }
 }
