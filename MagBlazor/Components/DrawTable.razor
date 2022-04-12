@@ -51,15 +51,22 @@ else
                                 if (Infobase.rontology.IsEnumeration(c.Prop))
                                 {
                                     var states = Infobase.rontology.EnumPairs(c.Prop, "ru");
-                                    <td>
-                                        <select @bind="f.Value">
-                                            <option value=""></option>
-                                            @foreach (var state in states)
-                                            {
-                                                <option value="@(state.Key)">@state.Value</option>
-                                            }
-                                        </select>
-                                    </td>
+                        <td>
+                            <select @onchange="@(e => SelectChangeHandler(e.Value, c))">
+                                <option value=""></option>
+                                @foreach (var item in states)
+                                {
+                                    if (f.Value == item.Key)
+                                    {
+                                        <option selected="selected" value="@item.Key">@item.Value</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@item.Key">@item.Value</option>
+                                    }
+                                }
+                            </select>
+                        </td>
                                 }
                                 else
                                 {
@@ -290,4 +297,10 @@ else
         erecord = null;
     }
     private void Cancel() { erecord = null; }
+
+    private void SelectChangeHandler(object e, RProperty bindProperty)
+    {
+        ((RField)bindProperty).Value = e.ToString();
+    }
+
 }
