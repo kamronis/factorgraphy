@@ -11,54 +11,24 @@ namespace MagBlazor.Controllers
         [HttpGet("docs/GetImage")]
         public IActionResult GetImage(string u, string s)
         {
-            if (u == null) return NotFound();
-            u = System.Web.HttpUtility.UrlDecode(u);
-            var cass_dir = OAData.OADB.CassDirPath(u);
-            if (cass_dir == null) return NotFound();
-            string last10 = u.Substring(u.Length - 10);
-            string subpath;
-            string method = s;
-            //if (method == null) subpath = "/originals";
-            if (method == "small") subpath = "/documents/small";
-            else if (method == "medium") subpath = "/documents/medium";
-            else subpath = "/documents/normal"; // (method == "n")
-            string path = cass_dir + subpath + last10 + ".jpg";
+            string path = OAData.OADB.GetFilePath(u, s);
             return PhysicalFile(path, "image/jpg");
         }
 
         [HttpGet("docs/GetVideo")]
         public IActionResult GetVideo(string u)
         {
-            if (u == null) return NotFound();
-            u = System.Web.HttpUtility.UrlDecode(u);
-            var cass_dir = OAData.OADB.CassDirPath(u);
-            if (cass_dir == null) return NotFound();
-            string last10 = u.Substring(u.Length - 10);
-            string dirpath = cass_dir + "/documents/normal/" + last10.Substring(0, 6);
-            System.IO.DirectoryInfo dinfo = new System.IO.DirectoryInfo(dirpath);
-            //Console.WriteLine("GetVideo dinfo = " + dinfo);
-            var finfo = dinfo.GetFiles(last10.Substring(6) + ".*").LastOrDefault();
-            if (finfo == null) return NotFound();
-            string path = finfo.FullName;
-            //Console.WriteLine("GetVideo path = " + path);
-            int lastpoint = path.LastIndexOf('.');
-            //string uniquename = u.Split(':', '/').Aggregate((acc, s) => acc + s);
-            return PhysicalFile(path, "video/" + path.Substring(lastpoint + 1));
+            string path = OAData.OADB.GetFilePath(u, "normal");
+            if (path == null) return NotFound();
+            int pos = path.LastIndexOf('.');
+            if (pos == -1) return NotFound();
+            return PhysicalFile(path, "video/" + path.Substring(pos + 1));
         }
         [HttpGet("docs/GetPdf")]
         public IActionResult GetPdf(string u)
         {
-            if (u == null) return NotFound();
-
-            u = System.Web.HttpUtility.UrlDecode(u);
-            var cass_dir = OAData.OADB.CassDirPath(u);
-            if (cass_dir == null) return NotFound();
-            string last10 = u.Substring(u.Length - 10);
-            string dirpath = cass_dir + "/originals/" + last10.Substring(0, 6);
-            System.IO.DirectoryInfo dinfo = new System.IO.DirectoryInfo(dirpath);
-            var finfo = dinfo.GetFiles(last10.Substring(6) + ".*").LastOrDefault();
-            if (finfo == null) return NotFound();
-            string path = finfo.FullName;
+            string path = OAData.OADB.GetFilePath(u, null);
+            if (path == null) return NotFound();
             return PhysicalFile(path, "application/pdf");
         }
 
