@@ -360,3 +360,4 @@ MigrationBackup/
 /MagBlazor/wwwroot/logfile_put.txt
 /BlazorServer/wwwroot/credentials.db-shm
 /BlazorServer/wwwroot/credentials.db-wal
+/BlazorServer/wwwroot/config.xml

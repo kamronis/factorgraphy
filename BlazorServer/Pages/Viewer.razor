@@ -150,6 +150,10 @@
         {
             BuildPortrait(entityId);
         }
+        else
+        {
+            model = null;
+        }
     }
 
     protected override void OnParametersSet() // = On Page Load
@@ -157,6 +161,10 @@
         if (entityId != null)
         {
             BuildPortrait(entityId);
+        }
+        else
+        {
+            model = null;
         }
     }
 }

@@ -223,6 +223,10 @@
         {
             BuildPortrait(entityId);
         }
+        else
+        {
+            model = null;
+        }
         var authstate = await GetAuthenticationStateAsync.GetAuthenticationStateAsync();
         var user = authstate.User;
         userName = user.Identity.Name;
@@ -233,6 +237,10 @@
         if (entityId != null)
         {
             BuildPortrait(entityId);
+        }
+        else
+        {
+            model = null;
         }
     }
 }
