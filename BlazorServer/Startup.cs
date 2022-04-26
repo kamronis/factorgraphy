@@ -62,7 +62,7 @@ namespace BlazorServer
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             Infobase.Init(env.ContentRootPath + "/wwwroot/");
