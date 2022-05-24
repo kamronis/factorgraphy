@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polar.OModel", "..\PolarDB\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OAData", "..\PolarArchiving\src\OAData\OAData.csproj", "{6F8D2E14-AD5F-41AA-AA67-4F13530C34AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EtalonBlazor", "EtalonBlazor\EtalonBlazor.csproj", "{52E6BD99-6BAD-4CD3-9EA7-849081664C69}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EtalonBlazor", "EtalonBlazor\EtalonBlazor.csproj", "{52E6BD99-6BAD-4CD3-9EA7-849081664C69}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polar.Universal", "..\PolarDB\Polar.Universal\Polar.Universal.csproj", "{12B303AB-6E78-4478-898F-90D746E74EBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{52E6BD99-6BAD-4CD3-9EA7-849081664C69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52E6BD99-6BAD-4CD3-9EA7-849081664C69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52E6BD99-6BAD-4CD3-9EA7-849081664C69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12B303AB-6E78-4478-898F-90D746E74EBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12B303AB-6E78-4478-898F-90D746E74EBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12B303AB-6E78-4478-898F-90D746E74EBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12B303AB-6E78-4478-898F-90D746E74EBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
