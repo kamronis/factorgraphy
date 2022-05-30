@@ -13,12 +13,13 @@
 @if (!string.IsNullOrEmpty(searchsample))
 {
     IEnumerable<RRecord> query = null;
-    //query = Infobase.engine.RSearch(searchsample);
-    query = (new RDFEngine.RXEngine() { User = user }).RSearch(searchsample);
-    
+    //query = (new RDFEngine.RXEngine() { User = user }).RSearch(searchsample);
+    query = (new RDFEngine.RXEngine() { User = user }).RSearchByWords(searchsample);
+
     if (string.IsNullOrEmpty(searchtype)) query = query.Where(r => typs.Contains(r.Tp));
     else query = query.Where(r => r.Tp == searchtype);
-    foreach (RRecord rec in query.OrderBy(r => Infobase.GetName(r)))
+    query = query.OrderBy(r => Infobase.GetName(r));
+    foreach (RRecord rec in query)
     {
 <div>
     <a href="javascript:void(0)" @onclick="@(e =>SearchResultClick(rec))">@Infobase.GetName(rec)</a>
