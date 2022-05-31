@@ -9,16 +9,24 @@
             <option value="@typ">@(Infobase.rontology.LabelOfOnto(typ))</option>
         }
     </select>
+    <span>расш.<input type="checkbox" @bind="extended"/></span>
 </div>
 @if (!string.IsNullOrEmpty(searchsample))
 {
     IEnumerable<RRecord> query = null;
-    //query = (new RDFEngine.RXEngine() { User = user }).RSearch(searchsample);
-    query = (new RDFEngine.RXEngine() { User = user }).RSearchByWords(searchsample);
+    if (!extended)
+    {
+        query = (new RDFEngine.RXEngine() { User = user }).RSearch(searchsample);
+    }
+    else
+    {
+        query = (new RDFEngine.RXEngine() { User = user }).RSearchByWords(searchsample);
+    }
+
 
     if (string.IsNullOrEmpty(searchtype)) query = query.Where(r => typs.Contains(r.Tp));
     else query = query.Where(r => r.Tp == searchtype);
-    query = query.OrderBy(r => Infobase.GetName(r));
+    if (!extended) { query = query.OrderBy(r => Infobase.GetName(r)); }
     foreach (RRecord rec in query)
     {
 <div>
@@ -42,6 +50,7 @@
     [Parameter]
     public string user { get; set; }
     private bool toedit { get { return ! string.IsNullOrEmpty(user); } }
+    private bool extended = false;
 
     private async Task SearchResultClick(RRecord rec)
     {
