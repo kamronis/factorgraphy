@@ -230,7 +230,7 @@ else
             Tp = re.Tp,
             Props = re.Props.Select(p =>
             {
-                if (p is RField) return new RField { Prop = ((RField)p).Prop, Value = ((RField)p).Value };
+                if (p is RField) return new RField { Prop = ((RField)p).Prop, Value = ((RField)p).Value, Lang = ((RField)p).Lang };
                 else return p;
             }).ToArray()
         };
