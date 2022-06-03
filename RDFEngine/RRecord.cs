@@ -40,6 +40,7 @@ namespace RDFEngine
     public class RField : RProperty 
     {
         public string Value { get; set; }
+        public string Lang { get; set; }
     }
     public class RLink : RProperty, IEquatable<RLink>
     {

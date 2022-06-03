@@ -1,7 +1,9 @@
 ﻿@using RDFEngine
+@using MagBlazor
 @page "/{entityId?}"
 
 <div style="text-align:right;">
+    <span>ru </span>
     User: <input type="text" @bind="_user" />
     <MagBlazor.Components.Upload user="@user" onFinish="(str) => Build(entityId)" />
 </div>
@@ -119,7 +121,7 @@
             .Select(dd =>
             {
                 var qu = dd.Select(x => x.IRec)
-                    .Select(rr => new RRecord { Id = rr.Id, Tp = rr.Tp, Props = Infobase.rontology.ReorderFieldsDirects(rr) })
+                    .Select(rr => new RRecord { Id = rr.Id, Tp = rr.Tp, Props = Infobase.rontology.ReorderFieldsDirects(rr, "ru") })
                     .ToArray();
                 return new Models.InverseType
                 {
@@ -129,7 +131,7 @@
             }).ToArray()
     }).ToArray();
         focusInversePropTypes = query;
-        focusRec = new RRecord { Id = erec.Id, Tp = erec.Tp, Props = Infobase.rontology.ReorderFieldsDirects(erec) };
+        focusRec = new RRecord { Id = erec.Id, Tp = erec.Tp, Props = Infobase.rontology.ReorderFieldsDirects(erec, "ru") };
         entityId = recId;
     }
 

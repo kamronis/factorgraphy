@@ -75,7 +75,7 @@ namespace RDFEngine
                 Props = rec.Props.Select<RProperty, RProperty>(p =>
                 {
                     if (p is RField)
-                        return new RField() { Prop = p.Prop, Value = ((RField)p).Value };
+                        return new RField() { Prop = p.Prop, Value = ((RField)p).Value, Lang = ((RField)p).Lang };
                     else if (level > 0 && p is RLink && p.Prop != forbidden)
                         return new RDirect() { Prop = p.Prop, DRec = BuPo(((RLink)p).Resource, 0, null) };
                     else if (level > 1 && p is RInverseLink)
@@ -101,7 +101,9 @@ namespace RDFEngine
                 {
                     if (px.Name == "field")
                     {
-                        return new RField { Prop = px.Attribute("prop").Value, Value = px.Value };
+                        return new RField 
+                        { Prop = px.Attribute("prop").Value, Value = px.Value, 
+                            Lang = px.Attribute("{http://www.w3.org/XML/1998/namespace}lang")?.Value };
                     }
                     else if (px.Name == "direct")
                     {
@@ -227,7 +229,8 @@ namespace RDFEngine
                     {
                         if (p is RField)
                         {
-                            return new XElement(ToXName(p.Prop), ((RField)p).Value);
+                            return new XElement(ToXName(p.Prop), ((RField)p).Value, 
+                                ((RField)p).Lang == null ? null : new XAttribute("{http://www.w3.org/XML/1998/namespace}lang", ((RField)p).Lang));
                         }
                         else if (p is RLink)
                         {

@@ -314,7 +314,7 @@ namespace RDFEngine
         /// </summary>
         /// <param name="record"></param>
         /// <returns></returns>
-        public RProperty[] ReorderFieldsDirects(RRecord record)
+        public RProperty[] ReorderFieldsDirects(RRecord record, string lang)
         {
             // Определяем тип, по нему номер спецификации, по нему спецификацию из rontology. Назовем ее columns
             string tp = record.Tp;
@@ -349,7 +349,26 @@ namespace RDFEngine
                     if (p is RField)
                     {
                         RField f = (RField)p;
-                        ((RField)res_arr[n]).Value = f.Value;
+                        // Если имеющееся значение пустое, то переписать из f Value и Lang
+                        if (((RField)res_arr[n]).Value == null)
+                        {
+                            ((RField)res_arr[n]).Value = f.Value;
+                            ((RField)res_arr[n]).Lang = f.Lang;
+                        }
+                        else // Иначе есть два варианта: всепобеждающий lang и английский
+                        {
+                            if (((RField)res_arr[n]).Lang == lang) { }
+                            else if (f.Lang == lang) 
+                            {
+                                ((RField)res_arr[n]).Value = f.Value;
+                                ((RField)res_arr[n]).Lang = f.Lang;
+                            }
+                            else if (f.Lang == "en")
+                            {
+                                ((RField)res_arr[n]).Value = f.Value;
+                                ((RField)res_arr[n]).Lang = f.Lang;
+                            }
+                        }
                     }
                     else if (p is RDirect)
                     {
