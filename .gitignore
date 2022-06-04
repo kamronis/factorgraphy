@@ -361,3 +361,4 @@ MigrationBackup/
 /BlazorServer/wwwroot/credentials.db-shm
 /BlazorServer/wwwroot/credentials.db-wal
 /BlazorServer/wwwroot/config.xml
+/ConsoleTransformer/correction.fog
